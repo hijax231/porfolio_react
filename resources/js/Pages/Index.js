@@ -113,9 +113,6 @@ class Home extends Component {
   <div style={{overflow: "hidden"}}>   
 <Main />
 
-
-
-
 <Skills />
 
 <Porfolio />

@@ -23,7 +23,7 @@ import Particles from "react-particles-js";
 
 import Lottie from 'react-lottie';
 
-import  contact from '../images/rocket.json'
+import  contact from '../images/scroll.json'
 
 
 import waves from '../images/top.svg'
@@ -130,7 +130,7 @@ class mainpage extends React.Component {
                     direction="column"
                     alignItems="center"
                     justify="center"
-                    style={{ minHeight: "100vh" ,   padding: '1em' , 
+                    style={{ minHeight: "100vh" ,   padding: '1em', borderBottom: "10px solid #202833",
  
                 }}
                 >
@@ -170,7 +170,15 @@ class mainpage extends React.Component {
                     >
                         Fullstack Developer
                     </WhiteTextTypography>
+                    <Lottie options={defaultOptions}
+                            height={50}
+                            width={50}
+
+                            />
                 </Grid>
+
+            
+
             </div>
         );
     }

@@ -22,7 +22,9 @@ import Particles from "react-particles-js";
 
 import GridList from '@material-ui/core/GridList';
 import waves from '../images/wavetop.svg'
+import Lottie from 'react-lottie';
 
+import  contact from '../images/about.json'
 //lights
 
 import SkillBar from 'react-skillbars';
@@ -87,10 +89,22 @@ class Skills extends React.Component {
     render() {
         const classes = useStyles();
 
+
+        const defaultOptions = {
+            loop: true,
+            autoplay: true, 
+          
+            animationData: contact,
+            rendererSettings: {
+              preserveAspectRatio: 'xMidYMid slice'
+            }
+          };
+
+
         return (
             <div
                 style={{
-                    borderTop: "5px groove #C5C6C8",
+                    // borderTop: "3px solid #202833",
                     position: "relative",
                     backgroundColor: "#202833",
                     height: "100%",
@@ -192,6 +206,8 @@ class Skills extends React.Component {
                     
                     style={{ minHeight: "100vh" ,      padding: '1em', }}
                 >
+
+
 
 
 <Grid item xs={12}>
