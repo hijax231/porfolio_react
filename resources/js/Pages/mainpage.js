@@ -20,6 +20,13 @@ import Typist from "react-typist";
 import TypistLoop from "react-typist-loop";
 import Particles from "react-particles-js";
 
+
+import Lottie from 'react-lottie';
+
+import  contact from '../images/rocket.json'
+
+
+import waves from '../images/top.svg'
 //lights
 
 const useStyles = theme => ({
@@ -56,13 +63,30 @@ class mainpage extends React.Component {
     render() {
         const classes = useStyles();
 
+
+        const defaultOptions = {
+            loop: true,
+            autoplay: true, 
+            padding : 100,
+            animationData: contact,
+            rendererSettings: {
+              preserveAspectRatio: 'xMidYMid slice'
+            }
+          };
+
+
+
         return (
             <div
                 style={{
                     position: "relative",
                     backgroundColor: "#0B0C10",
                     height: "100%",
-                    width: "100vw"
+                    width: "100vw",
+                    backgroundRepeat  : 'no-repeat',
+                    backgroundImage:`url(${waves})`,
+                    backgroundPosition: "center bottom",
+
                 }}
             >
                 <div
@@ -97,21 +121,30 @@ class mainpage extends React.Component {
                     />
                 </div>
 
+
+
+
                 <Grid
                     container
                     align="center"
                     direction="column"
                     alignItems="center"
                     justify="center"
-                    style={{ minHeight: "100vh" ,   padding: '1em' }}
+                    style={{ minHeight: "100vh" ,   padding: '1em' , 
+ 
+                }}
                 >
+
+                    
+            
+
                     <WhiteTextTypography variant="h4" gutterBottom>
                         <Typing speed={50}>
                             Hello, my name is Jan Dean Pasajol
                         </Typing>
 
                         <TypistLoop interval={1500}>
-                            {["Creative", "Handsome", "Skinny"].map(text => (
+                            {["Creative", "Adaptable ", "Independent" , "Resourceful"].map(text => (
                                 <Typist key={text} startDelay={1000}>
                                     {text}
                                     <Typist.Backspace

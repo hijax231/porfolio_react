@@ -20,6 +20,7 @@ import "fontsource-roboto";
 import Main from "./mainpage";
 import Skills from "./skills";
 import Porfolio from "./porfolio";
+import Contact from "./contact";
 
 
 const useStyles = theme => ({
@@ -119,6 +120,7 @@ class Home extends Component {
 
 <Porfolio />
 
+<Contact />
 
 </div>
 

@@ -31,6 +31,7 @@
         "@material-ui/icons": "^4.9.1",
         "fontsource-roboto": "^3.0.3",
         "pts": "^0.9.4",
+        "react-animate-on-scroll": "^2.1.5",
         "react-awesome-slider": "^4.1.0",
         "react-lottie": "^1.2.3",
         "react-particles-js": "^3.3.0",

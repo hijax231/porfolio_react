@@ -21,7 +21,7 @@ import TypistLoop from "react-typist-loop";
 import Particles from "react-particles-js";
 
 import GridList from '@material-ui/core/GridList';
-
+import waves from '../images/wavetop.svg'
 
 //lights
 
@@ -90,11 +90,13 @@ class Skills extends React.Component {
         return (
             <div
                 style={{
-                    borderTop: "10px solid #C5C6C8",
+                    borderTop: "5px groove #C5C6C8",
                     position: "relative",
                     backgroundColor: "#202833",
                     height: "100%",
-                          width: "100vw"
+                          width: "100vw",
+                        //   backgroundImage:`url(${waves})`,
+                        //   backgroundRepeat  : 'no-repeat',
                
                 }}
             >
@@ -190,6 +192,22 @@ class Skills extends React.Component {
                     
                     style={{ minHeight: "100vh" ,      padding: '1em', }}
                 >
+
+
+<Grid item xs={12}>
+                    <WhiteTextTypography
+                    variant="h4" component="h2">
+ ABOUT
+
+</WhiteTextTypography>
+
+<WhiteTextTypography
+                    variant="h4" component="h2">
+___
+</WhiteTextTypography>
+
+</Grid>
+
 
 
                     <Grid item xs={12} md={6}  >
