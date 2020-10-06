@@ -1,7 +1,7 @@
 import React, { Suspense, useEffect, useRef, useState } from "react";
 
 import { makeStyles, withStyles } from "@material-ui/core/styles";
-
+import ScrollAnimation from 'react-animate-on-scroll';
 import ReactDOM from "react-dom";
 
 import { Redirect } from "react-router-dom";
@@ -29,18 +29,20 @@ import  contact from '../images/about.json'
 
 import SkillBar from 'react-skillbars';
 import solaire from '../images/soliarehexa.png'; 
+import Iframe from 'react-iframe'
+
 
 const skills = [
-    {type: "HTML", level: 99},
-    {type: "CSS", level: 98},
-    {type: "JavaScript", level: 87},
-    {type: "jQuery", level: 92},
-    {type: "BootStrap", level: 90},
-    {type: "Photoshop", level: 100},
-    {type: "Angular.js", level: 16},
-    {type: "React.js", level: 25},
-    {type: "PHP", level: 36},
-    {type: "Ruby", level: 11}
+    {type: "HTML", level: 90},
+    {type: "CSS", level: 90},
+    {type: "JavaScript", level: 80},
+    {type: "jQuery", level: 80},
+    {type: "Laravel", level: 80},
+    {type: "React", level: 80},
+    {type: "Vue", level: 60},
+    {type: "Java", level: 70},
+    {type: "PHP", level: 80},
+    {type: "SQL", level: 80}
   ];
 
 
@@ -85,6 +87,21 @@ class Skills extends React.Component {
             redirect: false
         };
     }
+
+
+    componentDidMount(){
+        const script = document.createElement("script");
+  script.src = "../js/TagCanvas.js";
+  script.async = true;
+  script.onload = () => this.scriptLoaded();
+  document.body.appendChild(script);
+
+    }
+
+    scriptLoaded() {
+        window.A.sort();
+      }
+
 
     render() {
         const classes = useStyles();
@@ -236,23 +253,31 @@ ___
                     </WhiteTextTypography>
                     <WhiteTextTypography variant="h6" gutterBottom>
                   
-                        I'm a Front-End Developer for ChowNow in Los Angeles, CA. 
-                        I have serious passion for UI effects, animations and creating intuitive, dynamic user experiences. 
+                        I'm a innovative fullstack Developer for Pylon International Corp. base in San Pablo City as a contractor with a year of experience managing all aspects of developement process for small to large scale projects.
+                      
                         Let's make something special.
                     </WhiteTextTypography>
                     </Grid>
+                
 
                     <Grid item xs={12} md={6} 
                     
                     style={{   padding: '1em', }}
                     
                     >
-
+{/* 
                     <SkillBar
                     
                     colors={colors}
                     height={25}
-                    skills={skills}/>
+                    skills={skills}/> */}
+
+<Iframe url="/skills/skillschart"
+        width="100%"
+        height="400px"
+        frameBorder="0"
+        display="initial"
+        position="relative"/>
 
                         
                     <WhiteTextTypography variant="h6" gutterBottom>
@@ -264,10 +289,10 @@ ___
                     </WhiteTextTypography>
 
             </Grid>
-
-
+     
+      
             </Grid>
-
+         
 {/*  */}
             </div>
         );

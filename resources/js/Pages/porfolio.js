@@ -54,6 +54,10 @@ import MoreVertIcon from "@material-ui/icons/MoreVert";
 import Zoom from "@material-ui/core/Zoom";
 
 
+import ubilis from '../images/porfolio/ubilis1.png'
+import ecris from '../images/porfolio/ecris.png'
+import atin from '../images/porfolio/atin.png'
+import esgc from '../images/porfolio/ecosavers.png'
 //lights
 
 const useStyles = theme => ({
@@ -91,68 +95,77 @@ const WhiteTextTypography = withStyles({
 
 const portfolio = [
     {
-        name: "My best client",
-        category: ["all", "frontend", "ux-ui"],
-        img: "https://homepages.cae.wisc.edu/~ece533/images/airplane.png",
-        title: "EBPLS",
-        author: "author"
+        name: "EBPLS",
+        category: ["all", " / ","Boostrap"," / ", "Codeigniter"],
+        img: ubilis,
+        title: "Electronic Business Processing And Licensing System ",
+        author: "EBPLS",
+        description: "A integrated multi platform software solution that utilizes data analytics which is designed to assist in data gathering, business registration, renewal, automated assessment, approval of  business applications and printing of Business Permit."  
+     },
+    {
+        name: "ECRIS",
+        category: ["all", " / ","Boostrap"," / ", "Codeigniter"],
+        img: ecris,
+        title: "Electronic Civil Registry Information System 2.0",
+        author: "ECRIS",
+        description: "Web based solution used in the creation of an electronic data base and is capable of releasing requested documents in real time manner. Handles online request system and uses data analytics to release pertinent reports and statistics." 
+   },
+    {
+        name: "ATIN",
+        category: ["all", " / ","React"," / ", "Laravel"],
+        img: atin,
+        title: "ATIN COVID19 Tracker",
+        author: "ATIN",
+        description: ""   
     },
     {
-        name: "My favorite case",
-        category: ["all", "mobile", "ux-ui"],
-        img: "https://homepages.cae.wisc.edu/~ece533/images/airplane.png",
-        title: "ECRIS",
-        author: "ECRIS"
-    },
-    {
-        name: "A old job",
-        category: ["all", "frontend"],
-        img: "https://homepages.cae.wisc.edu/~ece533/images/fruits.png",
-        title: "QRPASS",
-        author: "QRPASS"
-    },
-    {
-        name: "It is a really cool website",
-        category: ["all", "frontend", "ux-ui"],
-        img: "https://homepages.cae.wisc.edu/~ece533/images/pool.png",
-        title: "ATIN",
-        author: "ATIN"
+        name: "ESGC",
+        category: ["all", " / ","C#"," / ", "UX-Ui"],
+        img:esgc,
+        title: "ESGC Inventory System",
+        author: "ESGC",
+        description:  "A Stand Alone Software used in tracking goods for the entire supply chain, from adding new inventory to end sales and reports", 
     },
     {
         name: "Something more",
         category: ["all", "others"],
         img: "https://homepages.cae.wisc.edu/~ece533/images/barbara.png",
         title: "COMPANY",
-        author: "COMPANY"
+        author: "author",
+        description: "asd" 
     },
     {
         name: "Something more",
         category: ["all", "others"],
         img: "https://homepages.cae.wisc.edu/~ece533/images/barbara.png",
         title: "Image",
-        author: "author"
+        author: "author",
+        description: "asd"    
     },
     {
         name: "Something more",
         category: ["all", "others"],
         img: "https://homepages.cae.wisc.edu/~ece533/images/barbara.png",
         title: "Image",
-        author: "author"
+        author: "author",
+        description: "asd"    
     },
     {
         name: "Something more",
         category: ["all", "others"],
         img: "https://homepages.cae.wisc.edu/~ece533/images/barbara.png",
         title: "Image",
-        author: "author"
-    },
+        author: "author",
+    description: "asd"     
+},
     {
         name: "Something more",
         category: ["all", "others"],
         img: "https://homepages.cae.wisc.edu/~ece533/images/barbara.png",
         title: "Image",
-        author: "author"
-    }
+        author: "author",
+    description: "asd"    
+}
 ];
 
 class Porfolio extends React.Component {
@@ -349,7 +362,7 @@ onClick={()=>{
                                         style={{
                                             backgroundImage: `url(${item.img})`,
                                             height: 250,
-                                            width: 350,
+                                            width: 370,
                                             backgroundSize: "cover"
                                         }}
                                     >
@@ -361,22 +374,23 @@ onClick={()=>{
                                                     display: "none",
                                                     backgroundColor: "white",
                                                     height: "100%",
-                                                    width: 350,
+                                                    width: 370,
                                                     borderTop:
                                                         "10px solid #303F9F"
                                                 }}
                                             >
                                                 <Grid
                                                     container
-                                                    spacing={4}
+                                                    spacing={2}
                                                     style={{
                                                         paddingBottom: 20,
-                                                        paddingTop: 20
+                                                        paddingLeft: 20,
+                                                        paddingRight: 20,
                                                     }}
                                                 >
                                                     <Grid item xs={12}>
                                                         <Typography
-                                                            variant="h5"
+                                                            variant="overline"
                                                             component="h2"
                                                         >
                                                             {" "}
@@ -392,14 +406,15 @@ onClick={()=>{
                                                             {" "}
                                                             {item.category}{" "}
                                                         </Typography>
-                                                    </Grid>
-                                                    <Grid item xs={12}>
-                                                        <Button
-                                                            variant="outlined"
-                                                            color="secondary"
+                                                 
+                                                    <Typography
+                                                            color=""
+                                                            variant="body2"
+                                                            display="block"
+                                                            gutterBottom
                                                         >
-                                                            Learn More
-                                                        </Button>
+                                                   {item.description}
+                                                   </Typography>
                                                     </Grid>
                                                 </Grid>
 
@@ -414,7 +429,12 @@ onClick={()=>{
                         </Grid>
                     </Container>
                 </Grid>
-            </div>
+
+</div>
+
+
+
+
         );
     }
 }

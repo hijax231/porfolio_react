@@ -16,3 +16,8 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('App');
 });
+
+
+Route::get('/skills/skillschart', function () {
+    return view('skill');
+});

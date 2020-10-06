@@ -21659,6 +21659,457 @@ var index = create();
 
 /***/ }),
 
+/***/ "./node_modules/lodash.throttle/index.js":
+/*!***********************************************!*\
+  !*** ./node_modules/lodash.throttle/index.js ***!
+  \***********************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+/* WEBPACK VAR INJECTION */(function(global) {/**
+ * lodash (Custom Build) <https://lodash.com/>
+ * Build: `lodash modularize exports="npm" -o ./`
+ * Copyright jQuery Foundation and other contributors <https://jquery.org/>
+ * Released under MIT license <https://lodash.com/license>
+ * Based on Underscore.js 1.8.3 <http://underscorejs.org/LICENSE>
+ * Copyright Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
+ */
+
+/** Used as the `TypeError` message for "Functions" methods. */
+var FUNC_ERROR_TEXT = 'Expected a function';
+
+/** Used as references for various `Number` constants. */
+var NAN = 0 / 0;
+
+/** `Object#toString` result references. */
+var symbolTag = '[object Symbol]';
+
+/** Used to match leading and trailing whitespace. */
+var reTrim = /^\s+|\s+$/g;
+
+/** Used to detect bad signed hexadecimal string values. */
+var reIsBadHex = /^[-+]0x[0-9a-f]+$/i;
+
+/** Used to detect binary string values. */
+var reIsBinary = /^0b[01]+$/i;
+
+/** Used to detect octal string values. */
+var reIsOctal = /^0o[0-7]+$/i;
+
+/** Built-in method references without a dependency on `root`. */
+var freeParseInt = parseInt;
+
+/** Detect free variable `global` from Node.js. */
+var freeGlobal = typeof global == 'object' && global && global.Object === Object && global;
+
+/** Detect free variable `self`. */
+var freeSelf = typeof self == 'object' && self && self.Object === Object && self;
+
+/** Used as a reference to the global object. */
+var root = freeGlobal || freeSelf || Function('return this')();
+
+/** Used for built-in method references. */
+var objectProto = Object.prototype;
+
+/**
+ * Used to resolve the
+ * [`toStringTag`](http://ecma-international.org/ecma-262/7.0/#sec-object.prototype.tostring)
+ * of values.
+ */
+var objectToString = objectProto.toString;
+
+/* Built-in method references for those with the same name as other `lodash` methods. */
+var nativeMax = Math.max,
+    nativeMin = Math.min;
+
+/**
+ * Gets the timestamp of the number of milliseconds that have elapsed since
+ * the Unix epoch (1 January 1970 00:00:00 UTC).
+ *
+ * @static
+ * @memberOf _
+ * @since 2.4.0
+ * @category Date
+ * @returns {number} Returns the timestamp.
+ * @example
+ *
+ * _.defer(function(stamp) {
+ *   console.log(_.now() - stamp);
+ * }, _.now());
+ * // => Logs the number of milliseconds it took for the deferred invocation.
+ */
+var now = function() {
+  return root.Date.now();
+};
+
+/**
+ * Creates a debounced function that delays invoking `func` until after `wait`
+ * milliseconds have elapsed since the last time the debounced function was
+ * invoked. The debounced function comes with a `cancel` method to cancel
+ * delayed `func` invocations and a `flush` method to immediately invoke them.
+ * Provide `options` to indicate whether `func` should be invoked on the
+ * leading and/or trailing edge of the `wait` timeout. The `func` is invoked
+ * with the last arguments provided to the debounced function. Subsequent
+ * calls to the debounced function return the result of the last `func`
+ * invocation.
+ *
+ * **Note:** If `leading` and `trailing` options are `true`, `func` is
+ * invoked on the trailing edge of the timeout only if the debounced function
+ * is invoked more than once during the `wait` timeout.
+ *
+ * If `wait` is `0` and `leading` is `false`, `func` invocation is deferred
+ * until to the next tick, similar to `setTimeout` with a timeout of `0`.
+ *
+ * See [David Corbacho's article](https://css-tricks.com/debouncing-throttling-explained-examples/)
+ * for details over the differences between `_.debounce` and `_.throttle`.
+ *
+ * @static
+ * @memberOf _
+ * @since 0.1.0
+ * @category Function
+ * @param {Function} func The function to debounce.
+ * @param {number} [wait=0] The number of milliseconds to delay.
+ * @param {Object} [options={}] The options object.
+ * @param {boolean} [options.leading=false]
+ *  Specify invoking on the leading edge of the timeout.
+ * @param {number} [options.maxWait]
+ *  The maximum time `func` is allowed to be delayed before it's invoked.
+ * @param {boolean} [options.trailing=true]
+ *  Specify invoking on the trailing edge of the timeout.
+ * @returns {Function} Returns the new debounced function.
+ * @example
+ *
+ * // Avoid costly calculations while the window size is in flux.
+ * jQuery(window).on('resize', _.debounce(calculateLayout, 150));
+ *
+ * // Invoke `sendMail` when clicked, debouncing subsequent calls.
+ * jQuery(element).on('click', _.debounce(sendMail, 300, {
+ *   'leading': true,
+ *   'trailing': false
+ * }));
+ *
+ * // Ensure `batchLog` is invoked once after 1 second of debounced calls.
+ * var debounced = _.debounce(batchLog, 250, { 'maxWait': 1000 });
+ * var source = new EventSource('/stream');
+ * jQuery(source).on('message', debounced);
+ *
+ * // Cancel the trailing debounced invocation.
+ * jQuery(window).on('popstate', debounced.cancel);
+ */
+function debounce(func, wait, options) {
+  var lastArgs,
+      lastThis,
+      maxWait,
+      result,
+      timerId,
+      lastCallTime,
+      lastInvokeTime = 0,
+      leading = false,
+      maxing = false,
+      trailing = true;
+
+  if (typeof func != 'function') {
+    throw new TypeError(FUNC_ERROR_TEXT);
+  }
+  wait = toNumber(wait) || 0;
+  if (isObject(options)) {
+    leading = !!options.leading;
+    maxing = 'maxWait' in options;
+    maxWait = maxing ? nativeMax(toNumber(options.maxWait) || 0, wait) : maxWait;
+    trailing = 'trailing' in options ? !!options.trailing : trailing;
+  }
+
+  function invokeFunc(time) {
+    var args = lastArgs,
+        thisArg = lastThis;
+
+    lastArgs = lastThis = undefined;
+    lastInvokeTime = time;
+    result = func.apply(thisArg, args);
+    return result;
+  }
+
+  function leadingEdge(time) {
+    // Reset any `maxWait` timer.
+    lastInvokeTime = time;
+    // Start the timer for the trailing edge.
+    timerId = setTimeout(timerExpired, wait);
+    // Invoke the leading edge.
+    return leading ? invokeFunc(time) : result;
+  }
+
+  function remainingWait(time) {
+    var timeSinceLastCall = time - lastCallTime,
+        timeSinceLastInvoke = time - lastInvokeTime,
+        result = wait - timeSinceLastCall;
+
+    return maxing ? nativeMin(result, maxWait - timeSinceLastInvoke) : result;
+  }
+
+  function shouldInvoke(time) {
+    var timeSinceLastCall = time - lastCallTime,
+        timeSinceLastInvoke = time - lastInvokeTime;
+
+    // Either this is the first call, activity has stopped and we're at the
+    // trailing edge, the system time has gone backwards and we're treating
+    // it as the trailing edge, or we've hit the `maxWait` limit.
+    return (lastCallTime === undefined || (timeSinceLastCall >= wait) ||
+      (timeSinceLastCall < 0) || (maxing && timeSinceLastInvoke >= maxWait));
+  }
+
+  function timerExpired() {
+    var time = now();
+    if (shouldInvoke(time)) {
+      return trailingEdge(time);
+    }
+    // Restart the timer.
+    timerId = setTimeout(timerExpired, remainingWait(time));
+  }
+
+  function trailingEdge(time) {
+    timerId = undefined;
+
+    // Only invoke if we have `lastArgs` which means `func` has been
+    // debounced at least once.
+    if (trailing && lastArgs) {
+      return invokeFunc(time);
+    }
+    lastArgs = lastThis = undefined;
+    return result;
+  }
+
+  function cancel() {
+    if (timerId !== undefined) {
+      clearTimeout(timerId);
+    }
+    lastInvokeTime = 0;
+    lastArgs = lastCallTime = lastThis = timerId = undefined;
+  }
+
+  function flush() {
+    return timerId === undefined ? result : trailingEdge(now());
+  }
+
+  function debounced() {
+    var time = now(),
+        isInvoking = shouldInvoke(time);
+
+    lastArgs = arguments;
+    lastThis = this;
+    lastCallTime = time;
+
+    if (isInvoking) {
+      if (timerId === undefined) {
+        return leadingEdge(lastCallTime);
+      }
+      if (maxing) {
+        // Handle invocations in a tight loop.
+        timerId = setTimeout(timerExpired, wait);
+        return invokeFunc(lastCallTime);
+      }
+    }
+    if (timerId === undefined) {
+      timerId = setTimeout(timerExpired, wait);
+    }
+    return result;
+  }
+  debounced.cancel = cancel;
+  debounced.flush = flush;
+  return debounced;
+}
+
+/**
+ * Creates a throttled function that only invokes `func` at most once per
+ * every `wait` milliseconds. The throttled function comes with a `cancel`
+ * method to cancel delayed `func` invocations and a `flush` method to
+ * immediately invoke them. Provide `options` to indicate whether `func`
+ * should be invoked on the leading and/or trailing edge of the `wait`
+ * timeout. The `func` is invoked with the last arguments provided to the
+ * throttled function. Subsequent calls to the throttled function return the
+ * result of the last `func` invocation.
+ *
+ * **Note:** If `leading` and `trailing` options are `true`, `func` is
+ * invoked on the trailing edge of the timeout only if the throttled function
+ * is invoked more than once during the `wait` timeout.
+ *
+ * If `wait` is `0` and `leading` is `false`, `func` invocation is deferred
+ * until to the next tick, similar to `setTimeout` with a timeout of `0`.
+ *
+ * See [David Corbacho's article](https://css-tricks.com/debouncing-throttling-explained-examples/)
+ * for details over the differences between `_.throttle` and `_.debounce`.
+ *
+ * @static
+ * @memberOf _
+ * @since 0.1.0
+ * @category Function
+ * @param {Function} func The function to throttle.
+ * @param {number} [wait=0] The number of milliseconds to throttle invocations to.
+ * @param {Object} [options={}] The options object.
+ * @param {boolean} [options.leading=true]
+ *  Specify invoking on the leading edge of the timeout.
+ * @param {boolean} [options.trailing=true]
+ *  Specify invoking on the trailing edge of the timeout.
+ * @returns {Function} Returns the new throttled function.
+ * @example
+ *
+ * // Avoid excessively updating the position while scrolling.
+ * jQuery(window).on('scroll', _.throttle(updatePosition, 100));
+ *
+ * // Invoke `renewToken` when the click event is fired, but not more than once every 5 minutes.
+ * var throttled = _.throttle(renewToken, 300000, { 'trailing': false });
+ * jQuery(element).on('click', throttled);
+ *
+ * // Cancel the trailing throttled invocation.
+ * jQuery(window).on('popstate', throttled.cancel);
+ */
+function throttle(func, wait, options) {
+  var leading = true,
+      trailing = true;
+
+  if (typeof func != 'function') {
+    throw new TypeError(FUNC_ERROR_TEXT);
+  }
+  if (isObject(options)) {
+    leading = 'leading' in options ? !!options.leading : leading;
+    trailing = 'trailing' in options ? !!options.trailing : trailing;
+  }
+  return debounce(func, wait, {
+    'leading': leading,
+    'maxWait': wait,
+    'trailing': trailing
+  });
+}
+
+/**
+ * Checks if `value` is the
+ * [language type](http://www.ecma-international.org/ecma-262/7.0/#sec-ecmascript-language-types)
+ * of `Object`. (e.g. arrays, functions, objects, regexes, `new Number(0)`, and `new String('')`)
+ *
+ * @static
+ * @memberOf _
+ * @since 0.1.0
+ * @category Lang
+ * @param {*} value The value to check.
+ * @returns {boolean} Returns `true` if `value` is an object, else `false`.
+ * @example
+ *
+ * _.isObject({});
+ * // => true
+ *
+ * _.isObject([1, 2, 3]);
+ * // => true
+ *
+ * _.isObject(_.noop);
+ * // => true
+ *
+ * _.isObject(null);
+ * // => false
+ */
+function isObject(value) {
+  var type = typeof value;
+  return !!value && (type == 'object' || type == 'function');
+}
+
+/**
+ * Checks if `value` is object-like. A value is object-like if it's not `null`
+ * and has a `typeof` result of "object".
+ *
+ * @static
+ * @memberOf _
+ * @since 4.0.0
+ * @category Lang
+ * @param {*} value The value to check.
+ * @returns {boolean} Returns `true` if `value` is object-like, else `false`.
+ * @example
+ *
+ * _.isObjectLike({});
+ * // => true
+ *
+ * _.isObjectLike([1, 2, 3]);
+ * // => true
+ *
+ * _.isObjectLike(_.noop);
+ * // => false
+ *
+ * _.isObjectLike(null);
+ * // => false
+ */
+function isObjectLike(value) {
+  return !!value && typeof value == 'object';
+}
+
+/**
+ * Checks if `value` is classified as a `Symbol` primitive or object.
+ *
+ * @static
+ * @memberOf _
+ * @since 4.0.0
+ * @category Lang
+ * @param {*} value The value to check.
+ * @returns {boolean} Returns `true` if `value` is a symbol, else `false`.
+ * @example
+ *
+ * _.isSymbol(Symbol.iterator);
+ * // => true
+ *
+ * _.isSymbol('abc');
+ * // => false
+ */
+function isSymbol(value) {
+  return typeof value == 'symbol' ||
+    (isObjectLike(value) && objectToString.call(value) == symbolTag);
+}
+
+/**
+ * Converts `value` to a number.
+ *
+ * @static
+ * @memberOf _
+ * @since 4.0.0
+ * @category Lang
+ * @param {*} value The value to process.
+ * @returns {number} Returns the number.
+ * @example
+ *
+ * _.toNumber(3.2);
+ * // => 3.2
+ *
+ * _.toNumber(Number.MIN_VALUE);
+ * // => 5e-324
+ *
+ * _.toNumber(Infinity);
+ * // => Infinity
+ *
+ * _.toNumber('3.2');
+ * // => 3.2
+ */
+function toNumber(value) {
+  if (typeof value == 'number') {
+    return value;
+  }
+  if (isSymbol(value)) {
+    return NAN;
+  }
+  if (isObject(value)) {
+    var other = typeof value.valueOf == 'function' ? value.valueOf() : value;
+    value = isObject(other) ? (other + '') : other;
+  }
+  if (typeof value != 'string') {
+    return value === 0 ? value : +value;
+  }
+  value = value.replace(reTrim, '');
+  var isBinary = reIsBinary.test(value);
+  return (isBinary || reIsOctal.test(value))
+    ? freeParseInt(value.slice(2), isBinary ? 2 : 8)
+    : (reIsBadHex.test(value) ? NAN : +value);
+}
+
+module.exports = throttle;
+
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./../webpack/buildin/global.js */ "./node_modules/webpack/buildin/global.js")))
+
+/***/ }),
+
 /***/ "./node_modules/lodash/_DataView.js":
 /*!******************************************!*\
   !*** ./node_modules/lodash/_DataView.js ***!
@@ -41344,6 +41795,309 @@ module.exports.polyfill = function(object) {
 }
 
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./../webpack/buildin/global.js */ "./node_modules/webpack/buildin/global.js")))
+
+/***/ }),
+
+/***/ "./node_modules/react-animate-on-scroll/dist/scrollAnimation.min.js":
+/*!**************************************************************************!*\
+  !*** ./node_modules/react-animate-on-scroll/dist/scrollAnimation.min.js ***!
+  \**************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var _react = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+
+var _react2 = _interopRequireDefault(_react);
+
+var _lodashThrottle = __webpack_require__(/*! lodash.throttle */ "./node_modules/lodash.throttle/index.js");
+
+var _lodashThrottle2 = _interopRequireDefault(_lodashThrottle);
+
+var _propTypes = __webpack_require__(/*! prop-types */ "./node_modules/prop-types/index.js");
+
+var _propTypes2 = _interopRequireDefault(_propTypes);
+
+var ScrollAnimation = (function (_Component) {
+  _inherits(ScrollAnimation, _Component);
+
+  function ScrollAnimation(props) {
+    _classCallCheck(this, ScrollAnimation);
+
+    _get(Object.getPrototypeOf(ScrollAnimation.prototype), "constructor", this).call(this, props);
+    this.serverSide = typeof window === "undefined";
+    this.listener = (0, _lodashThrottle2["default"])(this.handleScroll.bind(this), 50);
+    this.visibility = {
+      onScreen: false,
+      inViewport: false
+    };
+
+    this.state = {
+      classes: "animated",
+      style: {
+        animationDuration: this.props.duration + "s",
+        opacity: this.props.initiallyVisible ? 1 : 0
+      }
+    };
+  }
+
+  _createClass(ScrollAnimation, [{
+    key: "getElementTop",
+    value: function getElementTop(elm) {
+      var yPos = 0;
+      while (elm && elm.offsetTop !== undefined && elm.clientTop !== undefined) {
+        yPos += elm.offsetTop + elm.clientTop;
+        elm = elm.offsetParent;
+      }
+      return yPos;
+    }
+  }, {
+    key: "getScrollPos",
+    value: function getScrollPos() {
+      if (this.scrollableParent.pageYOffset !== undefined) {
+        return this.scrollableParent.pageYOffset;
+      }
+      return this.scrollableParent.scrollTop;
+    }
+  }, {
+    key: "getScrollableParentHeight",
+    value: function getScrollableParentHeight() {
+      if (this.scrollableParent.innerHeight !== undefined) {
+        return this.scrollableParent.innerHeight;
+      }
+      return this.scrollableParent.clientHeight;
+    }
+  }, {
+    key: "getViewportTop",
+    value: function getViewportTop() {
+      return this.getScrollPos() + this.props.offset;
+    }
+  }, {
+    key: "getViewportBottom",
+    value: function getViewportBottom() {
+      return this.getScrollPos() + this.getScrollableParentHeight() - this.props.offset;
+    }
+  }, {
+    key: "isInViewport",
+    value: function isInViewport(y) {
+      return y >= this.getViewportTop() && y <= this.getViewportBottom();
+    }
+  }, {
+    key: "isAboveViewport",
+    value: function isAboveViewport(y) {
+      return y < this.getViewportTop();
+    }
+  }, {
+    key: "isBelowViewport",
+    value: function isBelowViewport(y) {
+      return y > this.getViewportBottom();
+    }
+  }, {
+    key: "inViewport",
+    value: function inViewport(elementTop, elementBottom) {
+      return this.isInViewport(elementTop) || this.isInViewport(elementBottom) || this.isAboveViewport(elementTop) && this.isBelowViewport(elementBottom);
+    }
+  }, {
+    key: "onScreen",
+    value: function onScreen(elementTop, elementBottom) {
+      return !this.isAboveScreen(elementBottom) && !this.isBelowScreen(elementTop);
+    }
+  }, {
+    key: "isAboveScreen",
+    value: function isAboveScreen(y) {
+      return y < this.getScrollPos();
+    }
+  }, {
+    key: "isBelowScreen",
+    value: function isBelowScreen(y) {
+      return y > this.getScrollPos() + this.getScrollableParentHeight();
+    }
+  }, {
+    key: "getVisibility",
+    value: function getVisibility() {
+      var elementTop = this.getElementTop(this.node) - this.getElementTop(this.scrollableParent);
+      var elementBottom = elementTop + this.node.clientHeight;
+      return {
+        inViewport: this.inViewport(elementTop, elementBottom),
+        onScreen: this.onScreen(elementTop, elementBottom)
+      };
+    }
+  }, {
+    key: "componentDidMount",
+    value: function componentDidMount() {
+      if (!this.serverSide) {
+        var parentSelector = this.props.scrollableParentSelector;
+        this.scrollableParent = parentSelector ? document.querySelector(parentSelector) : window;
+        if (this.scrollableParent && this.scrollableParent.addEventListener) {
+          this.scrollableParent.addEventListener("scroll", this.listener);
+        } else {
+          console.warn("Cannot find element by locator: " + this.props.scrollableParentSelector);
+        }
+        if (this.props.animatePreScroll) {
+          this.handleScroll();
+        }
+      }
+    }
+  }, {
+    key: "componentWillUnmount",
+    value: function componentWillUnmount() {
+      clearTimeout(this.delayedAnimationTimeout);
+      clearTimeout(this.callbackTimeout);
+      if (window && window.removeEventListener) {
+        window.removeEventListener("scroll", this.listener);
+      }
+    }
+  }, {
+    key: "visibilityHasChanged",
+    value: function visibilityHasChanged(previousVis, currentVis) {
+      return previousVis.inViewport !== currentVis.inViewport || previousVis.onScreen !== currentVis.onScreen;
+    }
+  }, {
+    key: "animate",
+    value: function animate(animation, callback) {
+      var _this = this;
+
+      this.delayedAnimationTimeout = setTimeout(function () {
+        _this.animating = true;
+        _this.setState({
+          classes: "animated " + animation,
+          style: {
+            animationDuration: _this.props.duration + "s"
+          }
+        });
+        _this.callbackTimeout = setTimeout(callback, _this.props.duration * 1000);
+      }, this.props.delay);
+    }
+  }, {
+    key: "animateIn",
+    value: function animateIn(callback) {
+      var _this2 = this;
+
+      this.animate(this.props.animateIn, function () {
+        if (!_this2.props.animateOnce) {
+          _this2.setState({
+            style: {
+              animationDuration: _this2.props.duration + "s",
+              opacity: 1
+            }
+          });
+          _this2.animating = false;
+        }
+        var vis = _this2.getVisibility();
+        if (callback) {
+          callback(vis);
+        }
+      });
+    }
+  }, {
+    key: "animateOut",
+    value: function animateOut(callback) {
+      var _this3 = this;
+
+      this.animate(this.props.animateOut, function () {
+        _this3.setState({
+          classes: "animated",
+          style: {
+            animationDuration: _this3.props.duration + "s",
+            opacity: 0
+          }
+        });
+        var vis = _this3.getVisibility();
+        if (vis.inViewport && _this3.props.animateIn) {
+          _this3.animateIn(_this3.props.afterAnimatedIn);
+        } else {
+          _this3.animating = false;
+        }
+
+        if (callback) {
+          callback(vis);
+        }
+      });
+    }
+  }, {
+    key: "handleScroll",
+    value: function handleScroll() {
+      if (!this.animating) {
+        var currentVis = this.getVisibility();
+        if (this.visibilityHasChanged(this.visibility, currentVis)) {
+          clearTimeout(this.delayedAnimationTimeout);
+          if (!currentVis.onScreen) {
+            this.setState({
+              classes: "animated",
+              style: {
+                animationDuration: this.props.duration + "s",
+                opacity: this.props.initiallyVisible ? 1 : 0
+              }
+            });
+          } else if (currentVis.inViewport && this.props.animateIn) {
+            this.animateIn(this.props.afterAnimatedIn);
+          } else if (currentVis.onScreen && this.visibility.inViewport && this.props.animateOut && this.state.style.opacity === 1) {
+            this.animateOut(this.props.afterAnimatedOut);
+          }
+          this.visibility = currentVis;
+        }
+      }
+    }
+  }, {
+    key: "render",
+    value: function render() {
+      var _this4 = this;
+
+      var classes = this.props.className ? this.props.className + " " + this.state.classes : this.state.classes;
+      return _react2["default"].createElement(
+        "div",
+        { ref: function (node) {
+            _this4.node = node;
+          }, className: classes, style: Object.assign({}, this.state.style, this.props.style) },
+        this.props.children
+      );
+    }
+  }]);
+
+  return ScrollAnimation;
+})(_react.Component);
+
+exports["default"] = ScrollAnimation;
+
+ScrollAnimation.defaultProps = {
+  offset: 150,
+  duration: 1,
+  initiallyVisible: false,
+  delay: 0,
+  animateOnce: false,
+  animatePreScroll: true
+};
+
+ScrollAnimation.propTypes = {
+  animateIn: _propTypes2["default"].string,
+  animateOut: _propTypes2["default"].string,
+  offset: _propTypes2["default"].number,
+  duration: _propTypes2["default"].number,
+  delay: _propTypes2["default"].number,
+  initiallyVisible: _propTypes2["default"].bool,
+  animateOnce: _propTypes2["default"].bool,
+  style: _propTypes2["default"].object,
+  scrollableParentSelector: _propTypes2["default"].string,
+  className: _propTypes2["default"].string,
+  animatePreScroll: _propTypes2["default"].bool
+};
+module.exports = exports["default"];
 
 /***/ }),
 
@@ -66412,6 +67166,97 @@ function checkDCE() {
 if (false) {} else {
   module.exports = __webpack_require__(/*! ./cjs/react-dom.development.js */ "./node_modules/react-dom/cjs/react-dom.development.js");
 }
+
+
+/***/ }),
+
+/***/ "./node_modules/react-iframe/dist/es/iframe.js":
+/*!*****************************************************!*\
+  !*** ./node_modules/react-iframe/dist/es/iframe.js ***!
+  \*****************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var object_assign__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! object-assign */ "./node_modules/object-assign/index.js");
+/* harmony import */ var object_assign__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(object_assign__WEBPACK_IMPORTED_MODULE_1__);
+var __assign = (undefined && undefined.__assign) || function () {
+    __assign = Object.assign || function(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+                t[p] = s[p];
+        }
+        return t;
+    };
+    return __assign.apply(this, arguments);
+};
+
+
+var Iframe = function (_a) {
+    var url = _a.url, allowFullScreen = _a.allowFullScreen, position = _a.position, display = _a.display, height = _a.height, width = _a.width, overflow = _a.overflow, styles = _a.styles, onLoad = _a.onLoad, onMouseOver = _a.onMouseOver, onMouseOut = _a.onMouseOut, scrolling = _a.scrolling, id = _a.id, frameBorder = _a.frameBorder, ariaHidden = _a.ariaHidden, sandbox = _a.sandbox, allow = _a.allow, className = _a.className, title = _a.title, ariaLabel = _a.ariaLabel, ariaLabelledby = _a.ariaLabelledby, name = _a.name, target = _a.target, loading = _a.loading, importance = _a.importance, referrerpolicy = _a.referrerpolicy, allowpaymentrequest = _a.allowpaymentrequest, src = _a.src;
+    var defaultProps = object_assign__WEBPACK_IMPORTED_MODULE_1___default()({
+        src: src || url,
+        target: target || null,
+        style: {
+            position: position || null,
+            display: display || "block",
+            overflow: overflow || null
+        },
+        scrolling: scrolling || null,
+        allowpaymentrequest: allowpaymentrequest || null,
+        importance: importance || null,
+        sandbox: sandbox || null,
+        loading: loading || null,
+        styles: styles || null,
+        name: name || null,
+        className: className || null,
+        referrerpolicy: referrerpolicy || null,
+        title: title || null,
+        allow: allow || null,
+        id: id || null,
+        "aria-labelledby": ariaLabelledby || null,
+        "aria-hidden": ariaHidden || null,
+        "aria-label": ariaLabel || null,
+        width: width || null,
+        height: height || null,
+        onLoad: onLoad || null,
+        onMouseOver: onMouseOver || null,
+        onMouseOut: onMouseOut || null
+    });
+    var props = Object.create(null);
+    for (var _i = 0, _b = Object.keys(defaultProps); _i < _b.length; _i++) {
+        var prop = _b[_i];
+        if (defaultProps[prop] != null) {
+            props[prop] = defaultProps[prop];
+        }
+    }
+    for (var _c = 0, _d = Object.keys(props.style); _c < _d.length; _c++) {
+        var i = _d[_c];
+        if (props.style[i] == null) {
+            delete props.style[i];
+        }
+    }
+    if (allowFullScreen) {
+        if ("allow" in props) {
+            var currentAllow = props.allow.replace("fullscreen", "");
+            props.allow = ("fullscreen " + currentAllow.trim()).trim();
+        }
+        else {
+            props.allow = "fullscreen";
+        }
+    }
+    if (frameBorder >= 0) {
+        if (!props.style.hasOwnProperty("border")) {
+            props.style.border = frameBorder;
+        }
+    }
+    return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("iframe", __assign({}, props));
+};
+/* harmony default export */ __webpack_exports__["default"] = (Iframe);
 
 
 /***/ }),
@@ -96859,6 +97704,14 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _material_ui_icons_MoreVert__WEBPACK_IMPORTED_MODULE_33__ = __webpack_require__(/*! @material-ui/icons/MoreVert */ "./node_modules/@material-ui/icons/MoreVert.js");
 /* harmony import */ var _material_ui_icons_MoreVert__WEBPACK_IMPORTED_MODULE_33___default = /*#__PURE__*/__webpack_require__.n(_material_ui_icons_MoreVert__WEBPACK_IMPORTED_MODULE_33__);
 /* harmony import */ var _material_ui_core_Zoom__WEBPACK_IMPORTED_MODULE_34__ = __webpack_require__(/*! @material-ui/core/Zoom */ "./node_modules/@material-ui/core/esm/Zoom/index.js");
+/* harmony import */ var _images_porfolio_ubilis1_png__WEBPACK_IMPORTED_MODULE_35__ = __webpack_require__(/*! ../images/porfolio/ubilis1.png */ "./resources/js/images/porfolio/ubilis1.png");
+/* harmony import */ var _images_porfolio_ubilis1_png__WEBPACK_IMPORTED_MODULE_35___default = /*#__PURE__*/__webpack_require__.n(_images_porfolio_ubilis1_png__WEBPACK_IMPORTED_MODULE_35__);
+/* harmony import */ var _images_porfolio_ecris_png__WEBPACK_IMPORTED_MODULE_36__ = __webpack_require__(/*! ../images/porfolio/ecris.png */ "./resources/js/images/porfolio/ecris.png");
+/* harmony import */ var _images_porfolio_ecris_png__WEBPACK_IMPORTED_MODULE_36___default = /*#__PURE__*/__webpack_require__.n(_images_porfolio_ecris_png__WEBPACK_IMPORTED_MODULE_36__);
+/* harmony import */ var _images_porfolio_atin_png__WEBPACK_IMPORTED_MODULE_37__ = __webpack_require__(/*! ../images/porfolio/atin.png */ "./resources/js/images/porfolio/atin.png");
+/* harmony import */ var _images_porfolio_atin_png__WEBPACK_IMPORTED_MODULE_37___default = /*#__PURE__*/__webpack_require__.n(_images_porfolio_atin_png__WEBPACK_IMPORTED_MODULE_37__);
+/* harmony import */ var _images_porfolio_ecosavers_png__WEBPACK_IMPORTED_MODULE_38__ = __webpack_require__(/*! ../images/porfolio/ecosavers.png */ "./resources/js/images/porfolio/ecosavers.png");
+/* harmony import */ var _images_porfolio_ecosavers_png__WEBPACK_IMPORTED_MODULE_38___default = /*#__PURE__*/__webpack_require__.n(_images_porfolio_ecosavers_png__WEBPACK_IMPORTED_MODULE_38__);
 function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
@@ -96886,6 +97739,10 @@ function _assertThisInitialized(self) { if (self === void 0) { throw new Referen
 function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
 
 function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+
+
+
 
 
 
@@ -96957,59 +97814,68 @@ var WhiteTextTypography = Object(_material_ui_core_styles__WEBPACK_IMPORTED_MODU
   }
 })(_material_ui_core_Typography__WEBPACK_IMPORTED_MODULE_8__["default"]);
 var portfolio = [{
-  name: "My best client",
-  category: ["all", "frontend", "ux-ui"],
-  img: "https://homepages.cae.wisc.edu/~ece533/images/airplane.png",
-  title: "EBPLS",
-  author: "author"
+  name: "EBPLS",
+  category: ["all", " / ", "Boostrap", " / ", "Codeigniter"],
+  img: _images_porfolio_ubilis1_png__WEBPACK_IMPORTED_MODULE_35___default.a,
+  title: "Electronic Business Processing And Licensing System ",
+  author: "EBPLS",
+  description: "A integrated multi platform software solution that utilizes data analytics which is designed to assist in data gathering, business registration, renewal, automated assessment, approval of  business applications and printing of Business Permit."
 }, {
-  name: "My favorite case",
-  category: ["all", "mobile", "ux-ui"],
-  img: "https://homepages.cae.wisc.edu/~ece533/images/airplane.png",
-  title: "ECRIS",
-  author: "ECRIS"
+  name: "ECRIS",
+  category: ["all", " / ", "Boostrap", " / ", "Codeigniter"],
+  img: _images_porfolio_ecris_png__WEBPACK_IMPORTED_MODULE_36___default.a,
+  title: "Electronic Civil Registry Information System 2.0",
+  author: "ECRIS",
+  description: "Web based solution used in the creation of an electronic data base and is capable of releasing requested documents in real time manner. Handles online request system and uses data analytics to release pertinent reports and statistics."
 }, {
-  name: "A old job",
-  category: ["all", "frontend"],
-  img: "https://homepages.cae.wisc.edu/~ece533/images/fruits.png",
-  title: "QRPASS",
-  author: "QRPASS"
+  name: "ATIN",
+  category: ["all", " / ", "React", " / ", "Laravel"],
+  img: _images_porfolio_atin_png__WEBPACK_IMPORTED_MODULE_37___default.a,
+  title: "ATIN COVID19 Tracker",
+  author: "ATIN",
+  description: ""
 }, {
-  name: "It is a really cool website",
-  category: ["all", "frontend", "ux-ui"],
-  img: "https://homepages.cae.wisc.edu/~ece533/images/pool.png",
-  title: "ATIN",
-  author: "ATIN"
+  name: "ESGC",
+  category: ["all", " / ", "C#", " / ", "UX-Ui"],
+  img: _images_porfolio_ecosavers_png__WEBPACK_IMPORTED_MODULE_38___default.a,
+  title: "ESGC Inventory System",
+  author: "ESGC",
+  description: "A Stand Alone Software used in tracking goods for the entire supply chain, from adding new inventory to end sales and reports"
 }, {
   name: "Something more",
   category: ["all", "others"],
   img: "https://homepages.cae.wisc.edu/~ece533/images/barbara.png",
   title: "COMPANY",
-  author: "COMPANY"
+  author: "author",
+  description: "asd"
 }, {
   name: "Something more",
   category: ["all", "others"],
   img: "https://homepages.cae.wisc.edu/~ece533/images/barbara.png",
   title: "Image",
-  author: "author"
+  author: "author",
+  description: "asd"
 }, {
   name: "Something more",
   category: ["all", "others"],
   img: "https://homepages.cae.wisc.edu/~ece533/images/barbara.png",
   title: "Image",
-  author: "author"
+  author: "author",
+  description: "asd"
 }, {
   name: "Something more",
   category: ["all", "others"],
   img: "https://homepages.cae.wisc.edu/~ece533/images/barbara.png",
   title: "Image",
-  author: "author"
+  author: "author",
+  description: "asd"
 }, {
   name: "Something more",
   category: ["all", "others"],
   img: "https://homepages.cae.wisc.edu/~ece533/images/barbara.png",
   title: "Image",
-  author: "author"
+  author: "author",
+  description: "asd"
 }];
 
 var Porfolio = /*#__PURE__*/function (_React$Component) {
@@ -97179,7 +98045,7 @@ var Porfolio = /*#__PURE__*/function (_React$Component) {
           style: {
             backgroundImage: "url(".concat(item.img, ")"),
             height: 250,
-            width: 350,
+            width: 370,
             backgroundSize: "cover"
           }
         }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_material_ui_core_Zoom__WEBPACK_IMPORTED_MODULE_34__["default"], {
@@ -97191,34 +98057,34 @@ var Porfolio = /*#__PURE__*/function (_React$Component) {
             display: "none",
             backgroundColor: "white",
             height: "100%",
-            width: 350,
+            width: 370,
             borderTop: "10px solid #303F9F"
           }
         }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_material_ui_core_Grid__WEBPACK_IMPORTED_MODULE_6__["default"], {
           container: true,
-          spacing: 4,
+          spacing: 2,
           style: {
             paddingBottom: 20,
-            paddingTop: 20
+            paddingLeft: 20,
+            paddingRight: 20
           }
         }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_material_ui_core_Grid__WEBPACK_IMPORTED_MODULE_6__["default"], {
           item: true,
           xs: 12
         }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_material_ui_core_Typography__WEBPACK_IMPORTED_MODULE_8__["default"], {
-          variant: "h5",
+          variant: "overline",
           component: "h2"
         }, " ", item.title, " "), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_material_ui_core_Typography__WEBPACK_IMPORTED_MODULE_8__["default"], {
           color: "secondary",
           variant: "overline",
           display: "block",
           gutterBottom: true
-        }, " ", item.category, " ")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_material_ui_core_Grid__WEBPACK_IMPORTED_MODULE_6__["default"], {
-          item: true,
-          xs: 12
-        }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_material_ui_core_Button__WEBPACK_IMPORTED_MODULE_13__["default"], {
-          variant: "outlined",
-          color: "secondary"
-        }, "Learn More"))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null)))) : "";
+        }, " ", item.category, " "), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_material_ui_core_Typography__WEBPACK_IMPORTED_MODULE_8__["default"], {
+          color: "",
+          variant: "body2",
+          display: "block",
+          gutterBottom: true
+        }, item.description))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null)))) : "";
       })))));
     }
   }]);
@@ -97244,33 +98110,36 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _material_ui_core_styles__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @material-ui/core/styles */ "./node_modules/@material-ui/core/esm/styles/index.js");
-/* harmony import */ var react_dom__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react-dom */ "./node_modules/react-dom/index.js");
-/* harmony import */ var react_dom__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(react_dom__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/esm/react-router-dom.js");
-/* harmony import */ var _ap_cx_react_fullpage__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @ap.cx/react-fullpage */ "./node_modules/@ap.cx/react-fullpage/dist/index.es.js");
-/* harmony import */ var _material_ui_core_Grid__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @material-ui/core/Grid */ "./node_modules/@material-ui/core/esm/Grid/index.js");
-/* harmony import */ var fontsource_roboto__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! fontsource-roboto */ "./node_modules/fontsource-roboto/index.css");
-/* harmony import */ var fontsource_roboto__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(fontsource_roboto__WEBPACK_IMPORTED_MODULE_6__);
-/* harmony import */ var _material_ui_core_Typography__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @material-ui/core/Typography */ "./node_modules/@material-ui/core/esm/Typography/index.js");
-/* harmony import */ var react_typing_animation__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! react-typing-animation */ "./node_modules/react-typing-animation/dist/index.js");
-/* harmony import */ var react_typing_animation__WEBPACK_IMPORTED_MODULE_8___default = /*#__PURE__*/__webpack_require__.n(react_typing_animation__WEBPACK_IMPORTED_MODULE_8__);
-/* harmony import */ var react_typist__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! react-typist */ "./node_modules/react-typist/dist/Typist.js");
-/* harmony import */ var react_typist__WEBPACK_IMPORTED_MODULE_9___default = /*#__PURE__*/__webpack_require__.n(react_typist__WEBPACK_IMPORTED_MODULE_9__);
-/* harmony import */ var react_typist_loop__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! react-typist-loop */ "./node_modules/react-typist-loop/lib/TypistLoop.js");
-/* harmony import */ var react_typist_loop__WEBPACK_IMPORTED_MODULE_10___default = /*#__PURE__*/__webpack_require__.n(react_typist_loop__WEBPACK_IMPORTED_MODULE_10__);
-/* harmony import */ var react_particles_js__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! react-particles-js */ "./node_modules/react-particles-js/index.js");
-/* harmony import */ var react_particles_js__WEBPACK_IMPORTED_MODULE_11___default = /*#__PURE__*/__webpack_require__.n(react_particles_js__WEBPACK_IMPORTED_MODULE_11__);
-/* harmony import */ var _material_ui_core_GridList__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! @material-ui/core/GridList */ "./node_modules/@material-ui/core/esm/GridList/index.js");
-/* harmony import */ var _images_wavetop_svg__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ../images/wavetop.svg */ "./resources/js/images/wavetop.svg");
-/* harmony import */ var _images_wavetop_svg__WEBPACK_IMPORTED_MODULE_13___default = /*#__PURE__*/__webpack_require__.n(_images_wavetop_svg__WEBPACK_IMPORTED_MODULE_13__);
-/* harmony import */ var react_lottie__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! react-lottie */ "./node_modules/react-lottie/dist/index.js");
-/* harmony import */ var react_lottie__WEBPACK_IMPORTED_MODULE_14___default = /*#__PURE__*/__webpack_require__.n(react_lottie__WEBPACK_IMPORTED_MODULE_14__);
-/* harmony import */ var _images_about_json__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ../images/about.json */ "./resources/js/images/about.json");
-var _images_about_json__WEBPACK_IMPORTED_MODULE_15___namespace = /*#__PURE__*/__webpack_require__.t(/*! ../images/about.json */ "./resources/js/images/about.json", 1);
-/* harmony import */ var react_skillbars__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! react-skillbars */ "./node_modules/react-skillbars/build-module/index.js");
-/* harmony import */ var react_skillbars__WEBPACK_IMPORTED_MODULE_16___default = /*#__PURE__*/__webpack_require__.n(react_skillbars__WEBPACK_IMPORTED_MODULE_16__);
-/* harmony import */ var _images_soliarehexa_png__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! ../images/soliarehexa.png */ "./resources/js/images/soliarehexa.png");
-/* harmony import */ var _images_soliarehexa_png__WEBPACK_IMPORTED_MODULE_17___default = /*#__PURE__*/__webpack_require__.n(_images_soliarehexa_png__WEBPACK_IMPORTED_MODULE_17__);
+/* harmony import */ var react_animate_on_scroll__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react-animate-on-scroll */ "./node_modules/react-animate-on-scroll/dist/scrollAnimation.min.js");
+/* harmony import */ var react_animate_on_scroll__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(react_animate_on_scroll__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var react_dom__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! react-dom */ "./node_modules/react-dom/index.js");
+/* harmony import */ var react_dom__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(react_dom__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/esm/react-router-dom.js");
+/* harmony import */ var _ap_cx_react_fullpage__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @ap.cx/react-fullpage */ "./node_modules/@ap.cx/react-fullpage/dist/index.es.js");
+/* harmony import */ var _material_ui_core_Grid__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @material-ui/core/Grid */ "./node_modules/@material-ui/core/esm/Grid/index.js");
+/* harmony import */ var fontsource_roboto__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! fontsource-roboto */ "./node_modules/fontsource-roboto/index.css");
+/* harmony import */ var fontsource_roboto__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(fontsource_roboto__WEBPACK_IMPORTED_MODULE_7__);
+/* harmony import */ var _material_ui_core_Typography__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! @material-ui/core/Typography */ "./node_modules/@material-ui/core/esm/Typography/index.js");
+/* harmony import */ var react_typing_animation__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! react-typing-animation */ "./node_modules/react-typing-animation/dist/index.js");
+/* harmony import */ var react_typing_animation__WEBPACK_IMPORTED_MODULE_9___default = /*#__PURE__*/__webpack_require__.n(react_typing_animation__WEBPACK_IMPORTED_MODULE_9__);
+/* harmony import */ var react_typist__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! react-typist */ "./node_modules/react-typist/dist/Typist.js");
+/* harmony import */ var react_typist__WEBPACK_IMPORTED_MODULE_10___default = /*#__PURE__*/__webpack_require__.n(react_typist__WEBPACK_IMPORTED_MODULE_10__);
+/* harmony import */ var react_typist_loop__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! react-typist-loop */ "./node_modules/react-typist-loop/lib/TypistLoop.js");
+/* harmony import */ var react_typist_loop__WEBPACK_IMPORTED_MODULE_11___default = /*#__PURE__*/__webpack_require__.n(react_typist_loop__WEBPACK_IMPORTED_MODULE_11__);
+/* harmony import */ var react_particles_js__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! react-particles-js */ "./node_modules/react-particles-js/index.js");
+/* harmony import */ var react_particles_js__WEBPACK_IMPORTED_MODULE_12___default = /*#__PURE__*/__webpack_require__.n(react_particles_js__WEBPACK_IMPORTED_MODULE_12__);
+/* harmony import */ var _material_ui_core_GridList__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! @material-ui/core/GridList */ "./node_modules/@material-ui/core/esm/GridList/index.js");
+/* harmony import */ var _images_wavetop_svg__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ../images/wavetop.svg */ "./resources/js/images/wavetop.svg");
+/* harmony import */ var _images_wavetop_svg__WEBPACK_IMPORTED_MODULE_14___default = /*#__PURE__*/__webpack_require__.n(_images_wavetop_svg__WEBPACK_IMPORTED_MODULE_14__);
+/* harmony import */ var react_lottie__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! react-lottie */ "./node_modules/react-lottie/dist/index.js");
+/* harmony import */ var react_lottie__WEBPACK_IMPORTED_MODULE_15___default = /*#__PURE__*/__webpack_require__.n(react_lottie__WEBPACK_IMPORTED_MODULE_15__);
+/* harmony import */ var _images_about_json__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! ../images/about.json */ "./resources/js/images/about.json");
+var _images_about_json__WEBPACK_IMPORTED_MODULE_16___namespace = /*#__PURE__*/__webpack_require__.t(/*! ../images/about.json */ "./resources/js/images/about.json", 1);
+/* harmony import */ var react_skillbars__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! react-skillbars */ "./node_modules/react-skillbars/build-module/index.js");
+/* harmony import */ var react_skillbars__WEBPACK_IMPORTED_MODULE_17___default = /*#__PURE__*/__webpack_require__.n(react_skillbars__WEBPACK_IMPORTED_MODULE_17__);
+/* harmony import */ var _images_soliarehexa_png__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(/*! ../images/soliarehexa.png */ "./resources/js/images/soliarehexa.png");
+/* harmony import */ var _images_soliarehexa_png__WEBPACK_IMPORTED_MODULE_18___default = /*#__PURE__*/__webpack_require__.n(_images_soliarehexa_png__WEBPACK_IMPORTED_MODULE_18__);
+/* harmony import */ var react_iframe__WEBPACK_IMPORTED_MODULE_19__ = __webpack_require__(/*! react-iframe */ "./node_modules/react-iframe/dist/es/iframe.js");
 function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
@@ -97310,40 +98179,42 @@ function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.g
 
 
 
+
  //lights
+
 
 
 
 var skills = [{
   type: "HTML",
-  level: 99
-}, {
-  type: "CSS",
-  level: 98
-}, {
-  type: "JavaScript",
-  level: 87
-}, {
-  type: "jQuery",
-  level: 92
-}, {
-  type: "BootStrap",
   level: 90
 }, {
-  type: "Photoshop",
-  level: 100
+  type: "CSS",
+  level: 90
 }, {
-  type: "Angular.js",
-  level: 16
+  type: "JavaScript",
+  level: 80
 }, {
-  type: "React.js",
-  level: 25
+  type: "jQuery",
+  level: 80
+}, {
+  type: "Laravel",
+  level: 80
+}, {
+  type: "React",
+  level: 80
+}, {
+  type: "Vue",
+  level: 60
+}, {
+  type: "Java",
+  level: 70
 }, {
   type: "PHP",
-  level: 36
+  level: 80
 }, {
-  type: "Ruby",
-  level: 11
+  type: "SQL",
+  level: 80
 }];
 var colors = {
   "bar": "#37b8d4",
@@ -97373,7 +98244,7 @@ var WhiteTextTypography = Object(_material_ui_core_styles__WEBPACK_IMPORTED_MODU
   root: {
     color: "white"
   }
-})(_material_ui_core_Typography__WEBPACK_IMPORTED_MODULE_7__["default"]);
+})(_material_ui_core_Typography__WEBPACK_IMPORTED_MODULE_8__["default"]);
 
 var Skills = /*#__PURE__*/function (_React$Component) {
   _inherits(Skills, _React$Component);
@@ -97395,13 +98266,33 @@ var Skills = /*#__PURE__*/function (_React$Component) {
   }
 
   _createClass(Skills, [{
+    key: "componentDidMount",
+    value: function componentDidMount() {
+      var _this2 = this;
+
+      var script = document.createElement("script");
+      script.src = "../js/TagCanvas.js";
+      script.async = true;
+
+      script.onload = function () {
+        return _this2.scriptLoaded();
+      };
+
+      document.body.appendChild(script);
+    }
+  }, {
+    key: "scriptLoaded",
+    value: function scriptLoaded() {
+      window.A.sort();
+    }
+  }, {
     key: "render",
     value: function render() {
       var classes = useStyles();
       var defaultOptions = {
         loop: true,
         autoplay: true,
-        animationData: _images_about_json__WEBPACK_IMPORTED_MODULE_15__,
+        animationData: _images_about_json__WEBPACK_IMPORTED_MODULE_16__,
         rendererSettings: {
           preserveAspectRatio: 'xMidYMid slice'
         }
@@ -97421,7 +98312,7 @@ var Skills = /*#__PURE__*/function (_React$Component) {
           position: "absolute",
           align: "center"
         }
-      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_particles_js__WEBPACK_IMPORTED_MODULE_11___default.a, {
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_particles_js__WEBPACK_IMPORTED_MODULE_12___default.a, {
         height: "100vh",
         width: "100vw",
         params: {
@@ -97480,7 +98371,7 @@ var Skills = /*#__PURE__*/function (_React$Component) {
           },
           "retina_detect": false
         }
-      })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_material_ui_core_Grid__WEBPACK_IMPORTED_MODULE_5__["default"], {
+      })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_material_ui_core_Grid__WEBPACK_IMPORTED_MODULE_6__["default"], {
         container: true,
         align: "center",
         direction: "row",
@@ -97490,7 +98381,7 @@ var Skills = /*#__PURE__*/function (_React$Component) {
           minHeight: "100vh",
           padding: '1em'
         }
-      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_material_ui_core_Grid__WEBPACK_IMPORTED_MODULE_5__["default"], {
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_material_ui_core_Grid__WEBPACK_IMPORTED_MODULE_6__["default"], {
         item: true,
         xs: 12
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(WhiteTextTypography, {
@@ -97499,12 +98390,12 @@ var Skills = /*#__PURE__*/function (_React$Component) {
       }, "ABOUT"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(WhiteTextTypography, {
         variant: "h4",
         component: "h2"
-      }, "___")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_material_ui_core_Grid__WEBPACK_IMPORTED_MODULE_5__["default"], {
+      }, "___")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_material_ui_core_Grid__WEBPACK_IMPORTED_MODULE_6__["default"], {
         item: true,
         xs: 12,
         md: 6
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("img", {
-        src: _images_soliarehexa_png__WEBPACK_IMPORTED_MODULE_17___default.a,
+        src: _images_soliarehexa_png__WEBPACK_IMPORTED_MODULE_18___default.a,
         style: {
           height: "250px"
         },
@@ -97515,17 +98406,20 @@ var Skills = /*#__PURE__*/function (_React$Component) {
       }, "Who's this guy?"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(WhiteTextTypography, {
         variant: "h6",
         gutterBottom: true
-      }, "I'm a Front-End Developer for ChowNow in Los Angeles, CA. I have serious passion for UI effects, animations and creating intuitive, dynamic user experiences. Let's make something special.")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_material_ui_core_Grid__WEBPACK_IMPORTED_MODULE_5__["default"], {
+      }, "I'm a innovative fullstack Developer for Pylon International Corp. base in San Pablo City as a contractor with a year of experience managing all aspects of developement process for small to large scale projects. Let's make something special.")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_material_ui_core_Grid__WEBPACK_IMPORTED_MODULE_6__["default"], {
         item: true,
         xs: 12,
         md: 6,
         style: {
           padding: '1em'
         }
-      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_skillbars__WEBPACK_IMPORTED_MODULE_16___default.a, {
-        colors: colors,
-        height: 25,
-        skills: skills
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_iframe__WEBPACK_IMPORTED_MODULE_19__["default"], {
+        url: "/skills/skillschart",
+        width: "100%",
+        height: "400px",
+        frameBorder: "0",
+        display: "initial",
+        position: "relative"
       }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(WhiteTextTypography, {
         variant: "h6",
         gutterBottom: true
@@ -97653,6 +98547,50 @@ module.exports = JSON.parse("{\"v\":\"5.2.1\",\"fr\":29.9700012207031,\"ip\":0,\
 /***/ (function(module) {
 
 module.exports = JSON.parse("{\"v\":\"5.6.6\",\"fr\":24,\"ip\":0,\"op\":120,\"w\":3500,\"h\":3500,\"nm\":\"Wavy_Bus-05_Single-04\",\"ddd\":0,\"assets\":[],\"layers\":[{\"ddd\":0,\"ind\":1,\"ty\":4,\"nm\":\"head girl\",\"parent\":2,\"sr\":1,\"ks\":{\"o\":{\"a\":0,\"k\":100,\"ix\":11},\"r\":{\"a\":0,\"k\":0,\"ix\":10},\"p\":{\"a\":0,\"k\":[989.354,327.23,0],\"ix\":2},\"a\":{\"a\":0,\"k\":[-34,22,0],\"ix\":1},\"s\":{\"a\":0,\"k\":[100,100,100],\"ix\":6}},\"ao\":0,\"shapes\":[{\"ty\":\"gr\",\"it\":[{\"ind\":0,\"ty\":\"sh\",\"ix\":1,\"ks\":{\"a\":0,\"k\":{\"i\":[[-1.443,-2.38],[-30.471,-17.1],[8.622,23.328],[10.738,3.361],[12.238,-24.059],[3.857,-1.156],[0.166,-2.017]],\"o\":[[0,0],[27.284,15.315],[-2.875,-7.781],[-7.552,-2.365],[-3.206,-7.035],[-4.894,1.462],[-0.567,6.996]],\"v\":[[-42.21,-6.486],[-19.896,45.213],[44.926,-25.573],[21.039,-46.717],[-27.327,-24.112],[-40.129,-33.677],[-45.908,-21.289]],\"c\":true},\"ix\":2},\"nm\":\"Path 1\",\"mn\":\"ADBE Vector Shape - Group\",\"hd\":false},{\"ty\":\"gf\",\"o\":{\"a\":0,\"k\":100,\"ix\":10},\"r\":1,\"bm\":0,\"g\":{\"p\":3,\"k\":{\"a\":0,\"k\":[0,1,0.769,0.267,0.498,0.976,0.602,0.302,0.996,0.953,0.435,0.337],\"ix\":9}},\"s\":{\"a\":0,\"k\":[19.646,-145.343],\"ix\":5},\"e\":{\"a\":0,\"k\":[-61.461,357.523],\"ix\":6},\"t\":1,\"nm\":\"Gradient Fill 1\",\"mn\":\"ADBE Vector Graphic - G-Fill\",\"hd\":false},{\"ty\":\"tr\",\"p\":{\"a\":0,\"k\":[0,0],\"ix\":2},\"a\":{\"a\":0,\"k\":[0,0],\"ix\":1},\"s\":{\"a\":0,\"k\":[100,100],\"ix\":3},\"r\":{\"a\":0,\"k\":0,\"ix\":6},\"o\":{\"a\":0,\"k\":100,\"ix\":7},\"sk\":{\"a\":0,\"k\":0,\"ix\":4},\"sa\":{\"a\":0,\"k\":0,\"ix\":5},\"nm\":\"Transform\"}],\"nm\":\"head girl\",\"np\":2,\"cix\":2,\"bm\":0,\"ix\":1,\"mn\":\"ADBE Vector Group\",\"hd\":false}],\"ip\":0,\"op\":240,\"st\":0,\"bm\":0},{\"ddd\":0,\"ind\":2,\"ty\":4,\"nm\":\"neck girl\",\"parent\":7,\"sr\":1,\"ks\":{\"o\":{\"a\":0,\"k\":100,\"ix\":11},\"r\":{\"a\":0,\"k\":0,\"ix\":10},\"p\":{\"a\":0,\"k\":[953.399,360.349,0],\"ix\":2},\"a\":{\"a\":0,\"k\":[953.399,360.349,0],\"ix\":1},\"s\":{\"a\":0,\"k\":[100,100,100],\"ix\":6}},\"ao\":0,\"shapes\":[{\"ty\":\"gr\",\"it\":[{\"ty\":\"gr\",\"it\":[{\"ind\":0,\"ty\":\"sh\",\"ix\":1,\"ks\":{\"a\":0,\"k\":{\"i\":[[20.429,-12.683],[3.638,-4.498],[-64.524,32.561],[38.897,7.779],[-1.111,16.67],[0,0]],\"o\":[[-20.432,12.675],[-3.637,4.491],[0,0],[-8.288,-1.658],[0,0],[0,0]],\"v\":[[-25.723,-1.901],[-82.822,31.839],[81.762,21.526],[52.867,8.19],[47.309,-26.262],[39.53,-40.71]],\"c\":true},\"ix\":2},\"nm\":\"Path 1\",\"mn\":\"ADBE Vector Shape - Group\",\"hd\":false},{\"ty\":\"gf\",\"o\":{\"a\":0,\"k\":100,\"ix\":10},\"r\":1,\"bm\":0,\"g\":{\"p\":3,\"k\":{\"a\":0,\"k\":[0,1,0.769,0.267,0.5,0.976,0.602,0.302,1,0.953,0.435,0.337],\"ix\":9}},\"s\":{\"a\":0,\"k\":[-26,-162.222],\"ix\":5},\"e\":{\"a\":0,\"k\":[21.333,157.889],\"ix\":6},\"t\":1,\"nm\":\"Gradient Fill 1\",\"mn\":\"ADBE Vector Graphic - G-Fill\",\"hd\":false},{\"ty\":\"tr\",\"p\":{\"a\":0,\"k\":[953.399,360.349],\"ix\":2},\"a\":{\"a\":0,\"k\":[0,0],\"ix\":1},\"s\":{\"a\":0,\"k\":[100,100],\"ix\":3},\"r\":{\"a\":0,\"k\":0,\"ix\":6},\"o\":{\"a\":0,\"k\":100,\"ix\":7},\"sk\":{\"a\":0,\"k\":0,\"ix\":4},\"sa\":{\"a\":0,\"k\":0,\"ix\":5},\"nm\":\"Transform\"}],\"nm\":\"Group 3\",\"np\":2,\"cix\":2,\"bm\":0,\"ix\":1,\"mn\":\"ADBE Vector Group\",\"hd\":false},{\"ty\":\"tr\",\"p\":{\"a\":0,\"k\":[1190.021,655.74],\"ix\":2},\"a\":{\"a\":0,\"k\":[1190.021,655.74],\"ix\":1},\"s\":{\"a\":0,\"k\":[100,100],\"ix\":3},\"r\":{\"a\":0,\"k\":0,\"ix\":6},\"o\":{\"a\":0,\"k\":100,\"ix\":7},\"sk\":{\"a\":0,\"k\":0,\"ix\":4},\"sa\":{\"a\":0,\"k\":0,\"ix\":5},\"nm\":\"Transform\"}],\"nm\":\"Group 1\",\"np\":1,\"cix\":2,\"bm\":0,\"ix\":1,\"mn\":\"ADBE Vector Group\",\"hd\":false}],\"ip\":0,\"op\":240,\"st\":0,\"bm\":0},{\"ddd\":0,\"ind\":3,\"ty\":4,\"nm\":\"arm L girl\",\"parent\":7,\"sr\":1,\"ks\":{\"o\":{\"a\":0,\"k\":100,\"ix\":11},\"r\":{\"a\":0,\"k\":0,\"ix\":10},\"p\":{\"a\":0,\"k\":[779.686,404.345,0],\"ix\":2},\"a\":{\"a\":0,\"k\":[45,-221,0],\"ix\":1},\"s\":{\"a\":0,\"k\":[100,100,100],\"ix\":6}},\"ao\":0,\"shapes\":[{\"ty\":\"gr\",\"it\":[{\"ind\":0,\"ty\":\"sh\",\"ix\":1,\"ks\":{\"a\":0,\"k\":{\"i\":[[0.027,0.206],[1.415,94.186],[39.854,0.968],[-45.941,-164.031],[-45.362,0],[0,50.974]],\"o\":[[-6.524,-48.844],[-1.119,-74.605],[-67.951,-1.651],[7.755,43.129],[50.974,0],[0,-2.758]],\"v\":[[65.647,137.944],[126.623,-80.369],[42.864,-239.152],[-117.484,163.306],[-26.649,239.16],[65.647,146.864]],\"c\":true},\"ix\":2},\"nm\":\"Path 1\",\"mn\":\"ADBE Vector Shape - Group\",\"hd\":false},{\"ty\":\"gf\",\"o\":{\"a\":0,\"k\":100,\"ix\":10},\"r\":1,\"bm\":0,\"g\":{\"p\":3,\"k\":{\"a\":0,\"k\":[0,0.996,0.737,0.275,0.5,0.976,0.573,0.278,1,0.957,0.408,0.282],\"ix\":9}},\"s\":{\"a\":0,\"k\":[-11.686,361.987],\"ix\":5},\"e\":{\"a\":0,\"k\":[-685.908,-327.791],\"ix\":6},\"t\":1,\"nm\":\"Gradient Fill 1\",\"mn\":\"ADBE Vector Graphic - G-Fill\",\"hd\":false},{\"ty\":\"tr\",\"p\":{\"a\":0,\"k\":[0,0],\"ix\":2},\"a\":{\"a\":0,\"k\":[0,0],\"ix\":1},\"s\":{\"a\":0,\"k\":[100,100],\"ix\":3},\"r\":{\"a\":0,\"k\":0,\"ix\":6},\"o\":{\"a\":0,\"k\":100,\"ix\":7},\"sk\":{\"a\":0,\"k\":0,\"ix\":4},\"sa\":{\"a\":0,\"k\":0,\"ix\":5},\"nm\":\"Transform\"}],\"nm\":\"arm L girl\",\"np\":2,\"cix\":2,\"bm\":0,\"ix\":1,\"mn\":\"ADBE Vector Group\",\"hd\":false}],\"ip\":0,\"op\":240,\"st\":0,\"bm\":0},{\"ddd\":0,\"ind\":4,\"ty\":4,\"nm\":\"hand L girl\",\"parent\":5,\"sr\":1,\"ks\":{\"o\":{\"a\":0,\"k\":100,\"ix\":11},\"r\":{\"a\":1,\"k\":[{\"i\":{\"x\":[0],\"y\":[1]},\"o\":{\"x\":[0.333],\"y\":[0]},\"t\":0.959,\"s\":[-9]},{\"i\":{\"x\":[0.194],\"y\":[1]},\"o\":{\"x\":[0.333],\"y\":[0]},\"t\":12.466,\"s\":[6]},{\"i\":{\"x\":[0.833],\"y\":[1]},\"o\":{\"x\":[0.172],\"y\":[0]},\"t\":35,\"s\":[-9]},{\"i\":{\"x\":[0.235],\"y\":[1]},\"o\":{\"x\":[0.52],\"y\":[0]},\"t\":48.807,\"s\":[-9]},{\"i\":{\"x\":[0.742],\"y\":[0.844]},\"o\":{\"x\":[0.437],\"y\":[0]},\"t\":58.491,\"s\":[6]},{\"i\":{\"x\":[0.401],\"y\":[1]},\"o\":{\"x\":[0.284],\"y\":[-0.142]},\"t\":66.433,\"s\":[-9.665]},{\"i\":{\"x\":[0.598],\"y\":[1]},\"o\":{\"x\":[0.467],\"y\":[0]},\"t\":73,\"s\":[6]},{\"t\":108.958984375,\"s\":[-9]}],\"ix\":10},\"p\":{\"a\":0,\"k\":[193.345,71.112,0],\"ix\":2},\"a\":{\"a\":0,\"k\":[-54.5,-3,0],\"ix\":1},\"s\":{\"a\":0,\"k\":[100,100,100],\"ix\":6}},\"ao\":0,\"shapes\":[{\"ty\":\"gr\",\"it\":[{\"ind\":0,\"ty\":\"sh\",\"ix\":1,\"ks\":{\"a\":0,\"k\":{\"i\":[[-5.179,2.753],[-2.36,-1.116],[-9.887,-10.099],[4.836,-5.893],[18.041,11.22],[13.487,-1.242],[8.991,6.754],[-2.369,7.772]],\"o\":[[30.601,-16.255],[6.725,3.173],[1.119,1.525],[-3.876,4.722],[-7.562,-1.061],[-24.767,2.285],[-6.584,-4.943],[2.544,-8.349]],\"v\":[[-45.215,-20.572],[24.375,-19.049],[50.772,-0.122],[60.328,25.689],[23.4,15.277],[-8.906,14.485],[-54.009,17.84],[-60.468,-5.329]],\"c\":true},\"ix\":2},\"nm\":\"Path 1\",\"mn\":\"ADBE Vector Shape - Group\",\"hd\":false},{\"ty\":\"gf\",\"o\":{\"a\":0,\"k\":100,\"ix\":10},\"r\":1,\"bm\":0,\"g\":{\"p\":3,\"k\":{\"a\":0,\"k\":[0,1,0.769,0.267,0.498,0.976,0.602,0.302,0.996,0.953,0.435,0.337],\"ix\":9}},\"s\":{\"a\":0,\"k\":[72.564,46.75],\"ix\":5},\"e\":{\"a\":0,\"k\":[-134.365,-84.177],\"ix\":6},\"t\":1,\"nm\":\"Gradient Fill 1\",\"mn\":\"ADBE Vector Graphic - G-Fill\",\"hd\":false},{\"ty\":\"tr\",\"p\":{\"a\":0,\"k\":[0,0],\"ix\":2},\"a\":{\"a\":0,\"k\":[0,0],\"ix\":1},\"s\":{\"a\":0,\"k\":[100,100],\"ix\":3},\"r\":{\"a\":0,\"k\":0,\"ix\":6},\"o\":{\"a\":0,\"k\":100,\"ix\":7},\"sk\":{\"a\":0,\"k\":0,\"ix\":4},\"sa\":{\"a\":0,\"k\":0,\"ix\":5},\"nm\":\"Transform\"}],\"nm\":\"hand L girl\",\"np\":2,\"cix\":2,\"bm\":0,\"ix\":1,\"mn\":\"ADBE Vector Group\",\"hd\":false}],\"ip\":0,\"op\":240,\"st\":0,\"bm\":0},{\"ddd\":0,\"ind\":5,\"ty\":4,\"nm\":\"forearm L girl\",\"parent\":3,\"sr\":1,\"ks\":{\"o\":{\"a\":0,\"k\":100,\"ix\":11},\"r\":{\"a\":1,\"k\":[{\"i\":{\"x\":[0],\"y\":[1]},\"o\":{\"x\":[0.333],\"y\":[0]},\"t\":0,\"s\":[-5]},{\"i\":{\"x\":[0.194],\"y\":[1]},\"o\":{\"x\":[0.333],\"y\":[0]},\"t\":11.507,\"s\":[0]},{\"i\":{\"x\":[0.667],\"y\":[1]},\"o\":{\"x\":[0.172],\"y\":[0]},\"t\":34.041,\"s\":[-5]},{\"i\":{\"x\":[0.514],\"y\":[1]},\"o\":{\"x\":[0.52],\"y\":[0]},\"t\":48,\"s\":[-5]},{\"i\":{\"x\":[0],\"y\":[1]},\"o\":{\"x\":[0.48],\"y\":[0]},\"t\":57.685,\"s\":[0]},{\"i\":{\"x\":[0.604],\"y\":[1]},\"o\":{\"x\":[0.453],\"y\":[0]},\"t\":72.193,\"s\":[0]},{\"t\":108,\"s\":[-5]}],\"ix\":10},\"p\":{\"a\":0,\"k\":[-26.945,135.553,0],\"ix\":2},\"a\":{\"a\":0,\"k\":[-111,-46,0],\"ix\":1},\"s\":{\"a\":0,\"k\":[100,100,100],\"ix\":6}},\"ao\":0,\"shapes\":[{\"ty\":\"gr\",\"it\":[{\"ind\":0,\"ty\":\"sh\",\"ix\":1,\"ks\":{\"a\":0,\"k\":{\"i\":[[69.146,24.708],[4.57,6.061],[0.896,7.099],[0.043,0.278],[47.564,0],[0,-50.974],[-6.287,-12.473],[-17.66,-17.223],[-128.056,58.44],[-4.41,11.65]],\"o\":[[-17.085,-6.105],[-4.497,-5.965],[-0.036,-0.279],[-5.025,-46.227],[-50.974,0],[0,14.921],[9.222,21.723],[74.668,72.818],[4.411,-11.646],[-48.743,-13.364]],\"v\":[[17.326,-4.277],[-10.583,-24.335],[-18.451,-43.943],[-18.589,-44.777],[-110.334,-126.985],[-202.63,-34.689],[-192.798,6.796],[-152.826,65.651],[189.398,88.48],[202.63,53.539]],\"c\":true},\"ix\":2},\"nm\":\"Path 1\",\"mn\":\"ADBE Vector Shape - Group\",\"hd\":false},{\"ty\":\"gf\",\"o\":{\"a\":0,\"k\":100,\"ix\":10},\"r\":1,\"bm\":0,\"g\":{\"p\":3,\"k\":{\"a\":0,\"k\":[0,1,0.769,0.267,0.498,0.976,0.602,0.302,0.996,0.953,0.435,0.337],\"ix\":9}},\"s\":{\"a\":0,\"k\":[-39.4,150.456],\"ix\":5},\"e\":{\"a\":0,\"k\":[-687.208,-838.261],\"ix\":6},\"t\":1,\"nm\":\"Gradient Fill 1\",\"mn\":\"ADBE Vector Graphic - G-Fill\",\"hd\":false},{\"ty\":\"tr\",\"p\":{\"a\":0,\"k\":[0,0],\"ix\":2},\"a\":{\"a\":0,\"k\":[0,0],\"ix\":1},\"s\":{\"a\":0,\"k\":[100,100],\"ix\":3},\"r\":{\"a\":0,\"k\":0,\"ix\":6},\"o\":{\"a\":0,\"k\":100,\"ix\":7},\"sk\":{\"a\":0,\"k\":0,\"ix\":4},\"sa\":{\"a\":0,\"k\":0,\"ix\":5},\"nm\":\"Transform\"}],\"nm\":\"forearm L girl\",\"np\":2,\"cix\":2,\"bm\":0,\"ix\":1,\"mn\":\"ADBE Vector Group\",\"hd\":false}],\"ip\":0,\"op\":240,\"st\":0,\"bm\":0},{\"ddd\":0,\"ind\":6,\"ty\":4,\"nm\":\"laptop\",\"sr\":1,\"ks\":{\"o\":{\"a\":0,\"k\":100,\"ix\":11},\"r\":{\"a\":0,\"k\":0,\"ix\":10},\"p\":{\"a\":0,\"k\":[1305.371,948.141,0],\"ix\":2},\"a\":{\"a\":0,\"k\":[1294.693,842.992,0],\"ix\":1},\"s\":{\"a\":0,\"k\":[90,90,100],\"ix\":6}},\"ao\":0,\"shapes\":[{\"ty\":\"gr\",\"it\":[{\"ind\":0,\"ty\":\"sh\",\"ix\":1,\"ks\":{\"a\":0,\"k\":{\"i\":[[0,0],[-10.359,0.201],[0,0],[-6.914,-8.346],[-26.73,-27.574],[-26.251,-28.191],[-51.365,-18.988],[0,0],[10.148,-0.404],[0,0]],\"o\":[[5.12,-9.008],[0,0],[1.144,11.3],[21.585,26.054],[29.362,30.288],[27.634,29.67],[0,0],[-5.216,8.715],[0,0],[0,0]],\"v\":[[-79.643,-99.139],[-54.68,-113.989],[-47.009,-114.138],[-35.483,-84.155],[48.695,-46.598],[77.183,47.938],[200.864,72.439],[193.467,84.794],[168.844,99.408],[-200.864,114.138]],\"c\":true},\"ix\":2},\"nm\":\"Path 1\",\"mn\":\"ADBE Vector Shape - Group\",\"hd\":false},{\"ty\":\"gf\",\"o\":{\"a\":0,\"k\":100,\"ix\":10},\"r\":1,\"bm\":0,\"g\":{\"p\":3,\"k\":{\"a\":0,\"k\":[0.004,0.89,0.553,0.867,0.502,0.737,0.498,0.916,1,0.584,0.443,0.965],\"ix\":9}},\"s\":{\"a\":0,\"k\":[1659.117,-138.895],\"ix\":5},\"e\":{\"a\":0,\"k\":[1416.299,-379.771],\"ix\":6},\"t\":1,\"nm\":\"Gradient Fill 1\",\"mn\":\"ADBE Vector Graphic - G-Fill\",\"hd\":false},{\"ty\":\"tr\",\"p\":{\"a\":0,\"k\":[1350.117,841.895],\"ix\":2},\"a\":{\"a\":0,\"k\":[0,0],\"ix\":1},\"s\":{\"a\":0,\"k\":[100,100],\"ix\":3},\"r\":{\"a\":0,\"k\":0,\"ix\":6},\"o\":{\"a\":0,\"k\":30,\"ix\":7},\"sk\":{\"a\":0,\"k\":0,\"ix\":4},\"sa\":{\"a\":0,\"k\":0,\"ix\":5},\"nm\":\"Transform\"}],\"nm\":\"lap 1\",\"np\":2,\"cix\":2,\"bm\":1,\"ix\":1,\"mn\":\"ADBE Vector Group\",\"hd\":false},{\"ty\":\"gr\",\"it\":[{\"ind\":0,\"ty\":\"sh\",\"ix\":1,\"ks\":{\"a\":0,\"k\":{\"i\":[[9.308,-0.181],[0,0],[5.117,-9.006],[0,0],[0,0],[-5.216,8.714],[0,0]],\"o\":[[0,0],[-10.359,0.201],[0,0],[0,0],[10.148,-0.404],[0,0],[4.782,-7.986]],\"v\":[[242.072,-117.454],[-107.989,-110.671],[-132.95,-95.822],[-254.173,117.456],[115.535,102.727],[140.158,88.114],[252.47,-99.519]],\"c\":true},\"ix\":2},\"nm\":\"Path 1\",\"mn\":\"ADBE Vector Shape - Group\",\"hd\":false},{\"ty\":\"gf\",\"o\":{\"a\":0,\"k\":100,\"ix\":10},\"r\":1,\"bm\":0,\"g\":{\"p\":3,\"k\":{\"a\":0,\"k\":[0.004,0.251,0.267,0.494,0.502,0.224,0.237,0.457,1,0.196,0.208,0.42],\"ix\":9}},\"s\":{\"a\":0,\"k\":[183.351,-73.91],\"ix\":5},\"e\":{\"a\":0,\"k\":[260.586,-149.466],\"ix\":6},\"t\":1,\"nm\":\"Gradient Fill 1\",\"mn\":\"ADBE Vector Graphic - G-Fill\",\"hd\":false},{\"ty\":\"tr\",\"p\":{\"a\":0,\"k\":[1403.426,838.577],\"ix\":2},\"a\":{\"a\":0,\"k\":[0,0],\"ix\":1},\"s\":{\"a\":0,\"k\":[100,100],\"ix\":3},\"r\":{\"a\":0,\"k\":0,\"ix\":6},\"o\":{\"a\":0,\"k\":100,\"ix\":7},\"sk\":{\"a\":0,\"k\":0,\"ix\":4},\"sa\":{\"a\":0,\"k\":0,\"ix\":5},\"nm\":\"Transform\"}],\"nm\":\"lap 2\",\"np\":2,\"cix\":2,\"bm\":0,\"ix\":2,\"mn\":\"ADBE Vector Group\",\"hd\":false},{\"ty\":\"gr\",\"it\":[{\"ind\":0,\"ty\":\"sh\",\"ix\":1,\"ks\":{\"a\":0,\"k\":{\"i\":[[0,0],[0,0],[2.467,-3.962],[0,0],[-8.821,0.336],[0,0]],\"o\":[[0,0],[-4.664,0.229],[0,0],[-4.666,7.491],[0,0],[0,0]],\"v\":[[176.109,-27.525],[-162.734,-11.037],[-174.119,-4.348],[-183.495,10.701],[-173.734,27.517],[185.179,13.844]],\"c\":true},\"ix\":2},\"nm\":\"Path 1\",\"mn\":\"ADBE Vector Shape - Group\",\"hd\":false},{\"ty\":\"gf\",\"o\":{\"a\":0,\"k\":100,\"ix\":10},\"r\":1,\"bm\":0,\"g\":{\"p\":3,\"k\":{\"a\":0,\"k\":[0.004,0.22,0.235,0.451,0.502,0.22,0.229,0.471,1,0.22,0.224,0.49],\"ix\":9}},\"s\":{\"a\":0,\"k\":[-185.966,-0.339],\"ix\":5},\"e\":{\"a\":0,\"k\":[184.392,-0.339],\"ix\":6},\"t\":1,\"nm\":\"Gradient Fill 1\",\"mn\":\"ADBE Vector Graphic - G-Fill\",\"hd\":false},{\"ty\":\"tr\",\"p\":{\"a\":0,\"k\":[1116.966,937.339],\"ix\":2},\"a\":{\"a\":0,\"k\":[0,0],\"ix\":1},\"s\":{\"a\":0,\"k\":[100,100],\"ix\":3},\"r\":{\"a\":0,\"k\":0,\"ix\":6},\"o\":{\"a\":0,\"k\":100,\"ix\":7},\"sk\":{\"a\":0,\"k\":0,\"ix\":4},\"sa\":{\"a\":0,\"k\":0,\"ix\":5},\"nm\":\"Transform\"}],\"nm\":\"lap 3\",\"np\":2,\"cix\":2,\"bm\":0,\"ix\":3,\"mn\":\"ADBE Vector Group\",\"hd\":false}],\"ip\":0,\"op\":240,\"st\":0,\"bm\":0},{\"ddd\":0,\"ind\":7,\"ty\":4,\"nm\":\"body girl\",\"sr\":1,\"ks\":{\"o\":{\"a\":0,\"k\":100,\"ix\":11},\"r\":{\"a\":0,\"k\":0,\"ix\":10},\"p\":{\"a\":0,\"k\":[1113.471,966.462,0],\"ix\":2},\"a\":{\"a\":0,\"k\":[1081.47,863.349,0],\"ix\":1},\"s\":{\"a\":0,\"k\":[90,90,100],\"ix\":6}},\"ao\":0,\"shapes\":[{\"ty\":\"gr\",\"it\":[{\"ind\":0,\"ty\":\"sh\",\"ix\":1,\"ks\":{\"a\":0,\"k\":{\"i\":[[25.04,-10.379],[42.657,-15.675],[40.586,-12.414],[9.226,5.548],[-39.182,36.456],[-28.795,43.469],[9.773,20.794],[18.33,23.306],[21.121,63.838],[86.557,21.374],[-3.686,-40.609],[42.953,-33.086],[40.454,-32.6],[29.075,-14.21],[10.695,-15.48],[-23.948,-21.132],[-81.59,46.865],[-55.712,32.707],[-30.824,13.517],[-32.659,7.381]],\"o\":[[-30.85,12.787],[-40.691,14.952],[-60.958,18.646],[-8.454,-5.083],[44.998,-41.868],[11.203,-16.913],[-13.244,-28.179],[-32.933,-41.872],[-8.429,-25.477],[1.175,63.99],[12.057,132.823],[-27.535,21.211],[-33.615,27.087],[-43.888,21.45],[-7.854,11.372],[64.237,56.679],[25.799,-14.819],[23.792,-13.969],[74.725,-32.77],[-64.841,-43.238]],\"v\":[[195.465,88.264],[117.794,144.36],[22.863,152.99],[-70.629,224.908],[-31.794,127.1],[90.465,60.936],[100.534,-3.789],[34.37,-45.501],[57.384,-226.733],[-64.442,-305.517],[-55.894,-147.442],[-67.25,97.691],[-163.364,134.421],[-220.529,198.707],[-322.94,200.473],[-289.392,264.038],[-21.004,269.336],[70.814,209.302],[153.802,165.159],[324.845,121.836]],\"c\":true},\"ix\":2},\"nm\":\"Path 1\",\"mn\":\"ADBE Vector Shape - Group\",\"hd\":false},{\"ty\":\"gf\",\"o\":{\"a\":0,\"k\":100,\"ix\":10},\"r\":1,\"bm\":0,\"g\":{\"p\":3,\"k\":{\"a\":0,\"k\":[0,1,0.565,0.522,0.5,0.992,0.5,0.627,1,0.984,0.435,0.733],\"ix\":9}},\"s\":{\"a\":0,\"k\":[-79.187,95.378],\"ix\":5},\"e\":{\"a\":0,\"k\":[391.153,-327.497],\"ix\":6},\"t\":1,\"nm\":\"Gradient Fill 1\",\"mn\":\"ADBE Vector Graphic - G-Fill\",\"hd\":false},{\"ty\":\"tr\",\"p\":{\"a\":0,\"k\":[830.187,766.622],\"ix\":2},\"a\":{\"a\":0,\"k\":[0,0],\"ix\":1},\"s\":{\"a\":0,\"k\":[100,100],\"ix\":3},\"r\":{\"a\":0,\"k\":0,\"ix\":6},\"o\":{\"a\":0,\"k\":30,\"ix\":7},\"sk\":{\"a\":0,\"k\":0,\"ix\":4},\"sa\":{\"a\":0,\"k\":0,\"ix\":5},\"nm\":\"Transform\"}],\"nm\":\"shadow \",\"np\":2,\"cix\":2,\"bm\":1,\"ix\":1,\"mn\":\"ADBE Vector Group\",\"hd\":false},{\"ty\":\"gr\",\"it\":[{\"ind\":0,\"ty\":\"sh\",\"ix\":1,\"ks\":{\"a\":0,\"k\":{\"i\":[[-1.254,96.371],[-70.898,0.964],[-5.487,-14.064],[-9.952,-45.708],[-11.504,-29.365],[9.913,-67.104],[-24.012,-34.591],[1.779,-11.417],[106.479,-46.696],[23.792,-13.969],[25.799,-14.818],[64.237,56.68],[-7.854,11.37],[-43.888,21.45],[-33.615,27.086],[-27.535,21.211],[12.057,132.823]],\"o\":[[55.316,-6.815],[149.811,-2.034],[10.231,26.214],[5.95,27.33],[11.211,28.617],[-12.675,85.808],[16.684,24.035],[-3.79,24.324],[-30.824,13.516],[-55.712,32.707],[-81.59,46.867],[-23.948,-21.131],[10.695,-15.481],[29.075,-14.211],[40.454,-32.599],[42.952,-33.087],[-4.991,-54.987]],\"v\":[[-76.361,-334.858],[113.654,-347.825],[290.399,-316.8],[293.056,-231.74],[304.885,-162.591],[297.39,-51.484],[302.879,112.525],[336.45,150.012],[142.08,207.617],[59.091,251.76],[-32.727,311.793],[-301.115,306.496],[-334.663,242.931],[-232.252,241.165],[-175.087,176.879],[-78.972,140.15],[-67.617,-104.984]],\"c\":true},\"ix\":2},\"nm\":\"Path 1\",\"mn\":\"ADBE Vector Shape - Group\",\"hd\":false},{\"ty\":\"gf\",\"o\":{\"a\":0,\"k\":100,\"ix\":10},\"r\":1,\"bm\":0,\"g\":{\"p\":3,\"k\":{\"a\":0,\"k\":[0,1,0.769,0.267,0.5,0.976,0.602,0.302,1,0.953,0.435,0.337],\"ix\":9}},\"s\":{\"a\":0,\"k\":[331.201,-399.719],\"ix\":5},\"e\":{\"a\":0,\"k\":[-283.559,417.499],\"ix\":6},\"t\":1,\"nm\":\"Gradient Fill 1\",\"mn\":\"ADBE Vector Graphic - G-Fill\",\"hd\":false},{\"ty\":\"tr\",\"p\":{\"a\":0,\"k\":[841.91,724.164],\"ix\":2},\"a\":{\"a\":0,\"k\":[0,0],\"ix\":1},\"s\":{\"a\":0,\"k\":[100,100],\"ix\":3},\"r\":{\"a\":0,\"k\":0,\"ix\":6},\"o\":{\"a\":0,\"k\":100,\"ix\":7},\"sk\":{\"a\":0,\"k\":0,\"ix\":4},\"sa\":{\"a\":0,\"k\":0,\"ix\":5},\"nm\":\"Transform\"}],\"nm\":\"shape\",\"np\":2,\"cix\":2,\"bm\":0,\"ix\":2,\"mn\":\"ADBE Vector Group\",\"hd\":false},{\"ty\":\"gr\",\"it\":[{\"ind\":0,\"ty\":\"sh\",\"ix\":1,\"ks\":{\"a\":0,\"k\":{\"i\":[[-39.01,11.394],[-35.231,-48.404],[16.589,-101.592],[24.421,11.135],[30.766,89.912],[27.583,71.13]],\"o\":[[31.71,-9.262],[52.707,72.413],[-16.321,99.951],[-20.887,-9.524],[-24.825,-72.551],[-34.233,-88.277]],\"v\":[[-91.923,-266.099],[27.089,-159.374],[124.787,99.237],[-1.645,265.896],[-13.139,99.237],[-106.679,-44.471]],\"c\":true},\"ix\":2},\"nm\":\"Path 1\",\"mn\":\"ADBE Vector Shape - Group\",\"hd\":false},{\"ty\":\"gf\",\"o\":{\"a\":0,\"k\":100,\"ix\":10},\"r\":1,\"bm\":0,\"g\":{\"p\":3,\"k\":{\"a\":0,\"k\":[0,0.996,0.737,0.275,0.5,0.976,0.573,0.278,1,0.957,0.408,0.282],\"ix\":9}},\"s\":{\"a\":0,\"k\":[-68.355,-312.407],\"ix\":5},\"e\":{\"a\":0,\"k\":[530.22,407.036],\"ix\":6},\"t\":1,\"nm\":\"Gradient Fill 1\",\"mn\":\"ADBE Vector Graphic - G-Fill\",\"hd\":false},{\"ty\":\"tr\",\"p\":{\"a\":0,\"k\":[1190.021,655.74],\"ix\":2},\"a\":{\"a\":0,\"k\":[0,0],\"ix\":1},\"s\":{\"a\":0,\"k\":[100,100],\"ix\":3},\"r\":{\"a\":0,\"k\":0,\"ix\":6},\"o\":{\"a\":0,\"k\":100,\"ix\":7},\"sk\":{\"a\":0,\"k\":0,\"ix\":4},\"sa\":{\"a\":0,\"k\":0,\"ix\":5},\"nm\":\"Transform\"}],\"nm\":\"Group 7\",\"np\":2,\"cix\":2,\"bm\":0,\"ix\":3,\"mn\":\"ADBE Vector Group\",\"hd\":false}],\"ip\":0,\"op\":240,\"st\":0,\"bm\":0},{\"ddd\":0,\"ind\":8,\"ty\":4,\"nm\":\"hair girl\",\"parent\":1,\"sr\":1,\"ks\":{\"o\":{\"a\":0,\"k\":100,\"ix\":11},\"r\":{\"a\":0,\"k\":0,\"ix\":10},\"p\":{\"a\":0,\"k\":[-393.646,208.011,0],\"ix\":2},\"a\":{\"a\":0,\"k\":[0,0,0],\"ix\":1},\"s\":{\"a\":0,\"k\":[100,100,100],\"ix\":6}},\"ao\":0,\"shapes\":[{\"ty\":\"gr\",\"it\":[{\"ind\":0,\"ty\":\"sh\",\"ix\":1,\"ks\":{\"a\":1,\"k\":[{\"i\":{\"x\":0.667,\"y\":1},\"o\":{\"x\":0.333,\"y\":0},\"t\":0,\"s\":[{\"i\":[[-132.799,28.573],[-38.293,30.155],[4.959,46.014],[4.712,2.593],[30.052,-4.109],[27.079,-7.301],[67.447,-3.181],[72.529,-1.589],[80.391,13.501],[-3.4,-138.476],[-76.069,-27.517],[-13.657,-28.833],[-2.066,-35.752],[-6.408,-5.223],[-91.073,68.608]],\"o\":[[24.425,-5.254],[11.528,-9.078],[-4.365,-40.51],[-27.181,-14.96],[-38.969,5.328],[-66.991,18.057],[-86.205,4.063],[-81.423,1.783],[-111.584,-18.741],[1.963,79.979],[44.339,16.039],[9.72,20.519],[2.655,46.092],[59.486,48.487],[164.233,-123.721]],\"v\":[[343.778,-119.685],[446.662,-154.05],[494.071,-241.303],[446.6,-306.176],[362.271,-313.702],[283.28,-290.428],[126.187,-306.881],[-40.004,-237.563],[-217.422,-328.969],[-494.436,-89.11],[-356.85,110.047],[-251.009,149.825],[-261.074,221.906],[-212.326,305.565],[71.601,260.951]],\"c\":true}]},{\"i\":{\"x\":0.667,\"y\":1},\"o\":{\"x\":0.333,\"y\":0},\"t\":30,\"s\":[{\"i\":[[-132.799,28.573],[-38.293,30.155],[4.959,46.014],[4.712,2.593],[30.052,-4.109],[27.079,-7.301],[67.447,-3.181],[72.529,-1.589],[80.391,13.501],[-3.4,-138.476],[-76.068,-27.518],[-13.657,-28.833],[-2.066,-35.752],[-8.172,-1.255],[-91.073,68.608]],\"o\":[[24.425,-5.254],[11.528,-9.078],[-4.365,-40.51],[-27.181,-14.96],[-38.969,5.328],[-66.991,18.057],[-86.205,4.063],[-81.423,1.783],[-111.584,-18.741],[1.963,79.979],[44.339,16.039],[9.72,20.519],[2.655,46.092],[120.619,18.525],[164.233,-123.721]],\"v\":[[343.778,-119.685],[436.662,-164.05],[484.071,-251.303],[446.6,-306.176],[362.271,-313.702],[281.28,-304.428],[126.187,-316.881],[-64.004,-277.563],[-229.422,-384.969],[-506.436,-145.11],[-368.85,54.047],[-263.009,93.825],[-273.074,165.906],[-206.326,209.565],[63.601,174.951]],\"c\":true}]},{\"i\":{\"x\":0.667,\"y\":1},\"o\":{\"x\":0.333,\"y\":0},\"t\":60,\"s\":[{\"i\":[[-132.799,28.573],[-38.293,30.155],[4.959,46.014],[4.712,2.593],[30.052,-4.109],[27.079,-7.301],[67.447,-3.181],[72.529,-1.589],[80.391,13.501],[-3.4,-138.476],[-76.069,-27.517],[-13.657,-28.833],[-2.066,-35.752],[-6.408,-5.223],[-91.073,68.608]],\"o\":[[24.425,-5.254],[11.528,-9.078],[-4.365,-40.51],[-27.181,-14.96],[-38.969,5.328],[-66.991,18.057],[-86.205,4.063],[-81.423,1.783],[-111.584,-18.741],[1.963,79.979],[44.339,16.039],[9.72,20.519],[2.655,46.092],[59.486,48.487],[164.233,-123.721]],\"v\":[[343.778,-119.685],[446.662,-154.05],[494.071,-241.303],[446.6,-306.176],[362.271,-313.702],[283.28,-290.428],[126.187,-306.881],[-40.004,-237.563],[-217.422,-328.969],[-494.436,-89.11],[-356.85,110.047],[-251.009,149.825],[-261.074,221.906],[-212.326,305.565],[71.601,260.951]],\"c\":true}]},{\"i\":{\"x\":0.667,\"y\":1},\"o\":{\"x\":0.333,\"y\":0},\"t\":90,\"s\":[{\"i\":[[-132.799,28.573],[-38.293,30.155],[4.959,46.014],[4.712,2.593],[30.052,-4.109],[27.079,-7.301],[67.447,-3.181],[72.529,-1.589],[80.391,13.501],[-3.4,-138.476],[-76.068,-27.518],[-13.657,-28.833],[-2.066,-35.752],[-8.172,-1.255],[-91.073,68.608]],\"o\":[[24.425,-5.254],[11.528,-9.078],[-4.365,-40.51],[-27.181,-14.96],[-38.969,5.328],[-66.991,18.057],[-86.205,4.063],[-81.423,1.783],[-111.584,-18.741],[1.963,79.979],[44.339,16.039],[9.72,20.519],[2.655,46.092],[120.619,18.525],[164.233,-123.721]],\"v\":[[343.778,-119.685],[436.662,-164.05],[484.071,-251.303],[446.6,-306.176],[362.271,-313.702],[281.28,-304.428],[126.187,-316.881],[-64.004,-277.563],[-229.422,-384.969],[-506.436,-145.11],[-368.85,54.047],[-263.009,93.825],[-273.074,165.906],[-206.326,209.565],[63.601,174.951]],\"c\":true}]},{\"i\":{\"x\":0.667,\"y\":1},\"o\":{\"x\":0.333,\"y\":0},\"t\":120,\"s\":[{\"i\":[[-132.799,28.573],[-38.293,30.155],[4.959,46.014],[4.712,2.593],[30.052,-4.109],[27.079,-7.301],[67.447,-3.181],[72.529,-1.589],[80.391,13.501],[-3.4,-138.476],[-76.069,-27.517],[-13.657,-28.833],[-2.066,-35.752],[-6.408,-5.223],[-91.073,68.608]],\"o\":[[24.425,-5.254],[11.528,-9.078],[-4.365,-40.51],[-27.181,-14.96],[-38.969,5.328],[-66.991,18.057],[-86.205,4.063],[-81.423,1.783],[-111.584,-18.741],[1.963,79.979],[44.339,16.039],[9.72,20.519],[2.655,46.092],[59.486,48.487],[164.233,-123.721]],\"v\":[[343.778,-119.685],[446.662,-154.05],[494.071,-241.303],[446.6,-306.176],[362.271,-313.702],[283.28,-290.428],[126.187,-306.881],[-40.004,-237.563],[-217.422,-328.969],[-494.436,-89.11],[-356.85,110.047],[-251.009,149.825],[-261.074,221.906],[-212.326,305.565],[71.601,260.951]],\"c\":true}]},{\"t\":150,\"s\":[{\"i\":[[-132.799,28.573],[-38.293,30.155],[4.959,46.014],[4.712,2.593],[30.052,-4.109],[27.079,-7.301],[67.447,-3.181],[72.529,-1.589],[80.391,13.501],[-3.4,-138.476],[-76.068,-27.518],[-13.657,-28.833],[-2.066,-35.752],[-8.172,-1.255],[-91.073,68.608]],\"o\":[[24.425,-5.254],[11.528,-9.078],[-4.365,-40.51],[-27.181,-14.96],[-38.969,5.328],[-66.991,18.057],[-86.205,4.063],[-81.423,1.783],[-111.584,-18.741],[1.963,79.979],[44.339,16.039],[9.72,20.519],[2.655,46.092],[120.619,18.525],[164.233,-123.721]],\"v\":[[343.778,-119.685],[436.662,-164.05],[484.071,-251.303],[446.6,-306.176],[362.271,-313.702],[281.28,-304.428],[126.187,-316.881],[-64.004,-277.563],[-265.422,-338.969],[-542.436,-99.11],[-404.85,100.047],[-299.009,139.825],[-309.074,211.906],[-242.326,255.565],[63.601,174.951]],\"c\":true}]}],\"ix\":2},\"nm\":\"Path 1\",\"mn\":\"ADBE Vector Shape - Group\",\"hd\":false},{\"ty\":\"gf\",\"o\":{\"a\":0,\"k\":100,\"ix\":10},\"r\":1,\"bm\":0,\"g\":{\"p\":3,\"k\":{\"a\":0,\"k\":[0,0.192,0.098,0.267,0.498,0.306,0.161,0.365,0.996,0.42,0.224,0.463],\"ix\":9}},\"s\":{\"a\":0,\"k\":[381.939,-277.783],\"ix\":5},\"e\":{\"a\":0,\"k\":[-981.158,6.939],\"ix\":6},\"t\":1,\"nm\":\"Gradient Fill 1\",\"mn\":\"ADBE Vector Graphic - G-Fill\",\"hd\":false},{\"ty\":\"tr\",\"p\":{\"a\":0,\"k\":[0,0],\"ix\":2},\"a\":{\"a\":0,\"k\":[0,0],\"ix\":1},\"s\":{\"a\":0,\"k\":[100,100],\"ix\":3},\"r\":{\"a\":0,\"k\":0,\"ix\":6},\"o\":{\"a\":0,\"k\":100,\"ix\":7},\"sk\":{\"a\":0,\"k\":0,\"ix\":4},\"sa\":{\"a\":0,\"k\":0,\"ix\":5},\"nm\":\"Transform\"}],\"nm\":\"hair girl\",\"np\":2,\"cix\":2,\"bm\":0,\"ix\":1,\"mn\":\"ADBE Vector Group\",\"hd\":false}],\"ip\":0,\"op\":240,\"st\":0,\"bm\":0},{\"ddd\":0,\"ind\":9,\"ty\":4,\"nm\":\"thigh L\",\"sr\":1,\"ks\":{\"o\":{\"a\":0,\"k\":100,\"ix\":11},\"r\":{\"a\":0,\"k\":0,\"ix\":10},\"p\":{\"a\":0,\"k\":[897.664,1118.157,0],\"ix\":2},\"a\":{\"a\":0,\"k\":[-178,-4,0],\"ix\":1},\"s\":{\"a\":0,\"k\":[100,100,100],\"ix\":6}},\"ao\":0,\"shapes\":[{\"ty\":\"gr\",\"it\":[{\"ind\":0,\"ty\":\"sh\",\"ix\":1,\"ks\":{\"a\":0,\"k\":{\"i\":[[0.617,-63.656],[27.562,-2.723],[108.107,-15.788],[49.318,65.824],[-38.726,32.027],[-104.965,-0.949],[-39.528,-0.504],[-30.445,-27.676]],\"o\":[[-14.838,-0.788],[-130.805,12.926],[-25.573,3.736],[-35.405,-47.258],[16.39,-13.554],[39.53,0.358],[167.327,2.132],[14.202,12.911]],\"v\":[[276.335,12.2],[211.086,13.679],[-63.885,107.095],[-252.64,61.636],[-243.962,-99.079],[-106.38,-111.307],[12.21,-110.318],[241.982,-92.098]],\"c\":true},\"ix\":2},\"nm\":\"Path 1\",\"mn\":\"ADBE Vector Shape - Group\",\"hd\":false},{\"ty\":\"gf\",\"o\":{\"a\":0,\"k\":100,\"ix\":10},\"r\":1,\"bm\":0,\"g\":{\"p\":3,\"k\":{\"a\":0,\"k\":[0,0.667,0.502,0.976,0.498,0.524,0.449,0.91,0.996,0.38,0.396,0.843],\"ix\":9}},\"s\":{\"a\":0,\"k\":[-2129.336,-111.157],\"ix\":5},\"e\":{\"a\":0,\"k\":[-2213.471,-597.565],\"ix\":6},\"t\":1,\"nm\":\"Gradient Fill 1\",\"mn\":\"ADBE Vector Graphic - G-Fill\",\"hd\":false},{\"ty\":\"tr\",\"p\":{\"a\":0,\"k\":[0,0],\"ix\":2},\"a\":{\"a\":0,\"k\":[0,0],\"ix\":1},\"s\":{\"a\":0,\"k\":[100,100],\"ix\":3},\"r\":{\"a\":0,\"k\":0,\"ix\":6},\"o\":{\"a\":0,\"k\":100,\"ix\":7},\"sk\":{\"a\":0,\"k\":0,\"ix\":4},\"sa\":{\"a\":0,\"k\":0,\"ix\":5},\"nm\":\"Transform\"}],\"nm\":\"thigh L\",\"np\":2,\"cix\":2,\"bm\":0,\"ix\":1,\"mn\":\"ADBE Vector Group\",\"hd\":false}],\"ip\":0,\"op\":240,\"st\":0,\"bm\":0},{\"ddd\":0,\"ind\":10,\"ty\":4,\"nm\":\"shadow leg L\",\"sr\":1,\"ks\":{\"o\":{\"a\":0,\"k\":30,\"ix\":11},\"r\":{\"a\":0,\"k\":0,\"ix\":10},\"p\":{\"a\":0,\"k\":[1113.062,1094.628,0],\"ix\":2},\"a\":{\"a\":0,\"k\":[0,0,0],\"ix\":1},\"s\":{\"a\":0,\"k\":[100,100,100],\"ix\":6}},\"ao\":0,\"shapes\":[{\"ty\":\"gr\",\"it\":[{\"ind\":0,\"ty\":\"sh\",\"ix\":1,\"ks\":{\"a\":0,\"k\":{\"i\":[[-6.738,58.625],[-6.165,8.125],[-131.094,-38.457],[-31.145,-27.756],[-21.406,-11.955],[-18.354,-64.135],[18.04,0.201],[30.831,3.013],[26.712,3.131],[11.816,-6.29],[12.995,5.01],[82.149,18.733]],\"o\":[[2.986,-25.984],[53.357,-70.307],[11.945,20.566],[37.297,33.238],[59.857,33.431],[-27.232,-42.222],[-25.821,-0.287],[-32.954,-3.22],[-7.996,-0.937],[-15.768,-16.51],[-72.783,-28.064],[-64.637,-14.739]],\"v\":[[-295.846,-39.954],[-271.261,-91.683],[34.106,-139.119],[96.992,-61.605],[186.295,-5.706],[296.384,159.613],[227.802,105.965],[159.613,124.742],[92.413,91.142],[62.763,97.729],[22.247,66.436],[-180.343,103.989]],\"c\":true},\"ix\":2},\"nm\":\"Path 1\",\"mn\":\"ADBE Vector Shape - Group\",\"hd\":false},{\"ty\":\"gf\",\"o\":{\"a\":0,\"k\":100,\"ix\":10},\"r\":1,\"bm\":0,\"g\":{\"p\":3,\"k\":{\"a\":0,\"k\":[0,0.667,0.502,0.976,0.498,0.524,0.449,0.91,0.996,0.38,0.396,0.843],\"ix\":9}},\"s\":{\"a\":0,\"k\":[-1923.938,543.372],\"ix\":5},\"e\":{\"a\":0,\"k\":[-2043.845,922.858],\"ix\":6},\"t\":1,\"nm\":\"Gradient Fill 1\",\"mn\":\"ADBE Vector Graphic - G-Fill\",\"hd\":false},{\"ty\":\"tr\",\"p\":{\"a\":0,\"k\":[0,0],\"ix\":2},\"a\":{\"a\":0,\"k\":[0,0],\"ix\":1},\"s\":{\"a\":0,\"k\":[100,100],\"ix\":3},\"r\":{\"a\":0,\"k\":0,\"ix\":6},\"o\":{\"a\":0,\"k\":100,\"ix\":7},\"sk\":{\"a\":0,\"k\":0,\"ix\":4},\"sa\":{\"a\":0,\"k\":0,\"ix\":5},\"nm\":\"Transform\"}],\"nm\":\"shadow leg L\",\"np\":2,\"cix\":2,\"bm\":1,\"ix\":1,\"mn\":\"ADBE Vector Group\",\"hd\":false}],\"ip\":0,\"op\":240,\"st\":0,\"bm\":1},{\"ddd\":0,\"ind\":11,\"ty\":4,\"nm\":\"leg R\",\"sr\":1,\"ks\":{\"o\":{\"a\":0,\"k\":100,\"ix\":11},\"r\":{\"a\":0,\"k\":0,\"ix\":10},\"p\":{\"a\":0,\"k\":[955.538,1042.292,0],\"ix\":2},\"a\":{\"a\":0,\"k\":[1499.538,1146.292,0],\"ix\":1},\"s\":{\"a\":0,\"k\":[100,100,100],\"ix\":6}},\"ao\":0,\"shapes\":[{\"ty\":\"gr\",\"it\":[{\"ind\":0,\"ty\":\"sh\",\"ix\":1,\"ks\":{\"a\":0,\"k\":{\"i\":[[-10.172,-0.765],[7.501,47.755],[98.023,54.747],[37.296,33.238],[11.945,20.566],[53.357,-70.307],[2.986,-25.984],[-64.637,-14.739],[-72.783,-28.064],[-34.522,-38.908],[-9.34,-18.275],[-3.076,-52.063],[-14.206,-26.427],[-10.997,-8.356]],\"o\":[[26.005,-101.585],[-11.339,-72.178],[-21.406,-11.955],[-31.146,-27.756],[-131.094,-38.457],[-6.165,8.125],[-6.738,58.625],[82.149,18.733],[20.359,7.85],[43.917,49.495],[27.811,54.419],[0.716,12.128],[10.905,20.287],[10.173,0.767]],\"v\":[[292.336,329.943],[304.195,97.707],[171.771,-176.037],[82.468,-231.936],[19.582,-309.449],[-285.785,-262.014],[-310.371,-210.284],[-194.867,-66.341],[7.722,-103.895],[79.864,-37.683],[157.808,75.759],[209.785,222.414],[225.135,285.473],[261.819,327.642]],\"c\":true},\"ix\":2},\"nm\":\"Path 1\",\"mn\":\"ADBE Vector Shape - Group\",\"hd\":false},{\"ty\":\"gf\",\"o\":{\"a\":0,\"k\":100,\"ix\":10},\"r\":1,\"bm\":0,\"g\":{\"p\":3,\"k\":{\"a\":0,\"k\":[0,0.667,0.502,0.976,0.498,0.524,0.449,0.91,0.996,0.38,0.396,0.843],\"ix\":9}},\"s\":{\"a\":0,\"k\":[-1908.413,373.042],\"ix\":5},\"e\":{\"a\":0,\"k\":[-2028.32,752.527],\"ix\":6},\"t\":1,\"nm\":\"Gradient Fill 1\",\"mn\":\"ADBE Vector Graphic - G-Fill\",\"hd\":false},{\"ty\":\"tr\",\"p\":{\"a\":0,\"k\":[1671.587,1368.958],\"ix\":2},\"a\":{\"a\":0,\"k\":[0,0],\"ix\":1},\"s\":{\"a\":0,\"k\":[100,100],\"ix\":3},\"r\":{\"a\":0,\"k\":0,\"ix\":6},\"o\":{\"a\":0,\"k\":100,\"ix\":7},\"sk\":{\"a\":0,\"k\":0,\"ix\":4},\"sa\":{\"a\":0,\"k\":0,\"ix\":5},\"nm\":\"Transform\"}],\"nm\":\"Group 1\",\"np\":2,\"cix\":2,\"bm\":0,\"ix\":1,\"mn\":\"ADBE Vector Group\",\"hd\":false},{\"ty\":\"gr\",\"it\":[{\"ind\":0,\"ty\":\"sh\",\"ix\":1,\"ks\":{\"a\":0,\"k\":{\"i\":[[-9.405,0.437],[-4.965,-6.154],[11.647,-7.55],[3.494,6.854],[0.184,16.912],[1.78,5.607]],\"o\":[[-3.641,21.071],[3.494,4.331],[-5.256,3.407],[-3.164,-6.207],[-0.12,-11.135],[9.405,-0.437]],\"v\":[[-0.356,-48.516],[5.574,-10.305],[25.778,48.331],[-18.998,0.149],[-24.404,-21.505],[-28.568,-47.208]],\"c\":true},\"ix\":2},\"nm\":\"Path 1\",\"mn\":\"ADBE Vector Shape - Group\",\"hd\":false},{\"ty\":\"gf\",\"o\":{\"a\":0,\"k\":100,\"ix\":10},\"r\":1,\"bm\":0,\"g\":{\"p\":3,\"k\":{\"a\":0,\"k\":[0,1,0.769,0.267,0.498,0.976,0.602,0.302,0.996,0.953,0.435,0.337],\"ix\":9}},\"s\":{\"a\":0,\"k\":[-1434.026,92.051],\"ix\":5},\"e\":{\"a\":0,\"k\":[-1635.631,696.865],\"ix\":6},\"t\":1,\"nm\":\"Gradient Fill 1\",\"mn\":\"ADBE Vector Graphic - G-Fill\",\"hd\":false},{\"ty\":\"tr\",\"p\":{\"a\":0,\"k\":[1961.974,1730.949],\"ix\":2},\"a\":{\"a\":0,\"k\":[0,0],\"ix\":1},\"s\":{\"a\":0,\"k\":[100,100],\"ix\":3},\"r\":{\"a\":0,\"k\":0,\"ix\":6},\"o\":{\"a\":0,\"k\":100,\"ix\":7},\"sk\":{\"a\":0,\"k\":0,\"ix\":4},\"sa\":{\"a\":0,\"k\":0,\"ix\":5},\"nm\":\"Transform\"}],\"nm\":\"Group 2\",\"np\":2,\"cix\":2,\"bm\":0,\"ix\":2,\"mn\":\"ADBE Vector Group\",\"hd\":false},{\"ty\":\"gr\",\"it\":[{\"ind\":0,\"ty\":\"sh\",\"ix\":1,\"ks\":{\"a\":0,\"k\":{\"i\":[[3.998,13.972],[0,0],[6.411,4.29],[0,0],[4.259,-17.203],[-26.849,-19.384],[-3.862,2.208]],\"o\":[[0,0],[-3.285,-6.979],[0,0],[0,0],[-0.916,21.846],[4.458,3.217],[6.539,-3.738]],\"v\":[[37.851,17.803],[14.728,-31.324],[-0.089,-48.548],[-11.538,-56.21],[-43.166,-39.734],[25.221,50.309],[39.897,55.608]],\"c\":true},\"ix\":2},\"nm\":\"Path 1\",\"mn\":\"ADBE Vector Shape - Group\",\"hd\":false},{\"ty\":\"gf\",\"o\":{\"a\":0,\"k\":100,\"ix\":10},\"r\":1,\"bm\":0,\"g\":{\"p\":3,\"k\":{\"a\":0,\"k\":[0,0.192,0.098,0.267,0.5,0.306,0.161,0.365,1,0.42,0.224,0.463],\"ix\":9}},\"s\":{\"a\":0,\"k\":[502.547,1981.918],\"ix\":5},\"e\":{\"a\":0,\"k\":[399.881,1913.193],\"ix\":6},\"t\":1,\"nm\":\"Gradient Fill 1\",\"mn\":\"ADBE Vector Graphic - G-Fill\",\"hd\":false},{\"ty\":\"tr\",\"p\":{\"a\":0,\"k\":[1967.218,1765.354],\"ix\":2},\"a\":{\"a\":0,\"k\":[0,0],\"ix\":1},\"s\":{\"a\":0,\"k\":[100,100],\"ix\":3},\"r\":{\"a\":0,\"k\":0,\"ix\":6},\"o\":{\"a\":0,\"k\":100,\"ix\":7},\"sk\":{\"a\":0,\"k\":0,\"ix\":4},\"sa\":{\"a\":0,\"k\":0,\"ix\":5},\"nm\":\"Transform\"}],\"nm\":\"Group 3\",\"np\":2,\"cix\":2,\"bm\":0,\"ix\":3,\"mn\":\"ADBE Vector Group\",\"hd\":false}],\"ip\":0,\"op\":240,\"st\":0,\"bm\":0},{\"ddd\":0,\"ind\":12,\"ty\":4,\"nm\":\"calf l\",\"parent\":9,\"sr\":1,\"ks\":{\"o\":{\"a\":0,\"k\":100,\"ix\":11},\"r\":{\"a\":1,\"k\":[{\"i\":{\"x\":[0.667],\"y\":[1]},\"o\":{\"x\":[0.333],\"y\":[0]},\"t\":0,\"s\":[0]},{\"i\":{\"x\":[0.667],\"y\":[1]},\"o\":{\"x\":[0.333],\"y\":[0]},\"t\":30,\"s\":[-6]},{\"i\":{\"x\":[0.667],\"y\":[1]},\"o\":{\"x\":[0.333],\"y\":[0]},\"t\":60,\"s\":[0]},{\"i\":{\"x\":[0.667],\"y\":[1]},\"o\":{\"x\":[0.333],\"y\":[0]},\"t\":90,\"s\":[-6]},{\"i\":{\"x\":[0.667],\"y\":[1]},\"o\":{\"x\":[0.333],\"y\":[0]},\"t\":120,\"s\":[0]},{\"t\":150,\"s\":[-6]}],\"ix\":10},\"p\":{\"a\":0,\"k\":[200.339,-60.839,0],\"ix\":2},\"a\":{\"a\":0,\"k\":[-70,-140,0],\"ix\":1},\"s\":{\"a\":0,\"k\":[100,100,100],\"ix\":6}},\"ao\":0,\"shapes\":[{\"ty\":\"gr\",\"it\":[{\"ind\":0,\"ty\":\"sh\",\"ix\":1,\"ks\":{\"a\":0,\"k\":{\"i\":[[-18.968,-80.509],[-7.87,2.867],[6.527,55.832],[74.897,23.335],[-25.677,-38.167],[-4.825,-4.884],[-52.046,-59.429]],\"o\":[[7.872,-2.866],[12.278,-28.045],[-17.821,-152.441],[-43.918,-13.683],[4.584,6.813],[28.589,28.935],[31.241,35.671]],\"v\":[[82.403,192.325],[106.015,183.725],[128.274,53.628],[-66.138,-189.984],[-121.289,-116.37],[-106.929,-98.561],[-1.188,22.993]],\"c\":true},\"ix\":2},\"nm\":\"Path 1\",\"mn\":\"ADBE Vector Shape - Group\",\"hd\":false},{\"ty\":\"gf\",\"o\":{\"a\":0,\"k\":100,\"ix\":10},\"r\":1,\"bm\":0,\"g\":{\"p\":3,\"k\":{\"a\":0,\"k\":[0,0.667,0.502,0.976,0.498,0.524,0.449,0.91,0.996,0.38,0.396,0.843],\"ix\":9}},\"s\":{\"a\":0,\"k\":[-1584.997,-153.318],\"ix\":5},\"e\":{\"a\":0,\"k\":[-1671.71,-654.629],\"ix\":6},\"t\":1,\"nm\":\"Gradient Fill 1\",\"mn\":\"ADBE Vector Graphic - G-Fill\",\"hd\":false},{\"ty\":\"tr\",\"p\":{\"a\":0,\"k\":[0,0],\"ix\":2},\"a\":{\"a\":0,\"k\":[0,0],\"ix\":1},\"s\":{\"a\":0,\"k\":[100,100],\"ix\":3},\"r\":{\"a\":0,\"k\":0,\"ix\":6},\"o\":{\"a\":0,\"k\":100,\"ix\":7},\"sk\":{\"a\":0,\"k\":0,\"ix\":4},\"sa\":{\"a\":0,\"k\":0,\"ix\":5},\"nm\":\"Transform\"}],\"nm\":\"calf l\",\"np\":2,\"cix\":2,\"bm\":0,\"ix\":1,\"mn\":\"ADBE Vector Group\",\"hd\":false}],\"ip\":0,\"op\":240,\"st\":0,\"bm\":0},{\"ddd\":0,\"ind\":13,\"ty\":4,\"nm\":\"foot L\",\"parent\":12,\"sr\":1,\"ks\":{\"o\":{\"a\":0,\"k\":100,\"ix\":11},\"r\":{\"a\":1,\"k\":[{\"i\":{\"x\":[0.667],\"y\":[1]},\"o\":{\"x\":[0.333],\"y\":[0]},\"t\":2,\"s\":[0]},{\"i\":{\"x\":[0.667],\"y\":[1]},\"o\":{\"x\":[0.333],\"y\":[0]},\"t\":32,\"s\":[-7]},{\"i\":{\"x\":[0.667],\"y\":[1]},\"o\":{\"x\":[0.333],\"y\":[0]},\"t\":62,\"s\":[0]},{\"i\":{\"x\":[0.667],\"y\":[1]},\"o\":{\"x\":[0.333],\"y\":[0]},\"t\":92,\"s\":[-7]},{\"i\":{\"x\":[0.667],\"y\":[1]},\"o\":{\"x\":[0.333],\"y\":[0]},\"t\":120,\"s\":[0]},{\"t\":150,\"s\":[-7]}],\"ix\":10},\"p\":{\"a\":0,\"k\":[83.829,169.959,0],\"ix\":2},\"a\":{\"a\":0,\"k\":[1973.832,1475.277,0],\"ix\":1},\"s\":{\"a\":0,\"k\":[100,100,100],\"ix\":6}},\"ao\":0,\"shapes\":[{\"ty\":\"gr\",\"it\":[{\"ind\":0,\"ty\":\"sh\",\"ix\":1,\"ks\":{\"a\":0,\"k\":{\"i\":[[0,0],[-13.242,-18.777],[2.616,-7.613],[5.639,0.579],[4.222,11.674],[0,0]],\"o\":[[0,0],[6.595,9.352],[-1.753,5.102],[-10.796,-1.109],[-6.234,-17.242],[0,0]],\"v\":[[2.971,-43.749],[9.27,10.604],[22.146,35.501],[8.097,43.689],[-12.905,14.356],[-22.614,-39.782]],\"c\":true},\"ix\":2},\"nm\":\"Path 1\",\"mn\":\"ADBE Vector Shape - Group\",\"hd\":false},{\"ty\":\"gf\",\"o\":{\"a\":0,\"k\":100,\"ix\":10},\"r\":1,\"bm\":0,\"g\":{\"p\":3,\"k\":{\"a\":0,\"k\":[0,1,0.769,0.267,0.498,0.976,0.602,0.302,0.996,0.953,0.435,0.337],\"ix\":9}},\"s\":{\"a\":0,\"k\":[-1332.167,223.597],\"ix\":5},\"e\":{\"a\":0,\"k\":[-1445.229,562.782],\"ix\":6},\"t\":1,\"nm\":\"Gradient Fill 1\",\"mn\":\"ADBE Vector Graphic - G-Fill\",\"hd\":false},{\"ty\":\"tr\",\"p\":{\"a\":0,\"k\":[1989.833,1511.403],\"ix\":2},\"a\":{\"a\":0,\"k\":[0,0],\"ix\":1},\"s\":{\"a\":0,\"k\":[100,100],\"ix\":3},\"r\":{\"a\":0,\"k\":0,\"ix\":6},\"o\":{\"a\":0,\"k\":100,\"ix\":7},\"sk\":{\"a\":0,\"k\":0,\"ix\":4},\"sa\":{\"a\":0,\"k\":0,\"ix\":5},\"nm\":\"Transform\"}],\"nm\":\"leg p\",\"np\":2,\"cix\":2,\"bm\":0,\"ix\":1,\"mn\":\"ADBE Vector Group\",\"hd\":false},{\"ty\":\"gr\",\"it\":[{\"ind\":0,\"ty\":\"sh\",\"ix\":1,\"ks\":{\"a\":0,\"k\":{\"i\":[[-15.924,-27.653],[4.165,-33.478],[6.247,16.541],[-1.371,9.082]],\"o\":[[0,0],[-4.165,33.475],[-6.25,-16.54],[1.734,-11.489]],\"v\":[[12.734,-30.329],[34.162,33.686],[-17.707,0.379],[-28.11,-40.049]],\"c\":true},\"ix\":2},\"nm\":\"Path 1\",\"mn\":\"ADBE Vector Shape - Group\",\"hd\":false},{\"ty\":\"gf\",\"o\":{\"a\":0,\"k\":100,\"ix\":10},\"r\":1,\"bm\":0,\"g\":{\"p\":3,\"k\":{\"a\":0,\"k\":[0,0.192,0.098,0.267,0.5,0.306,0.161,0.365,1,0.42,0.224,0.463],\"ix\":9}},\"s\":{\"a\":0,\"k\":[284.742,-703.199],\"ix\":5},\"e\":{\"a\":0,\"k\":[-11.235,63.888],\"ix\":6},\"t\":1,\"nm\":\"Gradient Fill 1\",\"mn\":\"ADBE Vector Graphic - G-Fill\",\"hd\":false},{\"ty\":\"tr\",\"p\":{\"a\":0,\"k\":[1989.832,1545.763],\"ix\":2},\"a\":{\"a\":0,\"k\":[0,0],\"ix\":1},\"s\":{\"a\":0,\"k\":[100,100],\"ix\":3},\"r\":{\"a\":0,\"k\":0,\"ix\":6},\"o\":{\"a\":0,\"k\":100,\"ix\":7},\"sk\":{\"a\":0,\"k\":0,\"ix\":4},\"sa\":{\"a\":0,\"k\":0,\"ix\":5},\"nm\":\"Transform\"}],\"nm\":\"foot l1\",\"np\":2,\"cix\":2,\"bm\":0,\"ix\":2,\"mn\":\"ADBE Vector Group\",\"hd\":false}],\"ip\":0,\"op\":240,\"st\":0,\"bm\":0},{\"ddd\":0,\"ind\":15,\"ty\":4,\"nm\":\"elipse 3\",\"sr\":1,\"ks\":{\"o\":{\"a\":1,\"k\":[{\"i\":{\"x\":[0.342],\"y\":[1]},\"o\":{\"x\":[0.333],\"y\":[0]},\"t\":108.308,\"s\":[100]},{\"t\":120,\"s\":[0]}],\"ix\":11},\"r\":{\"a\":0,\"k\":0,\"ix\":10},\"p\":{\"a\":0,\"k\":[2589.421,1813.155,0],\"ix\":2},\"a\":{\"a\":0,\"k\":[0,0,0],\"ix\":1},\"s\":{\"a\":1,\"k\":[{\"i\":{\"x\":[0.667,0.667,0.667],\"y\":[1,1,1]},\"o\":{\"x\":[0.333,0.333,0.333],\"y\":[0,0,0]},\"t\":69,\"s\":[0,0,100]},{\"i\":{\"x\":[0.667,0.667,0.667],\"y\":[1,1,1]},\"o\":{\"x\":[0.333,0.333,0.333],\"y\":[0,0,0]},\"t\":76.272,\"s\":[110,110,100]},{\"i\":{\"x\":[0.667,0.667,0.667],\"y\":[1,1,1]},\"o\":{\"x\":[0.333,0.333,0.333],\"y\":[0,0,0]},\"t\":80.637,\"s\":[90,90,100]},{\"t\":85,\"s\":[100,100,100]}],\"ix\":6}},\"ao\":0,\"shapes\":[{\"ty\":\"gr\",\"it\":[{\"ind\":0,\"ty\":\"sh\",\"ix\":1,\"ks\":{\"a\":0,\"k\":{\"i\":[[0,-50.015],[52.661,0],[0,50.015],[-52.661,0]],\"o\":[[0,50.015],[-52.661,0],[0,-50.015],[52.661,0]],\"v\":[[95.351,0],[0,90.561],[-95.351,0],[0,-90.561]],\"c\":true},\"ix\":2},\"nm\":\"Path 1\",\"mn\":\"ADBE Vector Shape - Group\",\"hd\":false},{\"ty\":\"fl\",\"c\":{\"a\":0,\"k\":[1,1,1,1],\"ix\":4},\"o\":{\"a\":0,\"k\":100,\"ix\":5},\"r\":1,\"bm\":0,\"nm\":\"Fill 1\",\"mn\":\"ADBE Vector Graphic - Fill\",\"hd\":false},{\"ty\":\"tr\",\"p\":{\"a\":0,\"k\":[0,0],\"ix\":2},\"a\":{\"a\":0,\"k\":[0,0],\"ix\":1},\"s\":{\"a\":0,\"k\":[100,100],\"ix\":3},\"r\":{\"a\":0,\"k\":0,\"ix\":6},\"o\":{\"a\":0,\"k\":100,\"ix\":7},\"sk\":{\"a\":0,\"k\":0,\"ix\":4},\"sa\":{\"a\":0,\"k\":0,\"ix\":5},\"nm\":\"Transform\"}],\"nm\":\"elipse 2\",\"np\":2,\"cix\":2,\"bm\":0,\"ix\":1,\"mn\":\"ADBE Vector Group\",\"hd\":false}],\"ip\":0,\"op\":240,\"st\":0,\"bm\":0},{\"ddd\":0,\"ind\":16,\"ty\":4,\"nm\":\"elipse 2\",\"sr\":1,\"ks\":{\"o\":{\"a\":1,\"k\":[{\"i\":{\"x\":[0.342],\"y\":[1]},\"o\":{\"x\":[0.333],\"y\":[0]},\"t\":108.308,\"s\":[100]},{\"t\":120,\"s\":[0]}],\"ix\":11},\"r\":{\"a\":0,\"k\":0,\"ix\":10},\"p\":{\"a\":0,\"k\":[1357.421,2161.155,0],\"ix\":2},\"a\":{\"a\":0,\"k\":[0,0,0],\"ix\":1},\"s\":{\"a\":1,\"k\":[{\"i\":{\"x\":[0.667,0.667,0.667],\"y\":[1,1,1]},\"o\":{\"x\":[0.333,0.333,0.333],\"y\":[0,0,0]},\"t\":14,\"s\":[0,0,100]},{\"i\":{\"x\":[0.667,0.667,0.667],\"y\":[1,1,1]},\"o\":{\"x\":[0.333,0.333,0.333],\"y\":[0,0,0]},\"t\":21.272,\"s\":[110,110,100]},{\"i\":{\"x\":[0.667,0.667,0.667],\"y\":[1,1,1]},\"o\":{\"x\":[0.333,0.333,0.333],\"y\":[0,0,0]},\"t\":25.637,\"s\":[90,90,100]},{\"t\":30,\"s\":[100,100,100]}],\"ix\":6}},\"ao\":0,\"shapes\":[{\"ty\":\"gr\",\"it\":[{\"ind\":0,\"ty\":\"sh\",\"ix\":1,\"ks\":{\"a\":0,\"k\":{\"i\":[[0,-50.015],[52.661,0],[0,50.015],[-52.661,0]],\"o\":[[0,50.015],[-52.661,0],[0,-50.015],[52.661,0]],\"v\":[[95.351,0],[0,90.561],[-95.351,0],[0,-90.561]],\"c\":true},\"ix\":2},\"nm\":\"Path 1\",\"mn\":\"ADBE Vector Shape - Group\",\"hd\":false},{\"ty\":\"fl\",\"c\":{\"a\":0,\"k\":[1,1,1,1],\"ix\":4},\"o\":{\"a\":0,\"k\":100,\"ix\":5},\"r\":1,\"bm\":0,\"nm\":\"Fill 1\",\"mn\":\"ADBE Vector Graphic - Fill\",\"hd\":false},{\"ty\":\"tr\",\"p\":{\"a\":0,\"k\":[0,0],\"ix\":2},\"a\":{\"a\":0,\"k\":[0,0],\"ix\":1},\"s\":{\"a\":0,\"k\":[100,100],\"ix\":3},\"r\":{\"a\":0,\"k\":0,\"ix\":6},\"o\":{\"a\":0,\"k\":100,\"ix\":7},\"sk\":{\"a\":0,\"k\":0,\"ix\":4},\"sa\":{\"a\":0,\"k\":0,\"ix\":5},\"nm\":\"Transform\"}],\"nm\":\"elipse 2\",\"np\":2,\"cix\":2,\"bm\":0,\"ix\":1,\"mn\":\"ADBE Vector Group\",\"hd\":false}],\"ip\":0,\"op\":240,\"st\":0,\"bm\":0},{\"ddd\":0,\"ind\":17,\"ty\":4,\"nm\":\"line dynamic\",\"sr\":1,\"ks\":{\"o\":{\"a\":1,\"k\":[{\"i\":{\"x\":[0.667],\"y\":[1]},\"o\":{\"x\":[0.333],\"y\":[0]},\"t\":101,\"s\":[70]},{\"t\":114.154296875,\"s\":[0]}],\"ix\":11},\"r\":{\"a\":0,\"k\":0,\"ix\":10},\"p\":{\"a\":0,\"k\":[1750,1750,0],\"ix\":2},\"a\":{\"a\":0,\"k\":[0,0,0],\"ix\":1},\"s\":{\"a\":0,\"k\":[100,100,100],\"ix\":6}},\"ao\":0,\"shapes\":[{\"ty\":\"gr\",\"it\":[{\"ind\":0,\"ty\":\"sh\",\"ix\":1,\"ks\":{\"a\":0,\"k\":{\"i\":[[0,0],[0,0],[0,0],[0,0]],\"o\":[[0,0],[0,0],[0,0],[0,0]],\"v\":[[-1242,1190],[-390,390],[26,750],[838,62]],\"c\":false},\"ix\":2},\"nm\":\"Path 1\",\"mn\":\"ADBE Vector Shape - Group\",\"hd\":false},{\"ty\":\"tm\",\"s\":{\"a\":0,\"k\":0,\"ix\":1},\"e\":{\"a\":1,\"k\":[{\"i\":{\"x\":[0.667],\"y\":[1]},\"o\":{\"x\":[0.431],\"y\":[0]},\"t\":0,\"s\":[0]},{\"i\":{\"x\":[0.667],\"y\":[1]},\"o\":{\"x\":[0.333],\"y\":[0]},\"t\":16,\"s\":[39.695]},{\"i\":{\"x\":[0.453],\"y\":[1]},\"o\":{\"x\":[0.333],\"y\":[0]},\"t\":34,\"s\":[39.695]},{\"t\":72,\"s\":[100]}],\"ix\":2},\"o\":{\"a\":0,\"k\":0,\"ix\":3},\"m\":1,\"ix\":2,\"nm\":\"Trim Paths 1\",\"mn\":\"ADBE Vector Filter - Trim\",\"hd\":false},{\"ty\":\"st\",\"c\":{\"a\":0,\"k\":[1,1,1,1],\"ix\":3},\"o\":{\"a\":0,\"k\":100,\"ix\":4},\"w\":{\"a\":0,\"k\":50,\"ix\":5},\"lc\":2,\"lj\":2,\"bm\":0,\"nm\":\"Stroke 1\",\"mn\":\"ADBE Vector Graphic - Stroke\",\"hd\":false},{\"ty\":\"tr\",\"p\":{\"a\":0,\"k\":[0,0],\"ix\":2},\"a\":{\"a\":0,\"k\":[0,0],\"ix\":1},\"s\":{\"a\":0,\"k\":[100,100],\"ix\":3},\"r\":{\"a\":0,\"k\":0,\"ix\":6},\"o\":{\"a\":0,\"k\":100,\"ix\":7},\"sk\":{\"a\":0,\"k\":0,\"ix\":4},\"sa\":{\"a\":0,\"k\":0,\"ix\":5},\"nm\":\"Transform\"}],\"nm\":\"line 1\",\"np\":4,\"cix\":2,\"bm\":0,\"ix\":1,\"mn\":\"ADBE Vector Group\",\"hd\":false}],\"ip\":0,\"op\":240,\"st\":0,\"bm\":0},{\"ddd\":0,\"ind\":18,\"ty\":4,\"nm\":\"laptop 1\",\"sr\":1,\"ks\":{\"o\":{\"a\":0,\"k\":100,\"ix\":11},\"r\":{\"a\":0,\"k\":0,\"ix\":10},\"p\":{\"a\":1,\"k\":[{\"i\":{\"x\":0.667,\"y\":1},\"o\":{\"x\":0.333,\"y\":0},\"t\":-34,\"s\":[1405.579,2584.728,0],\"to\":[0,-8.667,0],\"ti\":[0,0,0]},{\"i\":{\"x\":0.667,\"y\":1},\"o\":{\"x\":0.333,\"y\":0},\"t\":30,\"s\":[1405.579,2532.728,0],\"to\":[0,0,0],\"ti\":[0,0,0]},{\"i\":{\"x\":0.667,\"y\":1},\"o\":{\"x\":0.333,\"y\":0},\"t\":86,\"s\":[1405.579,2584.728,0],\"to\":[0,0,0],\"ti\":[0,0,0]},{\"i\":{\"x\":0.667,\"y\":1},\"o\":{\"x\":0.333,\"y\":0},\"t\":150,\"s\":[1405.579,2532.728,0],\"to\":[0,0,0],\"ti\":[0,-8.667,0]},{\"t\":206,\"s\":[1405.579,2584.728,0]}],\"ix\":2},\"a\":{\"a\":0,\"k\":[1405.579,2584.728,0],\"ix\":1},\"s\":{\"a\":0,\"k\":[100,100,100],\"ix\":6}},\"ao\":0,\"shapes\":[{\"ty\":\"gr\",\"it\":[{\"ind\":0,\"ty\":\"sh\",\"ix\":1,\"ks\":{\"a\":0,\"k\":{\"i\":[[0,0],[0,0],[0,0],[0,0]],\"o\":[[0,0],[0,0],[0,0],[0,0]],\"v\":[[-786.67,16.579],[414.82,-73.452],[786.67,-22.787],[-404.47,73.452]],\"c\":true},\"ix\":2},\"nm\":\"Path 1\",\"mn\":\"ADBE Vector Shape - Group\",\"hd\":false},{\"ty\":\"gf\",\"o\":{\"a\":0,\"k\":100,\"ix\":10},\"r\":1,\"bm\":0,\"g\":{\"p\":3,\"k\":{\"a\":0,\"k\":[0,0.251,0.267,0.494,0.498,0.243,0.249,0.457,0.996,0.235,0.231,0.42],\"ix\":9}},\"s\":{\"a\":0,\"k\":[-787.583,-0.488],\"ix\":5},\"e\":{\"a\":0,\"k\":[785.758,-0.488],\"ix\":6},\"t\":1,\"nm\":\"Gradient Fill 1\",\"mn\":\"ADBE Vector Graphic - G-Fill\",\"hd\":false},{\"ty\":\"tr\",\"p\":{\"a\":0,\"k\":[1340.583,3045.488],\"ix\":2},\"a\":{\"a\":0,\"k\":[0,0],\"ix\":1},\"s\":{\"a\":0,\"k\":[100,100],\"ix\":3},\"r\":{\"a\":0,\"k\":0,\"ix\":6},\"o\":{\"a\":0,\"k\":30,\"ix\":7},\"sk\":{\"a\":0,\"k\":0,\"ix\":4},\"sa\":{\"a\":0,\"k\":0,\"ix\":5},\"nm\":\"Transform\"}],\"nm\":\"lap p1\",\"np\":2,\"cix\":2,\"bm\":1,\"ix\":1,\"mn\":\"ADBE Vector Group\",\"hd\":false},{\"ty\":\"gr\",\"it\":[{\"ind\":0,\"ty\":\"sh\",\"ix\":1,\"ks\":{\"a\":0,\"k\":{\"i\":[[7.655,-0.565],[0,0],[0,0],[-7.271,0.613],[0,0],[0,0]],\"o\":[[0,0],[0,0],[7.206,1.293],[0,0],[0,0],[-7.618,-1.047]],\"v\":[[369.511,-110.249],[-1073.669,-3.695],[-444.416,109.227],[-422.63,110.25],[1073.669,-15.956],[392.468,-109.525]],\"c\":true},\"ix\":2},\"nm\":\"Path 1\",\"mn\":\"ADBE Vector Shape - Group\",\"hd\":false},{\"ty\":\"gf\",\"o\":{\"a\":0,\"k\":100,\"ix\":10},\"r\":1,\"bm\":0,\"g\":{\"p\":3,\"k\":{\"a\":0,\"k\":[0,0.251,0.267,0.494,0.498,0.243,0.249,0.457,0.996,0.235,0.231,0.42],\"ix\":9}},\"s\":{\"a\":0,\"k\":[-1073.999,-0.082],\"ix\":5},\"e\":{\"a\":0,\"k\":[1073.339,-0.082],\"ix\":6},\"t\":1,\"nm\":\"Gradient Fill 1\",\"mn\":\"ADBE Vector Graphic - G-Fill\",\"hd\":false},{\"ty\":\"tr\",\"p\":{\"a\":0,\"k\":[1416.999,3063.082],\"ix\":2},\"a\":{\"a\":0,\"k\":[0,0],\"ix\":1},\"s\":{\"a\":0,\"k\":[100,100],\"ix\":3},\"r\":{\"a\":0,\"k\":0,\"ix\":6},\"o\":{\"a\":0,\"k\":100,\"ix\":7},\"sk\":{\"a\":0,\"k\":0,\"ix\":4},\"sa\":{\"a\":0,\"k\":0,\"ix\":5},\"nm\":\"Transform\"}],\"nm\":\"lap p2\",\"np\":2,\"cix\":2,\"bm\":0,\"ix\":2,\"mn\":\"ADBE Vector Group\",\"hd\":false},{\"ty\":\"gr\",\"it\":[{\"ind\":0,\"ty\":\"sh\",\"ix\":1,\"ks\":{\"a\":0,\"k\":{\"i\":[[88.536,47.636],[83.797,74.282],[62.513,67.299],[69.582,67.086],[75.786,60.902],[87.519,70.857],[10.816,47.251],[0,0],[0,-15.003],[0,0],[-15.006,1.065],[0,0],[-4.077,6.064],[41.969,37.036]],\"o\":[[-110.429,-59.416],[-50.803,-45.035],[-69.237,-74.539],[-87.982,-84.826],[-91.938,-73.884],[-37.748,-30.561],[0,0],[-15.006,0],[0,0],[0,15.003],[0,0],[7.164,-0.508],[-106.869,-3.895],[-82.101,-72.452]],\"v\":[[381.454,174.238],[100.398,115.827],[12.025,-30.09],[-171.872,-146.66],[-291.636,-358.385],[-570.244,-434.741],[-639.518,-556.983],[-725.151,-556.983],[-752.343,-529.818],[-752.343,531.679],[-725.151,556.914],[734.749,453.287],[752.343,442.531],[537.851,365.774]],\"c\":true},\"ix\":2},\"nm\":\"Path 1\",\"mn\":\"ADBE Vector Shape - Group\",\"hd\":false},{\"ty\":\"fl\",\"c\":{\"a\":0,\"k\":[1,1,1,1],\"ix\":4},\"o\":{\"a\":0,\"k\":100,\"ix\":5},\"r\":1,\"bm\":0,\"nm\":\"Fill 1\",\"mn\":\"ADBE Vector Graphic - Fill\",\"hd\":false},{\"ty\":\"tr\",\"p\":{\"a\":0,\"k\":[1095.673,2502.33],\"ix\":2},\"a\":{\"a\":0,\"k\":[0,0],\"ix\":1},\"s\":{\"a\":0,\"k\":[100,100],\"ix\":3},\"r\":{\"a\":0,\"k\":0,\"ix\":6},\"o\":{\"a\":0,\"k\":48,\"ix\":7},\"sk\":{\"a\":0,\"k\":0,\"ix\":4},\"sa\":{\"a\":0,\"k\":0,\"ix\":5},\"nm\":\"Transform\"}],\"nm\":\"lap p3\",\"np\":2,\"cix\":2,\"bm\":9,\"ix\":3,\"mn\":\"ADBE Vector Group\",\"hd\":false},{\"ty\":\"gr\",\"it\":[{\"ind\":0,\"ty\":\"sh\",\"ix\":1,\"ks\":{\"a\":0,\"k\":{\"i\":[[0,-9.516],[9.104,-0.028],[0,9.536],[-9.116,0.007]],\"o\":[[0,9.515],[-9.116,0.028],[0,-9.536],[9.104,-0.007]],\"v\":[[16.495,-0.03],[0.018,17.248],[-16.495,0.031],[0.018,-17.248]],\"c\":true},\"ix\":2},\"nm\":\"Path 1\",\"mn\":\"ADBE Vector Shape - Group\",\"hd\":false},{\"ty\":\"fl\",\"c\":{\"a\":0,\"k\":[1,1,1,1],\"ix\":4},\"o\":{\"a\":0,\"k\":100,\"ix\":5},\"r\":1,\"bm\":0,\"nm\":\"Fill 1\",\"mn\":\"ADBE Vector Graphic - Fill\",\"hd\":false},{\"ty\":\"tr\",\"p\":{\"a\":0,\"k\":[1140.123,1973.387],\"ix\":2},\"a\":{\"a\":0,\"k\":[0,0],\"ix\":1},\"s\":{\"a\":0,\"k\":[100,100],\"ix\":3},\"r\":{\"a\":0,\"k\":0,\"ix\":6},\"o\":{\"a\":0,\"k\":100,\"ix\":7},\"sk\":{\"a\":0,\"k\":0,\"ix\":4},\"sa\":{\"a\":0,\"k\":0,\"ix\":5},\"nm\":\"Transform\"}],\"nm\":\"lap p4\",\"np\":2,\"cix\":2,\"bm\":0,\"ix\":4,\"mn\":\"ADBE Vector Group\",\"hd\":false},{\"ty\":\"gr\",\"it\":[{\"ind\":0,\"ty\":\"sh\",\"ix\":1,\"ks\":{\"a\":0,\"k\":{\"i\":[[17.421,-1.148],[0,0],[0,20.866],[0,0],[-20.859,0.086],[0,0],[0,-19.006],[0,0]],\"o\":[[0,0],[-20.859,1.375],[0,0],[0,-20.866],[0,0],[17.421,-0.072],[0,0],[0,19.005]],\"v\":[[670.238,399.672],[-663.938,487.604],[-701.749,452.314],[-701.749,-444.227],[-663.938,-482.165],[670.238,-487.687],[701.749,-453.405],[701.749,363.183]],\"c\":true},\"ix\":2},\"nm\":\"Path 1\",\"mn\":\"ADBE Vector Shape - Group\",\"hd\":false},{\"ty\":\"gf\",\"o\":{\"a\":0,\"k\":100,\"ix\":10},\"r\":1,\"bm\":0,\"g\":{\"p\":3,\"k\":{\"a\":0,\"k\":[0,1,0.565,0.522,0.5,0.992,0.5,0.627,1,0.984,0.435,0.733],\"ix\":9}},\"s\":{\"a\":0,\"k\":[193.61,-358.489],\"ix\":5},\"e\":{\"a\":0,\"k\":[-969.113,1542.311],\"ix\":6},\"t\":1,\"nm\":\"Gradient Fill 1\",\"mn\":\"ADBE Vector Graphic - G-Fill\",\"hd\":false},{\"ty\":\"tr\",\"p\":{\"a\":0,\"k\":[1107.39,2492.489],\"ix\":2},\"a\":{\"a\":0,\"k\":[0,0],\"ix\":1},\"s\":{\"a\":0,\"k\":[100,100],\"ix\":3},\"r\":{\"a\":0,\"k\":0,\"ix\":6},\"o\":{\"a\":0,\"k\":100,\"ix\":7},\"sk\":{\"a\":0,\"k\":0,\"ix\":4},\"sa\":{\"a\":0,\"k\":0,\"ix\":5},\"nm\":\"Transform\"}],\"nm\":\"lap p5\",\"np\":2,\"cix\":2,\"bm\":0,\"ix\":5,\"mn\":\"ADBE Vector Group\",\"hd\":false},{\"ty\":\"gr\",\"it\":[{\"ind\":0,\"ty\":\"sh\",\"ix\":1,\"ks\":{\"a\":0,\"k\":{\"i\":[[21.118,-1.493],[0,0],[0,25.56],[0,0],[-25.633,0],[0,0],[0,-23.106],[0,0]],\"o\":[[0,0],[-25.633,1.811],[0,0],[0,-25.56],[0,0],[21.118,0],[0,0],[0,23.105]],\"v\":[[720.365,455.365],[-712.083,556.595],[-758.557,513.599],[-758.557,-510.432],[-712.083,-556.713],[720.365,-556.713],[758.557,-514.876],[758.557,410.829]],\"c\":true},\"ix\":2},\"nm\":\"Path 1\",\"mn\":\"ADBE Vector Shape - Group\",\"hd\":false},{\"ty\":\"gf\",\"o\":{\"a\":0,\"k\":100,\"ix\":10},\"r\":1,\"bm\":0,\"g\":{\"p\":3,\"k\":{\"a\":0,\"k\":[0,0.251,0.267,0.494,0.498,0.243,0.249,0.457,0.996,0.235,0.231,0.42],\"ix\":9}},\"s\":{\"a\":0,\"k\":[-758.887,-0.059],\"ix\":5},\"e\":{\"a\":0,\"k\":[758.227,-0.059],\"ix\":6},\"t\":1,\"nm\":\"Gradient Fill 1\",\"mn\":\"ADBE Vector Graphic - G-Fill\",\"hd\":false},{\"ty\":\"tr\",\"p\":{\"a\":0,\"k\":[1101.887,2502.059],\"ix\":2},\"a\":{\"a\":0,\"k\":[0,0],\"ix\":1},\"s\":{\"a\":0,\"k\":[100,100],\"ix\":3},\"r\":{\"a\":0,\"k\":0,\"ix\":6},\"o\":{\"a\":0,\"k\":100,\"ix\":7},\"sk\":{\"a\":0,\"k\":0,\"ix\":4},\"sa\":{\"a\":0,\"k\":0,\"ix\":5},\"nm\":\"Transform\"}],\"nm\":\"lap p6\",\"np\":2,\"cix\":2,\"bm\":0,\"ix\":6,\"mn\":\"ADBE Vector Group\",\"hd\":false},{\"ty\":\"gr\",\"it\":[{\"ind\":0,\"ty\":\"sh\",\"ix\":1,\"ks\":{\"a\":0,\"k\":{\"i\":[[21.117,-1.493],[0,0],[0,25.56],[0,0],[-25.633,0],[0,0],[0,-23.106],[0,0]],\"o\":[[0,0],[-25.633,1.811],[0,0],[0,-25.56],[0,0],[21.117,0],[0,0],[0,23.105]],\"v\":[[720.366,455.365],[-712.083,556.595],[-758.557,513.599],[-758.557,-510.432],[-712.083,-556.713],[720.366,-556.713],[758.557,-514.876],[758.557,410.829]],\"c\":true},\"ix\":2},\"nm\":\"Path 1\",\"mn\":\"ADBE Vector Shape - Group\",\"hd\":false},{\"ty\":\"gf\",\"o\":{\"a\":0,\"k\":100,\"ix\":10},\"r\":1,\"bm\":0,\"g\":{\"p\":3,\"k\":{\"a\":0,\"k\":[0,0.251,0.267,0.494,0.498,0.243,0.249,0.457,0.996,0.235,0.231,0.42],\"ix\":9}},\"s\":{\"a\":0,\"k\":[-31.047,-38.059],\"ix\":5},\"e\":{\"a\":0,\"k\":[-194.754,30.697],\"ix\":6},\"t\":1,\"nm\":\"Gradient Fill 1\",\"mn\":\"ADBE Vector Graphic - G-Fill\",\"hd\":false},{\"ty\":\"tr\",\"p\":{\"a\":0,\"k\":[1079.047,2502.059],\"ix\":2},\"a\":{\"a\":0,\"k\":[0,0],\"ix\":1},\"s\":{\"a\":0,\"k\":[100,100],\"ix\":3},\"r\":{\"a\":0,\"k\":0,\"ix\":6},\"o\":{\"a\":0,\"k\":100,\"ix\":7},\"sk\":{\"a\":0,\"k\":0,\"ix\":4},\"sa\":{\"a\":0,\"k\":0,\"ix\":5},\"nm\":\"Transform\"}],\"nm\":\"lap p7\",\"np\":2,\"cix\":2,\"bm\":0,\"ix\":7,\"mn\":\"ADBE Vector Group\",\"hd\":false},{\"ty\":\"gr\",\"it\":[{\"ind\":0,\"ty\":\"sh\",\"ix\":1,\"ks\":{\"a\":0,\"k\":{\"i\":[[0,0],[0,0],[0,0],[-12.684,-2.276],[0,0],[-7.271,0.613],[0,0],[0,15.431]],\"o\":[[0,0],[0,0],[0,15.019],[0,0],[7.206,1.293],[0,0],[13.15,-1.109],[0,0]],\"v\":[[1073.669,-79.141],[-1073.669,-97.843],[-1073.669,-42.507],[-1051.618,-12.441],[-444.416,96.525],[-422.63,97.547],[1050.334,-26.691],[1073.669,-56.042]],\"c\":true},\"ix\":2},\"nm\":\"Path 1\",\"mn\":\"ADBE Vector Shape - Group\",\"hd\":false},{\"ty\":\"gf\",\"o\":{\"a\":0,\"k\":100,\"ix\":10},\"r\":1,\"bm\":0,\"g\":{\"p\":3,\"k\":{\"a\":0,\"k\":[0,0.251,0.267,0.494,0.498,0.243,0.249,0.457,0.996,0.235,0.231,0.42],\"ix\":9}},\"s\":{\"a\":0,\"k\":[-166.999,2.733],\"ix\":5},\"e\":{\"a\":0,\"k\":[-317.845,66.088],\"ix\":6},\"t\":1,\"nm\":\"Gradient Fill 1\",\"mn\":\"ADBE Vector Graphic - G-Fill\",\"hd\":false},{\"ty\":\"tr\",\"p\":{\"a\":0,\"k\":[1416.999,3126.267],\"ix\":2},\"a\":{\"a\":0,\"k\":[0,0],\"ix\":1},\"s\":{\"a\":0,\"k\":[100,100],\"ix\":3},\"r\":{\"a\":0,\"k\":0,\"ix\":6},\"o\":{\"a\":0,\"k\":100,\"ix\":7},\"sk\":{\"a\":0,\"k\":0,\"ix\":4},\"sa\":{\"a\":0,\"k\":0,\"ix\":5},\"nm\":\"Transform\"}],\"nm\":\"lap p8\",\"np\":2,\"cix\":2,\"bm\":0,\"ix\":8,\"mn\":\"ADBE Vector Group\",\"hd\":false}],\"ip\":0,\"op\":240,\"st\":0,\"bm\":0},{\"ddd\":0,\"ind\":19,\"ty\":4,\"nm\":\"letter\",\"sr\":1,\"ks\":{\"o\":{\"a\":0,\"k\":100,\"ix\":11},\"r\":{\"a\":0,\"k\":0,\"ix\":10},\"p\":{\"a\":0,\"k\":[1772.042,1998.052,0],\"ix\":2},\"a\":{\"a\":0,\"k\":[1772.042,1998.052,0],\"ix\":1},\"s\":{\"a\":0,\"k\":[100,100,100],\"ix\":6}},\"ao\":0,\"shapes\":[{\"ty\":\"gr\",\"it\":[{\"ind\":0,\"ty\":\"sh\",\"ix\":1,\"ks\":{\"a\":0,\"k\":{\"i\":[[13.904,15.191],[0,0],[51.296,34.685],[0,0],[0,-26.975],[0,0],[-32.348,-2.202],[-171.241,-77.94],[-70.582,-53.514],[-119.178,-111.105],[-177.467,-109.067],[-154.529,-79.575],[-184.03,-112.788],[-22.935,-59.872],[0,0],[0,45.408],[0,0]],\"o\":[[0,0],[-48.089,40.462],[0,0],[-19.209,16.189],[0,0],[47.03,-20.494],[89.43,6.086],[160.111,72.873],[135.98,103.098],[124.103,115.696],[187.529,115.251],[216.497,111.485],[55.643,34.103],[0,0],[45.281,-4.099],[0,0],[0,-22.318]],\"v\":[[1226.274,-675.405],[252.554,143.866],[84.545,153.634],[-1217.173,-726.525],[-1248.684,-659.166],[-1248.684,-438.285],[-1129.509,-460.986],[-847.483,-321.463],[-599.992,-227.451],[-404.302,109.098],[4.347,240.904],[286.372,576.117],[907.979,577.999],[1022.132,726.525],[1168.398,713.286],[1248.684,625.506],[1248.684,-617.683]],\"c\":true},\"ix\":2},\"nm\":\"Path 1\",\"mn\":\"ADBE Vector Shape - Group\",\"hd\":false},{\"ty\":\"gf\",\"o\":{\"a\":0,\"k\":100,\"ix\":10},\"r\":1,\"bm\":0,\"g\":{\"p\":3,\"k\":{\"a\":0,\"k\":[0,1,0.769,0.267,0.498,0.976,0.602,0.302,0.996,0.953,0.435,0.337],\"ix\":9}},\"s\":{\"a\":0,\"k\":[9.617,-475.4],\"ix\":5},\"e\":{\"a\":0,\"k\":[867.213,1423.972],\"ix\":6},\"t\":1,\"nm\":\"Gradient Fill 1\",\"mn\":\"ADBE Vector Graphic - G-Fill\",\"hd\":false},{\"ty\":\"tr\",\"p\":{\"a\":0,\"k\":[1792.014,1909.4],\"ix\":2},\"a\":{\"a\":0,\"k\":[0,0],\"ix\":1},\"s\":{\"a\":0,\"k\":[100,100],\"ix\":3},\"r\":{\"a\":0,\"k\":0,\"ix\":6},\"o\":{\"a\":0,\"k\":37,\"ix\":7},\"sk\":{\"a\":0,\"k\":0,\"ix\":4},\"sa\":{\"a\":0,\"k\":0,\"ix\":5},\"nm\":\"Transform\"}],\"nm\":\"letter p1\",\"np\":2,\"cix\":2,\"bm\":1,\"ix\":1,\"mn\":\"ADBE Vector Group\",\"hd\":false},{\"ty\":\"gr\",\"it\":[{\"ind\":0,\"ty\":\"sh\",\"ix\":1,\"ks\":{\"a\":0,\"k\":{\"i\":[[-48.089,40.462],[0,0],[24.43,0.464],[0,0],[15.754,-13.279],[0,0]],\"o\":[[0,0],[-15.229,-16.639],[0,0],[-22.11,-0.42],[0,0],[51.296,34.685]],\"v\":[[248.003,428.933],[1221.724,-390.339],[1160.347,-418.046],[-1163.464,-462.216],[-1221.724,-441.459],[79.995,438.7]],\"c\":true},\"ix\":2},\"nm\":\"Path 1\",\"mn\":\"ADBE Vector Shape - Group\",\"hd\":false},{\"ty\":\"gf\",\"o\":{\"a\":0,\"k\":100,\"ix\":10},\"r\":1,\"bm\":0,\"g\":{\"p\":3,\"k\":{\"a\":0,\"k\":[0,1,0.769,0.267,0.498,0.976,0.602,0.302,0.996,0.953,0.435,0.337],\"ix\":9}},\"s\":{\"a\":0,\"k\":[-247.725,-10.334],\"ix\":5},\"e\":{\"a\":0,\"k\":[1077.028,-2066.664],\"ix\":6},\"t\":1,\"nm\":\"Gradient Fill 1\",\"mn\":\"ADBE Vector Graphic - G-Fill\",\"hd\":false},{\"ty\":\"tr\",\"p\":{\"a\":0,\"k\":[1796.564,1624.334],\"ix\":2},\"a\":{\"a\":0,\"k\":[0,0],\"ix\":1},\"s\":{\"a\":0,\"k\":[100,100],\"ix\":3},\"r\":{\"a\":0,\"k\":0,\"ix\":6},\"o\":{\"a\":0,\"k\":100,\"ix\":7},\"sk\":{\"a\":0,\"k\":0,\"ix\":4},\"sa\":{\"a\":0,\"k\":0,\"ix\":5},\"nm\":\"Transform\"}],\"nm\":\"letter p2\",\"np\":2,\"cix\":2,\"bm\":0,\"ix\":2,\"mn\":\"ADBE Vector Group\",\"hd\":false},{\"ty\":\"gr\",\"it\":[{\"ty\":\"gr\",\"it\":[{\"ind\":0,\"ty\":\"sh\",\"ix\":1,\"ks\":{\"a\":0,\"k\":{\"i\":[[46.734,0.888],[0,0],[0,-49.099],[0,0],[-50.343,4.557],[0,0],[0,45.408],[0,0]],\"o\":[[0,0],[-49.07,-0.933],[0,0],[0,50.484],[0,0],[45.281,-4.099],[0,0],[0,-46.762]],\"v\":[[1164.897,-791.456],[-1158.914,-835.626],[-1248.684,-747.508],[-1248.684,750.19],[-1155.413,835.281],[1168.398,624.943],[1248.684,537.164],[1248.684,-706.027]],\"c\":true},\"ix\":2},\"nm\":\"Path 1\",\"mn\":\"ADBE Vector Shape - Group\",\"hd\":false},{\"ty\":\"gf\",\"o\":{\"a\":0,\"k\":100,\"ix\":10},\"r\":1,\"bm\":0,\"g\":{\"p\":3,\"k\":{\"a\":0,\"k\":[0,1,0.769,0.267,0.498,0.976,0.602,0.302,0.996,0.953,0.435,0.337],\"ix\":9}},\"s\":{\"a\":0,\"k\":[-233.047,-453.743],\"ix\":5},\"e\":{\"a\":0,\"k\":[624.548,1445.628],\"ix\":6},\"t\":1,\"nm\":\"Gradient Fill 1\",\"mn\":\"ADBE Vector Graphic - G-Fill\",\"hd\":false},{\"ty\":\"tr\",\"p\":{\"a\":0,\"k\":[0,0],\"ix\":2},\"a\":{\"a\":0,\"k\":[0,0],\"ix\":1},\"s\":{\"a\":0,\"k\":[100,100],\"ix\":3},\"r\":{\"a\":0,\"k\":0,\"ix\":6},\"o\":{\"a\":0,\"k\":100,\"ix\":7},\"sk\":{\"a\":0,\"k\":0,\"ix\":4},\"sa\":{\"a\":0,\"k\":0,\"ix\":5},\"nm\":\"Transform\"}],\"nm\":\"Group 1\",\"np\":2,\"cix\":2,\"bm\":0,\"ix\":1,\"mn\":\"ADBE Vector Group\",\"hd\":false},{\"ty\":\"tr\",\"p\":{\"a\":0,\"k\":[1792.014,1997.743],\"ix\":2},\"a\":{\"a\":0,\"k\":[0,0],\"ix\":1},\"s\":{\"a\":0,\"k\":[100,100],\"ix\":3},\"r\":{\"a\":0,\"k\":0,\"ix\":6},\"o\":{\"a\":0,\"k\":100,\"ix\":7},\"sk\":{\"a\":0,\"k\":0,\"ix\":4},\"sa\":{\"a\":0,\"k\":0,\"ix\":5},\"nm\":\"Transform\"}],\"nm\":\"letter p3\",\"np\":1,\"cix\":2,\"bm\":0,\"ix\":3,\"mn\":\"ADBE Vector Group\",\"hd\":false},{\"ty\":\"gr\",\"it\":[{\"ty\":\"gr\",\"it\":[{\"ind\":0,\"ty\":\"sh\",\"ix\":1,\"ks\":{\"a\":0,\"k\":{\"i\":[[46.735,0.888],[0,0],[0,-49.099],[0,0],[-50.343,4.557],[0,0],[0,45.408],[0,0]],\"o\":[[0,0],[-49.07,-0.933],[0,0],[0,50.484],[0,0],[45.281,-4.099],[0,0],[0,-46.762]],\"v\":[[1164.896,-791.456],[-1158.914,-835.626],[-1248.684,-747.508],[-1248.684,750.19],[-1155.413,835.281],[1168.397,624.943],[1248.684,537.164],[1248.684,-706.027]],\"c\":true},\"ix\":2},\"nm\":\"Path 1\",\"mn\":\"ADBE Vector Shape - Group\",\"hd\":false},{\"ty\":\"gf\",\"o\":{\"a\":0,\"k\":100,\"ix\":10},\"r\":1,\"bm\":0,\"g\":{\"p\":3,\"k\":{\"a\":0,\"k\":[0,1,0.769,0.267,0.498,0.976,0.602,0.302,0.996,0.953,0.435,0.337],\"ix\":9}},\"s\":{\"a\":0,\"k\":[-736.152,-5.361],\"ix\":5},\"e\":{\"a\":0,\"k\":[-1766.405,103.995],\"ix\":6},\"t\":1,\"nm\":\"Gradient Fill 1\",\"mn\":\"ADBE Vector Graphic - G-Fill\",\"hd\":false},{\"ty\":\"tr\",\"p\":{\"a\":0,\"k\":[0,0],\"ix\":2},\"a\":{\"a\":0,\"k\":[0,0],\"ix\":1},\"s\":{\"a\":0,\"k\":[100,100],\"ix\":3},\"r\":{\"a\":0,\"k\":0,\"ix\":6},\"o\":{\"a\":0,\"k\":100,\"ix\":7},\"sk\":{\"a\":0,\"k\":0,\"ix\":4},\"sa\":{\"a\":0,\"k\":0,\"ix\":5},\"nm\":\"Transform\"}],\"nm\":\"Group 1\",\"np\":2,\"cix\":2,\"bm\":0,\"ix\":1,\"mn\":\"ADBE Vector Group\",\"hd\":false},{\"ty\":\"tr\",\"p\":{\"a\":0,\"k\":[1752.069,1998.361],\"ix\":2},\"a\":{\"a\":0,\"k\":[0,0],\"ix\":1},\"s\":{\"a\":0,\"k\":[100,100],\"ix\":3},\"r\":{\"a\":0,\"k\":0,\"ix\":6},\"o\":{\"a\":0,\"k\":100,\"ix\":7},\"sk\":{\"a\":0,\"k\":0,\"ix\":4},\"sa\":{\"a\":0,\"k\":0,\"ix\":5},\"nm\":\"Transform\"}],\"nm\":\"letter p4\",\"np\":1,\"cix\":2,\"bm\":0,\"ix\":4,\"mn\":\"ADBE Vector Group\",\"hd\":false}],\"ip\":0,\"op\":240,\"st\":0,\"bm\":0},{\"ddd\":0,\"ind\":20,\"ty\":4,\"nm\":\"l3\",\"sr\":1,\"ks\":{\"o\":{\"a\":0,\"k\":100,\"ix\":11},\"r\":{\"a\":1,\"k\":[{\"i\":{\"x\":[0.667],\"y\":[1]},\"o\":{\"x\":[0.333],\"y\":[0]},\"t\":0,\"s\":[60]},{\"t\":60,\"s\":[55]}],\"ix\":10,\"x\":\"var $bm_rt;\\n$bm_rt = loopOut('pingpong');\"},\"p\":{\"a\":0,\"k\":[2107.324,2650.354,0],\"ix\":2},\"a\":{\"a\":0,\"k\":[1991.324,2256.856,0],\"ix\":1},\"s\":{\"a\":0,\"k\":[-200,200,100],\"ix\":6}},\"ao\":0,\"hasMask\":true,\"masksProperties\":[{\"inv\":false,\"mode\":\"a\",\"pt\":{\"a\":0,\"k\":{\"i\":[[-106.029,37.139],[-2.735,114.949],[-104.282,-3.645],[-91.217,-46.022],[187.903,-79.075],[-7.999,-93.757]],\"o\":[[88.268,-30.918],[2.735,-114.949],[109.741,3.836],[158.941,80.191],[-187.903,79.074],[10.92,127.998]],\"v\":[[1979.933,1765.272],[2134.215,1617.494],[2301.684,1432.68],[2587.998,1334.006],[2425.118,1750.494],[2356.377,1988.507]],\"c\":true},\"ix\":1},\"o\":{\"a\":0,\"k\":100,\"ix\":3},\"x\":{\"a\":0,\"k\":0,\"ix\":4},\"nm\":\"Mask 1\"}],\"shapes\":[{\"ty\":\"gr\",\"it\":[{\"ty\":\"gr\",\"it\":[{\"ty\":\"gr\",\"it\":[{\"ind\":0,\"ty\":\"sh\",\"ix\":1,\"ks\":{\"a\":0,\"k\":{\"i\":[[112.306,-73.291],[0,0],[-1.815,-0.36],[0,0]],\"o\":[[0,0],[114.084,-74.45],[0,0],[-1.792,-0.357]],\"v\":[[-145.499,26.101],[-148.329,21.768],[148.329,-17.798],[147.328,-12.721]],\"c\":true},\"ix\":2},\"nm\":\"Path 1\",\"mn\":\"ADBE Vector Shape - Group\",\"hd\":false},{\"ty\":\"fl\",\"c\":{\"a\":0,\"k\":[0.988235294819,0.992156863213,0.996078431606,1],\"ix\":4},\"o\":{\"a\":0,\"k\":100,\"ix\":5},\"r\":1,\"bm\":0,\"nm\":\"Fill 1\",\"mn\":\"ADBE Vector Graphic - Fill\",\"hd\":false},{\"ty\":\"tr\",\"p\":{\"a\":0,\"k\":[2551.958,1507.037],\"ix\":2},\"a\":{\"a\":0,\"k\":[0,0],\"ix\":1},\"s\":{\"a\":0,\"k\":[100,100],\"ix\":3},\"r\":{\"a\":0,\"k\":0,\"ix\":6},\"o\":{\"a\":0,\"k\":100,\"ix\":7},\"sk\":{\"a\":0,\"k\":0,\"ix\":4},\"sa\":{\"a\":0,\"k\":0,\"ix\":5},\"nm\":\"Transform\"}],\"nm\":\"Group 1\",\"np\":2,\"cix\":2,\"bm\":0,\"ix\":1,\"mn\":\"ADBE Vector Group\",\"hd\":false},{\"ty\":\"gr\",\"it\":[{\"ind\":0,\"ty\":\"sh\",\"ix\":1,\"ks\":{\"a\":0,\"k\":{\"i\":[[45.415,-112.978],[0,0],[0.774,1.672],[0,0]],\"o\":[[0,0],[44.59,-110.929],[0,0],[0.785,1.692]],\"v\":[[11.399,141.739],[6.596,139.811],[-25.719,-139.562],[-21.026,-141.739]],\"c\":true},\"ix\":2},\"nm\":\"Path 1\",\"mn\":\"ADBE Vector Shape - Group\",\"hd\":false},{\"ty\":\"fl\",\"c\":{\"a\":0,\"k\":[0.988235294819,0.992156863213,0.996078431606,1],\"ix\":4},\"o\":{\"a\":0,\"k\":100,\"ix\":5},\"r\":1,\"bm\":0,\"nm\":\"Fill 1\",\"mn\":\"ADBE Vector Graphic - Fill\",\"hd\":false},{\"ty\":\"tr\",\"p\":{\"a\":0,\"k\":[2234.815,1570.368],\"ix\":2},\"a\":{\"a\":0,\"k\":[0,0],\"ix\":1},\"s\":{\"a\":0,\"k\":[100,100],\"ix\":3},\"r\":{\"a\":0,\"k\":0,\"ix\":6},\"o\":{\"a\":0,\"k\":100,\"ix\":7},\"sk\":{\"a\":0,\"k\":0,\"ix\":4},\"sa\":{\"a\":0,\"k\":0,\"ix\":5},\"nm\":\"Transform\"}],\"nm\":\"Group 2\",\"np\":2,\"cix\":2,\"bm\":0,\"ix\":2,\"mn\":\"ADBE Vector Group\",\"hd\":false},{\"ty\":\"gr\",\"it\":[{\"ind\":0,\"ty\":\"sh\",\"ix\":1,\"ks\":{\"a\":0,\"k\":{\"i\":[[66.648,-131.966],[0,0],[-2.752,0.248],[0,0]],\"o\":[[0,0],[67.94,-134.524],[0,0],[-2.722,0.246]],\"v\":[[-167.571,81.643],[-172.189,79.311],[171.724,-81.643],[172.189,-76.49]],\"c\":true},\"ix\":2},\"nm\":\"Path 1\",\"mn\":\"ADBE Vector Shape - Group\",\"hd\":false},{\"ty\":\"fl\",\"c\":{\"a\":0,\"k\":[0.988235294819,0.992156863213,0.996078431606,1],\"ix\":4},\"o\":{\"a\":0,\"k\":100,\"ix\":5},\"r\":1,\"bm\":0,\"nm\":\"Fill 1\",\"mn\":\"ADBE Vector Graphic - Fill\",\"hd\":false},{\"ty\":\"tr\",\"p\":{\"a\":0,\"k\":[2199.942,2089.265],\"ix\":2},\"a\":{\"a\":0,\"k\":[0,0],\"ix\":1},\"s\":{\"a\":0,\"k\":[100,100],\"ix\":3},\"r\":{\"a\":0,\"k\":0,\"ix\":6},\"o\":{\"a\":0,\"k\":100,\"ix\":7},\"sk\":{\"a\":0,\"k\":0,\"ix\":4},\"sa\":{\"a\":0,\"k\":0,\"ix\":5},\"nm\":\"Transform\"}],\"nm\":\"Group 3\",\"np\":2,\"cix\":2,\"bm\":0,\"ix\":3,\"mn\":\"ADBE Vector Group\",\"hd\":false},{\"ty\":\"gr\",\"it\":[{\"ind\":0,\"ty\":\"sh\",\"ix\":1,\"ks\":{\"a\":0,\"k\":{\"i\":[[-4.09,-150.939],[0,0],[1.317,1.118],[0,0]],\"o\":[[0,0],[-4.026,-148.597],[0,0],[1.334,1.13]],\"v\":[[70.433,132.879],[65.261,133.021],[-70.433,-129.077],[-67.084,-133.021]],\"c\":true},\"ix\":2},\"nm\":\"Path 1\",\"mn\":\"ADBE Vector Shape - Group\",\"hd\":false},{\"ty\":\"fl\",\"c\":{\"a\":0,\"k\":[0.988235294819,0.992156863213,0.996078431606,1],\"ix\":4},\"o\":{\"a\":0,\"k\":100,\"ix\":5},\"r\":1,\"bm\":0,\"nm\":\"Fill 1\",\"mn\":\"ADBE Vector Graphic - Fill\",\"hd\":false},{\"ty\":\"tr\",\"p\":{\"a\":0,\"k\":[2000.82,1906.091],\"ix\":2},\"a\":{\"a\":0,\"k\":[0,0],\"ix\":1},\"s\":{\"a\":0,\"k\":[100,100],\"ix\":3},\"r\":{\"a\":0,\"k\":0,\"ix\":6},\"o\":{\"a\":0,\"k\":100,\"ix\":7},\"sk\":{\"a\":0,\"k\":0,\"ix\":4},\"sa\":{\"a\":0,\"k\":0,\"ix\":5},\"nm\":\"Transform\"}],\"nm\":\"Group 4\",\"np\":2,\"cix\":2,\"bm\":0,\"ix\":4,\"mn\":\"ADBE Vector Group\",\"hd\":false},{\"ty\":\"gr\",\"it\":[{\"ind\":0,\"ty\":\"sh\",\"ix\":1,\"ks\":{\"a\":0,\"k\":{\"i\":[[64.355,-371.142],[0,0],[-330.063,173.823],[0,0]],\"o\":[[0,0],[64.624,-372.69],[0,0],[-328.672,173.091]],\"v\":[[-316.042,443.448],[-321.14,442.566],[318.73,-443.448],[321.14,-438.87]],\"c\":true},\"ix\":2},\"nm\":\"Path 1\",\"mn\":\"ADBE Vector Shape - Group\",\"hd\":false},{\"ty\":\"fl\",\"c\":{\"a\":0,\"k\":[0.988235294819,0.992156863213,0.996078431606,1],\"ix\":4},\"o\":{\"a\":0,\"k\":100,\"ix\":5},\"r\":1,\"bm\":0,\"nm\":\"Fill 1\",\"mn\":\"ADBE Vector Graphic - Fill\",\"hd\":false},{\"ty\":\"tr\",\"p\":{\"a\":0,\"k\":[2334.656,1795.696],\"ix\":2},\"a\":{\"a\":0,\"k\":[0,0],\"ix\":1},\"s\":{\"a\":0,\"k\":[100,100],\"ix\":3},\"r\":{\"a\":0,\"k\":0,\"ix\":6},\"o\":{\"a\":0,\"k\":100,\"ix\":7},\"sk\":{\"a\":0,\"k\":0,\"ix\":4},\"sa\":{\"a\":0,\"k\":0,\"ix\":5},\"nm\":\"Transform\"}],\"nm\":\"Group 5\",\"np\":2,\"cix\":2,\"bm\":0,\"ix\":5,\"mn\":\"ADBE Vector Group\",\"hd\":false},{\"ty\":\"tr\",\"p\":{\"a\":0,\"k\":[2334.656,1795.696],\"ix\":2},\"a\":{\"a\":0,\"k\":[2334.656,1795.696],\"ix\":1},\"s\":{\"a\":0,\"k\":[100,100],\"ix\":3},\"r\":{\"a\":0,\"k\":0,\"ix\":6},\"o\":{\"a\":0,\"k\":100,\"ix\":7},\"sk\":{\"a\":0,\"k\":0,\"ix\":4},\"sa\":{\"a\":0,\"k\":0,\"ix\":5},\"nm\":\"Transform\"}],\"nm\":\"Group 1\",\"np\":5,\"cix\":2,\"bm\":9,\"ix\":1,\"mn\":\"ADBE Vector Group\",\"hd\":false},{\"ty\":\"tr\",\"p\":{\"a\":0,\"k\":[2334.656,1795.696],\"ix\":2},\"a\":{\"a\":0,\"k\":[2334.656,1795.696],\"ix\":1},\"s\":{\"a\":0,\"k\":[100,100],\"ix\":3},\"r\":{\"a\":0,\"k\":0,\"ix\":6},\"o\":{\"a\":0,\"k\":15,\"ix\":7},\"sk\":{\"a\":0,\"k\":0,\"ix\":4},\"sa\":{\"a\":0,\"k\":0,\"ix\":5},\"nm\":\"Transform\"}],\"nm\":\"Group 1\",\"np\":1,\"cix\":2,\"bm\":0,\"ix\":1,\"mn\":\"ADBE Vector Group\",\"hd\":false},{\"ty\":\"gr\",\"it\":[{\"ind\":0,\"ty\":\"sh\",\"ix\":1,\"ks\":{\"a\":0,\"k\":{\"i\":[[2.315,-19.837],[0.92,-0.424],[75.165,-4.792],[14.717,0.099],[-44.396,14.771],[20.397,42.71],[-106.029,37.139],[-2.735,114.949],[-104.283,-3.645],[-91.217,-46.022],[187.903,-79.074],[-7.999,-93.757],[44.245,-51.768]],\"o\":[[-0.916,0.429],[-54.449,25.07],[-14.718,-0.099],[-13.259,-34.579],[68.946,-22.939],[-25.246,-52.864],[88.268,-30.919],[2.735,-114.949],[109.741,3.836],[158.941,80.192],[-187.903,79.074],[10.92,127.997],[-14.987,17.534]],\"v\":[[-141.783,414.783],[-144.537,416.062],[-338.085,463.706],[-382.238,463.408],[-357.52,378.796],[-311.024,190.716],[-286.497,-23.584],[-132.216,-171.362],[35.253,-356.176],[321.567,-454.85],[158.688,-38.362],[89.947,199.652],[-117.546,357.32]],\"c\":true},\"ix\":2},\"nm\":\"Path 1\",\"mn\":\"ADBE Vector Shape - Group\",\"hd\":false},{\"ty\":\"gf\",\"o\":{\"a\":0,\"k\":100,\"ix\":10},\"r\":1,\"bm\":0,\"g\":{\"p\":3,\"k\":{\"a\":0,\"k\":[0,0.667,0.502,0.976,0.499,0.633,0.465,0.973,0.999,0.6,0.427,0.969],\"ix\":9}},\"s\":{\"a\":0,\"k\":[372.808,-397.138],\"ix\":5},\"e\":{\"a\":0,\"k\":[-263.214,183.467],\"ix\":6},\"t\":1,\"nm\":\"Gradient Fill 1\",\"mn\":\"ADBE Vector Graphic - G-Fill\",\"hd\":false},{\"ty\":\"tr\",\"p\":{\"a\":0,\"k\":[2266.43,1788.856],\"ix\":2},\"a\":{\"a\":0,\"k\":[0,0],\"ix\":1},\"s\":{\"a\":0,\"k\":[100,100],\"ix\":3},\"r\":{\"a\":0,\"k\":0,\"ix\":6},\"o\":{\"a\":0,\"k\":100,\"ix\":7},\"sk\":{\"a\":0,\"k\":0,\"ix\":4},\"sa\":{\"a\":0,\"k\":0,\"ix\":5},\"nm\":\"Transform\"}],\"nm\":\"Group 2\",\"np\":2,\"cix\":2,\"bm\":0,\"ix\":2,\"mn\":\"ADBE Vector Group\",\"hd\":false}],\"ip\":0,\"op\":144,\"st\":0,\"bm\":0},{\"ddd\":0,\"ind\":21,\"ty\":4,\"nm\":\"l4\",\"sr\":1,\"ks\":{\"o\":{\"a\":0,\"k\":100,\"ix\":11},\"r\":{\"a\":1,\"k\":[{\"i\":{\"x\":[0.667],\"y\":[1]},\"o\":{\"x\":[0.333],\"y\":[0]},\"t\":-30,\"s\":[32]},{\"t\":30,\"s\":[28]}],\"ix\":10,\"x\":\"var $bm_rt;\\n$bm_rt = loopOut('pingpong');\"},\"p\":{\"a\":0,\"k\":[2299.324,3602.354,0],\"ix\":2},\"a\":{\"a\":0,\"k\":[1991.324,2256.856,0],\"ix\":1},\"s\":{\"a\":0,\"k\":[-300,300,100],\"ix\":6}},\"ao\":0,\"hasMask\":true,\"masksProperties\":[{\"inv\":false,\"mode\":\"a\",\"pt\":{\"a\":0,\"k\":{\"i\":[[-2.735,114.949],[-104.282,-3.645],[-91.217,-46.022],[187.903,-79.075]],\"o\":[[2.735,-114.949],[109.741,3.836],[158.941,80.191],[-187.903,79.074]],\"v\":[[2134.215,1617.494],[2301.684,1432.68],[2587.998,1334.006],[2425.118,1750.494]],\"c\":true},\"ix\":1},\"o\":{\"a\":0,\"k\":100,\"ix\":3},\"x\":{\"a\":0,\"k\":0,\"ix\":4},\"nm\":\"Mask 1\"}],\"shapes\":[{\"ty\":\"gr\",\"it\":[{\"ty\":\"gr\",\"it\":[{\"ty\":\"gr\",\"it\":[{\"ind\":0,\"ty\":\"sh\",\"ix\":1,\"ks\":{\"a\":0,\"k\":{\"i\":[[112.306,-73.291],[0,0],[-1.815,-0.36],[0,0]],\"o\":[[0,0],[114.084,-74.45],[0,0],[-1.792,-0.357]],\"v\":[[-145.499,26.101],[-148.329,21.768],[148.329,-17.798],[147.328,-12.721]],\"c\":true},\"ix\":2},\"nm\":\"Path 1\",\"mn\":\"ADBE Vector Shape - Group\",\"hd\":false},{\"ty\":\"fl\",\"c\":{\"a\":0,\"k\":[0.988235294819,0.992156863213,0.996078431606,1],\"ix\":4},\"o\":{\"a\":0,\"k\":100,\"ix\":5},\"r\":1,\"bm\":0,\"nm\":\"Fill 1\",\"mn\":\"ADBE Vector Graphic - Fill\",\"hd\":false},{\"ty\":\"tr\",\"p\":{\"a\":0,\"k\":[2551.958,1507.037],\"ix\":2},\"a\":{\"a\":0,\"k\":[0,0],\"ix\":1},\"s\":{\"a\":0,\"k\":[100,100],\"ix\":3},\"r\":{\"a\":0,\"k\":0,\"ix\":6},\"o\":{\"a\":0,\"k\":100,\"ix\":7},\"sk\":{\"a\":0,\"k\":0,\"ix\":4},\"sa\":{\"a\":0,\"k\":0,\"ix\":5},\"nm\":\"Transform\"}],\"nm\":\"Group 1\",\"np\":2,\"cix\":2,\"bm\":0,\"ix\":1,\"mn\":\"ADBE Vector Group\",\"hd\":false},{\"ty\":\"gr\",\"it\":[{\"ind\":0,\"ty\":\"sh\",\"ix\":1,\"ks\":{\"a\":0,\"k\":{\"i\":[[45.415,-112.978],[0,0],[0.774,1.672],[0,0]],\"o\":[[0,0],[44.59,-110.929],[0,0],[0.785,1.692]],\"v\":[[11.399,141.739],[6.596,139.811],[-25.719,-139.562],[-21.026,-141.739]],\"c\":true},\"ix\":2},\"nm\":\"Path 1\",\"mn\":\"ADBE Vector Shape - Group\",\"hd\":false},{\"ty\":\"fl\",\"c\":{\"a\":0,\"k\":[0.988235294819,0.992156863213,0.996078431606,1],\"ix\":4},\"o\":{\"a\":0,\"k\":100,\"ix\":5},\"r\":1,\"bm\":0,\"nm\":\"Fill 1\",\"mn\":\"ADBE Vector Graphic - Fill\",\"hd\":false},{\"ty\":\"tr\",\"p\":{\"a\":0,\"k\":[2234.815,1570.368],\"ix\":2},\"a\":{\"a\":0,\"k\":[0,0],\"ix\":1},\"s\":{\"a\":0,\"k\":[100,100],\"ix\":3},\"r\":{\"a\":0,\"k\":0,\"ix\":6},\"o\":{\"a\":0,\"k\":100,\"ix\":7},\"sk\":{\"a\":0,\"k\":0,\"ix\":4},\"sa\":{\"a\":0,\"k\":0,\"ix\":5},\"nm\":\"Transform\"}],\"nm\":\"Group 2\",\"np\":2,\"cix\":2,\"bm\":0,\"ix\":2,\"mn\":\"ADBE Vector Group\",\"hd\":false},{\"ty\":\"gr\",\"it\":[{\"ind\":0,\"ty\":\"sh\",\"ix\":1,\"ks\":{\"a\":0,\"k\":{\"i\":[[66.648,-131.966],[0,0],[-2.752,0.248],[0,0]],\"o\":[[0,0],[67.94,-134.524],[0,0],[-2.722,0.246]],\"v\":[[-167.571,81.643],[-172.189,79.311],[171.724,-81.643],[172.189,-76.49]],\"c\":true},\"ix\":2},\"nm\":\"Path 1\",\"mn\":\"ADBE Vector Shape - Group\",\"hd\":false},{\"ty\":\"fl\",\"c\":{\"a\":0,\"k\":[0.988235294819,0.992156863213,0.996078431606,1],\"ix\":4},\"o\":{\"a\":0,\"k\":100,\"ix\":5},\"r\":1,\"bm\":0,\"nm\":\"Fill 1\",\"mn\":\"ADBE Vector Graphic - Fill\",\"hd\":false},{\"ty\":\"tr\",\"p\":{\"a\":0,\"k\":[2199.942,2089.265],\"ix\":2},\"a\":{\"a\":0,\"k\":[0,0],\"ix\":1},\"s\":{\"a\":0,\"k\":[100,100],\"ix\":3},\"r\":{\"a\":0,\"k\":0,\"ix\":6},\"o\":{\"a\":0,\"k\":100,\"ix\":7},\"sk\":{\"a\":0,\"k\":0,\"ix\":4},\"sa\":{\"a\":0,\"k\":0,\"ix\":5},\"nm\":\"Transform\"}],\"nm\":\"Group 3\",\"np\":2,\"cix\":2,\"bm\":0,\"ix\":3,\"mn\":\"ADBE Vector Group\",\"hd\":false},{\"ty\":\"gr\",\"it\":[{\"ind\":0,\"ty\":\"sh\",\"ix\":1,\"ks\":{\"a\":0,\"k\":{\"i\":[[-4.09,-150.939],[0,0],[1.317,1.118],[0,0]],\"o\":[[0,0],[-4.026,-148.597],[0,0],[1.334,1.13]],\"v\":[[70.433,132.879],[65.261,133.021],[-70.433,-129.077],[-67.084,-133.021]],\"c\":true},\"ix\":2},\"nm\":\"Path 1\",\"mn\":\"ADBE Vector Shape - Group\",\"hd\":false},{\"ty\":\"fl\",\"c\":{\"a\":0,\"k\":[0.988235294819,0.992156863213,0.996078431606,1],\"ix\":4},\"o\":{\"a\":0,\"k\":100,\"ix\":5},\"r\":1,\"bm\":0,\"nm\":\"Fill 1\",\"mn\":\"ADBE Vector Graphic - Fill\",\"hd\":false},{\"ty\":\"tr\",\"p\":{\"a\":0,\"k\":[2000.82,1906.091],\"ix\":2},\"a\":{\"a\":0,\"k\":[0,0],\"ix\":1},\"s\":{\"a\":0,\"k\":[100,100],\"ix\":3},\"r\":{\"a\":0,\"k\":0,\"ix\":6},\"o\":{\"a\":0,\"k\":100,\"ix\":7},\"sk\":{\"a\":0,\"k\":0,\"ix\":4},\"sa\":{\"a\":0,\"k\":0,\"ix\":5},\"nm\":\"Transform\"}],\"nm\":\"Group 4\",\"np\":2,\"cix\":2,\"bm\":0,\"ix\":4,\"mn\":\"ADBE Vector Group\",\"hd\":false},{\"ty\":\"gr\",\"it\":[{\"ind\":0,\"ty\":\"sh\",\"ix\":1,\"ks\":{\"a\":0,\"k\":{\"i\":[[64.355,-371.142],[0,0],[-330.063,173.823],[0,0]],\"o\":[[0,0],[64.624,-372.69],[0,0],[-328.672,173.091]],\"v\":[[-316.042,443.448],[-321.14,442.566],[318.73,-443.448],[321.14,-438.87]],\"c\":true},\"ix\":2},\"nm\":\"Path 1\",\"mn\":\"ADBE Vector Shape - Group\",\"hd\":false},{\"ty\":\"fl\",\"c\":{\"a\":0,\"k\":[0.988235294819,0.992156863213,0.996078431606,1],\"ix\":4},\"o\":{\"a\":0,\"k\":100,\"ix\":5},\"r\":1,\"bm\":0,\"nm\":\"Fill 1\",\"mn\":\"ADBE Vector Graphic - Fill\",\"hd\":false},{\"ty\":\"tr\",\"p\":{\"a\":0,\"k\":[2334.656,1795.696],\"ix\":2},\"a\":{\"a\":0,\"k\":[0,0],\"ix\":1},\"s\":{\"a\":0,\"k\":[100,100],\"ix\":3},\"r\":{\"a\":0,\"k\":0,\"ix\":6},\"o\":{\"a\":0,\"k\":100,\"ix\":7},\"sk\":{\"a\":0,\"k\":0,\"ix\":4},\"sa\":{\"a\":0,\"k\":0,\"ix\":5},\"nm\":\"Transform\"}],\"nm\":\"Group 5\",\"np\":2,\"cix\":2,\"bm\":0,\"ix\":5,\"mn\":\"ADBE Vector Group\",\"hd\":false},{\"ty\":\"tr\",\"p\":{\"a\":0,\"k\":[2334.656,1795.696],\"ix\":2},\"a\":{\"a\":0,\"k\":[2334.656,1795.696],\"ix\":1},\"s\":{\"a\":0,\"k\":[100,100],\"ix\":3},\"r\":{\"a\":0,\"k\":0,\"ix\":6},\"o\":{\"a\":0,\"k\":100,\"ix\":7},\"sk\":{\"a\":0,\"k\":0,\"ix\":4},\"sa\":{\"a\":0,\"k\":0,\"ix\":5},\"nm\":\"Transform\"}],\"nm\":\"Group 1\",\"np\":5,\"cix\":2,\"bm\":9,\"ix\":1,\"mn\":\"ADBE Vector Group\",\"hd\":false},{\"ty\":\"tr\",\"p\":{\"a\":0,\"k\":[2334.656,1795.696],\"ix\":2},\"a\":{\"a\":0,\"k\":[2334.656,1795.696],\"ix\":1},\"s\":{\"a\":0,\"k\":[100,100],\"ix\":3},\"r\":{\"a\":0,\"k\":0,\"ix\":6},\"o\":{\"a\":0,\"k\":13,\"ix\":7},\"sk\":{\"a\":0,\"k\":0,\"ix\":4},\"sa\":{\"a\":0,\"k\":0,\"ix\":5},\"nm\":\"Transform\"}],\"nm\":\"Group 1\",\"np\":1,\"cix\":2,\"bm\":0,\"ix\":1,\"mn\":\"ADBE Vector Group\",\"hd\":false},{\"ty\":\"gr\",\"it\":[{\"ind\":0,\"ty\":\"sh\",\"ix\":1,\"ks\":{\"a\":0,\"k\":{\"i\":[[2.315,-19.837],[0.92,-0.424],[75.165,-4.792],[14.717,0.099],[-44.396,14.771],[20.397,42.71],[-106.029,37.139],[-2.735,114.949],[-104.283,-3.645],[-91.217,-46.022],[187.903,-79.074],[-7.999,-93.757],[44.245,-51.768]],\"o\":[[-0.916,0.429],[-54.449,25.07],[-14.718,-0.099],[-13.259,-34.579],[68.946,-22.939],[-25.246,-52.864],[88.268,-30.919],[2.735,-114.949],[109.741,3.836],[158.941,80.192],[-187.903,79.074],[10.92,127.997],[-14.987,17.534]],\"v\":[[-141.783,414.783],[-144.537,416.062],[-338.085,463.706],[-382.238,463.408],[-357.52,378.796],[-311.024,190.716],[-286.497,-23.584],[-132.216,-171.362],[35.253,-356.176],[321.567,-454.85],[158.688,-38.362],[89.947,199.652],[-117.546,357.32]],\"c\":true},\"ix\":2},\"nm\":\"Path 1\",\"mn\":\"ADBE Vector Shape - Group\",\"hd\":false},{\"ty\":\"gf\",\"o\":{\"a\":0,\"k\":100,\"ix\":10},\"r\":1,\"bm\":0,\"g\":{\"p\":3,\"k\":{\"a\":0,\"k\":[0,0.667,0.502,0.976,0.499,0.405,0.341,0.847,0.999,0.144,0.181,0.718],\"ix\":9}},\"s\":{\"a\":0,\"k\":[564.345,-324.488],\"ix\":5},\"e\":{\"a\":0,\"k\":[-182.385,-85.672],\"ix\":6},\"t\":1,\"nm\":\"Gradient Fill 1\",\"mn\":\"ADBE Vector Graphic - G-Fill\",\"hd\":false},{\"ty\":\"tr\",\"p\":{\"a\":0,\"k\":[2266.43,1788.856],\"ix\":2},\"a\":{\"a\":0,\"k\":[0,0],\"ix\":1},\"s\":{\"a\":0,\"k\":[100,100],\"ix\":3},\"r\":{\"a\":0,\"k\":0,\"ix\":6},\"o\":{\"a\":0,\"k\":100,\"ix\":7},\"sk\":{\"a\":0,\"k\":0,\"ix\":4},\"sa\":{\"a\":0,\"k\":0,\"ix\":5},\"nm\":\"Transform\"}],\"nm\":\"Group 2\",\"np\":2,\"cix\":2,\"bm\":0,\"ix\":2,\"mn\":\"ADBE Vector Group\",\"hd\":false}],\"ip\":0,\"op\":144,\"st\":0,\"bm\":0},{\"ddd\":0,\"ind\":22,\"ty\":4,\"nm\":\"BG\",\"sr\":1,\"ks\":{\"o\":{\"a\":0,\"k\":100,\"ix\":11},\"r\":{\"a\":0,\"k\":0,\"ix\":10},\"p\":{\"a\":0,\"k\":[1753.54,1769.288,0],\"ix\":2},\"a\":{\"a\":0,\"k\":[0,0,0],\"ix\":1},\"s\":{\"a\":0,\"k\":[100,100,100],\"ix\":6}},\"ao\":0,\"shapes\":[{\"ty\":\"gr\",\"it\":[{\"ind\":0,\"ty\":\"sh\",\"ix\":1,\"ks\":{\"a\":0,\"k\":{\"i\":[[216.153,-315.091],[142.94,-105.612],[131.132,-88.495],[-284.409,-373.224],[-31.652,-126.939],[-45.457,-134.81],[-631.594,912.244],[263.556,467.269]],\"o\":[[-96.332,140.426],[-139.142,102.806],[-194.527,131.276],[85.531,112.242],[67.966,272.572],[102.351,303.542],[294.98,-426.055],[-476.241,-844.347]],\"v\":[[-744.621,-1279.47],[-870.941,-805.766],[-1312.146,-782.978],[-1186.74,322.219],[-998.09,605.072],[-1123.535,1174.595],[1184.498,820.601],[1260.058,-687.951]],\"c\":true},\"ix\":2},\"nm\":\"Path 1\",\"mn\":\"ADBE Vector Shape - Group\",\"hd\":false},{\"ty\":\"fl\",\"c\":{\"a\":0,\"k\":[0.956862747669,0.96862745285,0.980392158031,1],\"ix\":4},\"o\":{\"a\":0,\"k\":100,\"ix\":5},\"r\":1,\"bm\":0,\"nm\":\"Fill 1\",\"mn\":\"ADBE Vector Graphic - Fill\",\"hd\":false},{\"ty\":\"tr\",\"p\":{\"a\":0,\"k\":[0,0],\"ix\":2},\"a\":{\"a\":0,\"k\":[0,0],\"ix\":1},\"s\":{\"a\":0,\"k\":[100,100],\"ix\":3},\"r\":{\"a\":0,\"k\":0,\"ix\":6},\"o\":{\"a\":0,\"k\":100,\"ix\":7},\"sk\":{\"a\":0,\"k\":0,\"ix\":4},\"sa\":{\"a\":0,\"k\":0,\"ix\":5},\"nm\":\"Transform\"}],\"nm\":\"BG\",\"np\":2,\"cix\":2,\"bm\":0,\"ix\":1,\"mn\":\"ADBE Vector Group\",\"hd\":false}],\"ip\":0,\"op\":240,\"st\":0,\"bm\":0}],\"markers\":[]}");
+
+/***/ }),
+
+/***/ "./resources/js/images/porfolio/atin.png":
+/*!***********************************************!*\
+  !*** ./resources/js/images/porfolio/atin.png ***!
+  \***********************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = "/images/atin.png?1f68cd7b33076ebf0638b1883aa3b1db";
+
+/***/ }),
+
+/***/ "./resources/js/images/porfolio/ecosavers.png":
+/*!****************************************************!*\
+  !*** ./resources/js/images/porfolio/ecosavers.png ***!
+  \****************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = "/images/ecosavers.png?e69e5dc7d97a9ac1c271d690ddfdf1dc";
+
+/***/ }),
+
+/***/ "./resources/js/images/porfolio/ecris.png":
+/*!************************************************!*\
+  !*** ./resources/js/images/porfolio/ecris.png ***!
+  \************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = "/images/ecris.png?886254588a226a105e1142fec8aa8646";
+
+/***/ }),
+
+/***/ "./resources/js/images/porfolio/ubilis1.png":
+/*!**************************************************!*\
+  !*** ./resources/js/images/porfolio/ubilis1.png ***!
+  \**************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = "/images/ubilis1.png?b034137254c5fe5f0c6e095143010a41";
 
 /***/ }),
 
