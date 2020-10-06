@@ -58,6 +58,8 @@ import ubilis from '../images/porfolio/ubilis1.png'
 import ecris from '../images/porfolio/ecris.png'
 import atin from '../images/porfolio/atin.png'
 import esgc from '../images/porfolio/ecosavers.png'
+import humanar from '../images/porfolio/humanar.png'
+import apoint from '../images/porfolio/apoint.png'
 //lights
 
 const useStyles = theme => ({
@@ -127,19 +129,19 @@ const portfolio = [
         description:  "A Stand Alone Software used in tracking goods for the entire supply chain, from adding new inventory to end sales and reports", 
     },
     {
-        name: "Something more",
-        category: ["all", "others"],
-        img: "https://homepages.cae.wisc.edu/~ece533/images/barbara.png",
-        title: "COMPANY",
-        author: "author",
-        description: "asd" 
+        name: "HumanAR ",
+        category: ["all", " / ","C#"," / ", "Unity"],
+        img: humanar,
+        title: "HumanAR",
+        author: "HumanAR",
+        description: "The HumanAR is an augmented reality application that improves the retention of the students in which the students uses android camera to capture the image target from the book that they are using" 
     },
     {
-        name: "Something more",
-        category: ["all", "others"],
-        img: "https://homepages.cae.wisc.edu/~ece533/images/barbara.png",
-        title: "Image",
-        author: "author",
+        name: "Appointment",
+        category: ["all", " / ","React"," / ", "Laravel"],
+        img: apoint,
+        title: "HR Appointment System",
+        author: "Appointment",
         description: "asd"    
     },
     {
@@ -235,13 +237,14 @@ class Porfolio extends React.Component {
                     position: "relative",
                     backgroundColor: "#202833",
                     height: "100%",
+                
                  
                 }}
             >
                 <div
                     style={{
                         position: "absolute",
-
+                       
                         align: "center"
                     }}
                 >
@@ -254,7 +257,8 @@ class Porfolio extends React.Component {
                     container
                     align="center"
                     direction="row"
-                    style={{ minHeight: "100vh", padding: "1em" }}
+                    style={{ minHeight: "100vh", padding: "1em"  , 
+                    }}
                 >
                     <Grid
                         container
@@ -362,6 +366,7 @@ onClick={()=>{
                                         style={{
                                             backgroundImage: `url(${item.img})`,
                                             height: 250,
+                                            margin: 10,
                                             width: 370,
                                             backgroundSize: "cover"
                                         }}

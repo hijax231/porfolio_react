@@ -97712,6 +97712,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _images_porfolio_atin_png__WEBPACK_IMPORTED_MODULE_37___default = /*#__PURE__*/__webpack_require__.n(_images_porfolio_atin_png__WEBPACK_IMPORTED_MODULE_37__);
 /* harmony import */ var _images_porfolio_ecosavers_png__WEBPACK_IMPORTED_MODULE_38__ = __webpack_require__(/*! ../images/porfolio/ecosavers.png */ "./resources/js/images/porfolio/ecosavers.png");
 /* harmony import */ var _images_porfolio_ecosavers_png__WEBPACK_IMPORTED_MODULE_38___default = /*#__PURE__*/__webpack_require__.n(_images_porfolio_ecosavers_png__WEBPACK_IMPORTED_MODULE_38__);
+/* harmony import */ var _images_porfolio_humanar_png__WEBPACK_IMPORTED_MODULE_39__ = __webpack_require__(/*! ../images/porfolio/humanar.png */ "./resources/js/images/porfolio/humanar.png");
+/* harmony import */ var _images_porfolio_humanar_png__WEBPACK_IMPORTED_MODULE_39___default = /*#__PURE__*/__webpack_require__.n(_images_porfolio_humanar_png__WEBPACK_IMPORTED_MODULE_39__);
+/* harmony import */ var _images_porfolio_apoint_png__WEBPACK_IMPORTED_MODULE_40__ = __webpack_require__(/*! ../images/porfolio/apoint.png */ "./resources/js/images/porfolio/apoint.png");
+/* harmony import */ var _images_porfolio_apoint_png__WEBPACK_IMPORTED_MODULE_40___default = /*#__PURE__*/__webpack_require__.n(_images_porfolio_apoint_png__WEBPACK_IMPORTED_MODULE_40__);
 function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
@@ -97739,6 +97743,8 @@ function _assertThisInitialized(self) { if (self === void 0) { throw new Referen
 function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
 
 function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+
 
 
 
@@ -97842,18 +97848,18 @@ var portfolio = [{
   author: "ESGC",
   description: "A Stand Alone Software used in tracking goods for the entire supply chain, from adding new inventory to end sales and reports"
 }, {
-  name: "Something more",
-  category: ["all", "others"],
-  img: "https://homepages.cae.wisc.edu/~ece533/images/barbara.png",
-  title: "COMPANY",
-  author: "author",
-  description: "asd"
+  name: "HumanAR ",
+  category: ["all", " / ", "C#", " / ", "Unity"],
+  img: _images_porfolio_humanar_png__WEBPACK_IMPORTED_MODULE_39___default.a,
+  title: "HumanAR",
+  author: "HumanAR",
+  description: "The HumanAR is an augmented reality application that improves the retention of the students in which the students uses android camera to capture the image target from the book that they are using"
 }, {
-  name: "Something more",
-  category: ["all", "others"],
-  img: "https://homepages.cae.wisc.edu/~ece533/images/barbara.png",
-  title: "Image",
-  author: "author",
+  name: "Appointment",
+  category: ["all", " / ", "React", " / ", "Laravel"],
+  img: _images_porfolio_apoint_png__WEBPACK_IMPORTED_MODULE_40___default.a,
+  title: "HR Appointment System",
+  author: "Appointment",
   description: "asd"
 }, {
   name: "Something more",
@@ -98045,6 +98051,7 @@ var Porfolio = /*#__PURE__*/function (_React$Component) {
           style: {
             backgroundImage: "url(".concat(item.img, ")"),
             height: 250,
+            margin: 10,
             width: 370,
             backgroundSize: "cover"
           }
@@ -98550,6 +98557,17 @@ module.exports = JSON.parse("{\"v\":\"5.6.6\",\"fr\":24,\"ip\":0,\"op\":120,\"w\
 
 /***/ }),
 
+/***/ "./resources/js/images/porfolio/apoint.png":
+/*!*************************************************!*\
+  !*** ./resources/js/images/porfolio/apoint.png ***!
+  \*************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = "/images/apoint.png?7219d35c3ea486f55173b1121ae63560";
+
+/***/ }),
+
 /***/ "./resources/js/images/porfolio/atin.png":
 /*!***********************************************!*\
   !*** ./resources/js/images/porfolio/atin.png ***!
@@ -98580,6 +98598,17 @@ module.exports = "/images/ecosavers.png?e69e5dc7d97a9ac1c271d690ddfdf1dc";
 /***/ (function(module, exports) {
 
 module.exports = "/images/ecris.png?886254588a226a105e1142fec8aa8646";
+
+/***/ }),
+
+/***/ "./resources/js/images/porfolio/humanar.png":
+/*!**************************************************!*\
+  !*** ./resources/js/images/porfolio/humanar.png ***!
+  \**************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = "/images/humanar.png?4f9bec22ed6e965c2df08fe03dc0ddb0";
 
 /***/ }),
 
