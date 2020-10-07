@@ -97716,6 +97716,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _images_porfolio_humanar_png__WEBPACK_IMPORTED_MODULE_39___default = /*#__PURE__*/__webpack_require__.n(_images_porfolio_humanar_png__WEBPACK_IMPORTED_MODULE_39__);
 /* harmony import */ var _images_porfolio_apoint_png__WEBPACK_IMPORTED_MODULE_40__ = __webpack_require__(/*! ../images/porfolio/apoint.png */ "./resources/js/images/porfolio/apoint.png");
 /* harmony import */ var _images_porfolio_apoint_png__WEBPACK_IMPORTED_MODULE_40___default = /*#__PURE__*/__webpack_require__.n(_images_porfolio_apoint_png__WEBPACK_IMPORTED_MODULE_40__);
+/* harmony import */ var _images_porfolio_companyweb_png__WEBPACK_IMPORTED_MODULE_41__ = __webpack_require__(/*! ../images/porfolio/companyweb.png */ "./resources/js/images/porfolio/companyweb.png");
+/* harmony import */ var _images_porfolio_companyweb_png__WEBPACK_IMPORTED_MODULE_41___default = /*#__PURE__*/__webpack_require__.n(_images_porfolio_companyweb_png__WEBPACK_IMPORTED_MODULE_41__);
+/* harmony import */ var _images_porfolio_pylonproj_png__WEBPACK_IMPORTED_MODULE_42__ = __webpack_require__(/*! ../images/porfolio/pylonproj.png */ "./resources/js/images/porfolio/pylonproj.png");
+/* harmony import */ var _images_porfolio_pylonproj_png__WEBPACK_IMPORTED_MODULE_42___default = /*#__PURE__*/__webpack_require__.n(_images_porfolio_pylonproj_png__WEBPACK_IMPORTED_MODULE_42__);
+/* harmony import */ var _images_porfolio_hire_png__WEBPACK_IMPORTED_MODULE_43__ = __webpack_require__(/*! ../images/porfolio/hire.png */ "./resources/js/images/porfolio/hire.png");
+/* harmony import */ var _images_porfolio_hire_png__WEBPACK_IMPORTED_MODULE_43___default = /*#__PURE__*/__webpack_require__.n(_images_porfolio_hire_png__WEBPACK_IMPORTED_MODULE_43__);
 function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
@@ -97743,6 +97749,9 @@ function _assertThisInitialized(self) { if (self === void 0) { throw new Referen
 function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
 
 function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+
+
 
 
 
@@ -97860,27 +97869,27 @@ var portfolio = [{
   img: _images_porfolio_apoint_png__WEBPACK_IMPORTED_MODULE_40___default.a,
   title: "HR Appointment System",
   author: "Appointment",
-  description: "asd"
+  description: "The Appointment system is a web based solution that allows the users to set apointment/schedule for releasing of their ID and it is also used in order to minimize waiting times, prioritize appointments and optimize the utilization of resources.  "
 }, {
-  name: "Something more",
-  category: ["all", "others"],
-  img: "https://homepages.cae.wisc.edu/~ece533/images/barbara.png",
-  title: "Image",
-  author: "author",
-  description: "asd"
+  name: "Pylon website",
+  category: ["all", " / ", "Boostrap", " / ", "Codeigniter"],
+  img: _images_porfolio_companyweb_png__WEBPACK_IMPORTED_MODULE_41___default.a,
+  title: "Pylon Company Website",
+  author: "Pylon",
+  description: "A Company Website that tells  visitors all about your business and the Contact Us page informs everyone how to get in touch with you. It legitimizes your business and improves your credibility. It gives your business an identity and is virtual proof that it exists."
 }, {
-  name: "Something more",
-  category: ["all", "others"],
-  img: "https://homepages.cae.wisc.edu/~ece533/images/barbara.png",
-  title: "Image",
-  author: "author",
-  description: "asd"
+  name: "Pylon Project Management",
+  category: ["all", " / ", "Boostrap", " / ", "Codeigniter"],
+  img: _images_porfolio_pylonproj_png__WEBPACK_IMPORTED_MODULE_42___default.a,
+  title: "Pylon Project Management SYS",
+  author: "Pylonproj",
+  description: "Pylon Project Management is a web based solution that used for managing a project by planning, organizing, and managing its different required aspects"
 }, {
-  name: "Something more",
+  name: "Have any Projects in Mind?",
   category: ["all", "others"],
-  img: "https://homepages.cae.wisc.edu/~ece533/images/barbara.png",
-  title: "Image",
-  author: "author",
+  img: _images_porfolio_hire_png__WEBPACK_IMPORTED_MODULE_43___default.a,
+  title: "Have any Projects in Mind?",
+  author: "Have any Projects in Mind?",
   description: "asd"
 }];
 
@@ -98579,6 +98588,17 @@ module.exports = "/images/atin.png?1f68cd7b33076ebf0638b1883aa3b1db";
 
 /***/ }),
 
+/***/ "./resources/js/images/porfolio/companyweb.png":
+/*!*****************************************************!*\
+  !*** ./resources/js/images/porfolio/companyweb.png ***!
+  \*****************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = "/images/companyweb.png?bc241c7b794ec106e70277e1b36b0de0";
+
+/***/ }),
+
 /***/ "./resources/js/images/porfolio/ecosavers.png":
 /*!****************************************************!*\
   !*** ./resources/js/images/porfolio/ecosavers.png ***!
@@ -98601,6 +98621,17 @@ module.exports = "/images/ecris.png?886254588a226a105e1142fec8aa8646";
 
 /***/ }),
 
+/***/ "./resources/js/images/porfolio/hire.png":
+/*!***********************************************!*\
+  !*** ./resources/js/images/porfolio/hire.png ***!
+  \***********************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = "/images/hire.png?f2eb6fea32f8a96fc729cb862f0e75ea";
+
+/***/ }),
+
 /***/ "./resources/js/images/porfolio/humanar.png":
 /*!**************************************************!*\
   !*** ./resources/js/images/porfolio/humanar.png ***!
@@ -98609,6 +98640,17 @@ module.exports = "/images/ecris.png?886254588a226a105e1142fec8aa8646";
 /***/ (function(module, exports) {
 
 module.exports = "/images/humanar.png?4f9bec22ed6e965c2df08fe03dc0ddb0";
+
+/***/ }),
+
+/***/ "./resources/js/images/porfolio/pylonproj.png":
+/*!****************************************************!*\
+  !*** ./resources/js/images/porfolio/pylonproj.png ***!
+  \****************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = "/images/pylonproj.png?71b8483c4190e87a9fc1d0bdda42ff05";
 
 /***/ }),
 

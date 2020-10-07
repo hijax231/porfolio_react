@@ -60,6 +60,9 @@ import atin from '../images/porfolio/atin.png'
 import esgc from '../images/porfolio/ecosavers.png'
 import humanar from '../images/porfolio/humanar.png'
 import apoint from '../images/porfolio/apoint.png'
+import companyweb from '../images/porfolio/companyweb.png'
+import pylonproj from '../images/porfolio/pylonproj.png'
+import hire from '../images/porfolio/hire.png'
 //lights
 
 const useStyles = theme => ({
@@ -142,31 +145,31 @@ const portfolio = [
         img: apoint,
         title: "HR Appointment System",
         author: "Appointment",
-        description: "asd"    
+        description: "The Appointment system is a web based solution that allows the users to set apointment/schedule for releasing of their ID and it is also used in order to minimize waiting times, prioritize appointments and optimize the utilization of resources.  "    
     },
     {
-        name: "Something more",
-        category: ["all", "others"],
-        img: "https://homepages.cae.wisc.edu/~ece533/images/barbara.png",
-        title: "Image",
-        author: "author",
-        description: "asd"    
+        name: "Pylon website",
+        category: ["all", " / ","Boostrap"," / ", "Codeigniter"],
+        img: companyweb,
+        title: "Pylon Company Website",
+        author: "Pylon",
+        description: "A Company Website that tells  visitors all about your business and the Contact Us page informs everyone how to get in touch with you. It legitimizes your business and improves your credibility. It gives your business an identity and is virtual proof that it exists."    
     },
     {
-        name: "Something more",
-        category: ["all", "others"],
-        img: "https://homepages.cae.wisc.edu/~ece533/images/barbara.png",
-        title: "Image",
-        author: "author",
-    description: "asd"     
+        name: "Pylon Project Management",
+        category: ["all", " / ","Boostrap"," / ", "Codeigniter"],
+        img: pylonproj,
+        title: "Pylon Project Management SYS",
+        author: "Pylonproj",
+        description: "Pylon Project Management is a web based solution that used for managing a project by planning, organizing, and managing its different required aspects"     
 },
     {
-        name: "Something more",
+        name: "Have any Projects in Mind?",
         category: ["all", "others"],
-        img: "https://homepages.cae.wisc.edu/~ece533/images/barbara.png",
-        title: "Image",
-        author: "author",
-    description: "asd"    
+        img: hire,
+        title: "Have any Projects in Mind?",
+        author: "Have any Projects in Mind?",
+        description: "asd"    
 }
 ];
 
