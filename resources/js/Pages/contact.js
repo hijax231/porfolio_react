@@ -44,6 +44,12 @@ import waves from '../images/wave.svg'
 
 import IconButton from '@material-ui/core/IconButton';
 import PhotoCamera from '@material-ui/icons/ArrowUpward';
+import Email from '@material-ui/icons/MailOutline';
+import Phone from '@material-ui/icons/Phone';
+import InsertDriveFile from '@material-ui/icons/InsertDriveFile';
+
+
+
 
 
 //lights
@@ -145,7 +151,8 @@ class Contact extends React.Component {
                 <Grid
                     container
                     align="center"
-                    direction="row"
+                
+                    spacing={4}
                     style={{ minHeight: "30vh" ,
                    }}
                 >
@@ -155,28 +162,75 @@ class Contact extends React.Component {
                                 CONTACT
                             </Typography>
 
-                            <Typography variant="h6"   color="primary" component="h2">
+                            <Typography variant="h6" style={{marginBottom: 20,}}  color="primary" component="h2">
                             Have a question or want to work together?
                             </Typography>
 
-                           <Typography onClick={()=>{
-                               window.location.href = "mailto: pasajol231@gmail.com";
-                           }} variant="overline" component="h2">
-                          Pasajol231@gmail.com 
-                            </Typography>
+                                      
+                            
+                            </Grid>
+                            
+                            <Grid item xs={12} md={4}style={{marginBottom: 10, backgroundColor:"#202833"  ,borderTop:  "10px solid #2E3B71" , borderBottom:  "10px solid #2E3B71"}}  >
+                                        <Email style={{color: "white"}}/>
+                                        <WhiteTextTypography onClick={()=>{
+                                            window.location.href = "mailto: pasajol231@gmail.com";
+                                        }} variant="overline" component="h2">
+                                        Pasajol231@gmail.com 
+                                            </WhiteTextTypography>
+                                       </Grid>
+
+                                       <Grid item xs={12} md={4}style={{marginBottom: 10, backgroundColor:"#202833" ,borderTop:  "10px solid #2E3B71" , borderBottom:  "10px solid #2E3B71"}}   >
+                                        <Phone style={{color: "white"}}/>
+                                        <WhiteTextTypography variant="overline" component="h2">
+                                        +639206131065
+                                            </WhiteTextTypography>
+                                       </Grid>
+
+                                       <Grid item xs={12} md={4}style={{marginBottom: 10, backgroundColor:"#202833" ,borderTop:  "10px solid #2E3B71" , borderBottom:  "10px solid #2E3B71"}}   >
+                                        <InsertDriveFile style={{color: "white"}}/>
+                                        <WhiteTextTypography onClick={()=>{
+                                            window.open("https://deanpasajol.jobs180.com/" , '_blank');
+                                        }} variant="overline" component="h2">
+                                       Click here for RESUME
+                                            </WhiteTextTypography>
+                                       </Grid>
+
+              
 
 
-               <Button color="primary" onClick={()=>{
+
+                
+                     
+                                       <Grid item xs={12} >
+                                   
+               <Button color="primary" style={{marginBottom: 20, marginTop: 5}}  onClick={()=>{
             document.documentElement.scrollTop = 0;
                }}>
+
+                   
                     <PhotoCamera />
+              
                     </Button>
+                    </Grid>
+
+
+
+                            
+
+
+
+
+
+
+
+
+               
 
 
 
 
                     </Grid>
-                    </Grid>
+                    
 
 
                     <Grid

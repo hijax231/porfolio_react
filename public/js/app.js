@@ -9905,6 +9905,64 @@ exports.default = _default;
 
 /***/ }),
 
+/***/ "./node_modules/@material-ui/icons/InsertDriveFile.js":
+/*!************************************************************!*\
+  !*** ./node_modules/@material-ui/icons/InsertDriveFile.js ***!
+  \************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _interopRequireDefault = __webpack_require__(/*! @babel/runtime/helpers/interopRequireDefault */ "./node_modules/@babel/runtime/helpers/interopRequireDefault.js");
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _react = _interopRequireDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+
+var _createSvgIcon = _interopRequireDefault(__webpack_require__(/*! ./utils/createSvgIcon */ "./node_modules/@material-ui/icons/utils/createSvgIcon.js"));
+
+var _default = (0, _createSvgIcon.default)(_react.default.createElement("path", {
+  d: "M6 2c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6H6zm7 7V3.5L18.5 9H13z"
+}), 'InsertDriveFile');
+
+exports.default = _default;
+
+/***/ }),
+
+/***/ "./node_modules/@material-ui/icons/MailOutline.js":
+/*!********************************************************!*\
+  !*** ./node_modules/@material-ui/icons/MailOutline.js ***!
+  \********************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _interopRequireDefault = __webpack_require__(/*! @babel/runtime/helpers/interopRequireDefault */ "./node_modules/@babel/runtime/helpers/interopRequireDefault.js");
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _react = _interopRequireDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+
+var _createSvgIcon = _interopRequireDefault(__webpack_require__(/*! ./utils/createSvgIcon */ "./node_modules/@material-ui/icons/utils/createSvgIcon.js"));
+
+var _default = (0, _createSvgIcon.default)(_react.default.createElement("path", {
+  d: "M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 14H4V8l8 5 8-5v10zm-8-7L4 6h16l-8 5z"
+}), 'MailOutline');
+
+exports.default = _default;
+
+/***/ }),
+
 /***/ "./node_modules/@material-ui/icons/MoreVert.js":
 /*!*****************************************************!*\
   !*** ./node_modules/@material-ui/icons/MoreVert.js ***!
@@ -9929,6 +9987,35 @@ var _createSvgIcon = _interopRequireDefault(__webpack_require__(/*! ./utils/crea
 var _default = (0, _createSvgIcon.default)(_react.default.createElement("path", {
   d: "M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"
 }), 'MoreVert');
+
+exports.default = _default;
+
+/***/ }),
+
+/***/ "./node_modules/@material-ui/icons/Phone.js":
+/*!**************************************************!*\
+  !*** ./node_modules/@material-ui/icons/Phone.js ***!
+  \**************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _interopRequireDefault = __webpack_require__(/*! @babel/runtime/helpers/interopRequireDefault */ "./node_modules/@babel/runtime/helpers/interopRequireDefault.js");
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _react = _interopRequireDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+
+var _createSvgIcon = _interopRequireDefault(__webpack_require__(/*! ./utils/createSvgIcon */ "./node_modules/@material-ui/icons/utils/createSvgIcon.js"));
+
+var _default = (0, _createSvgIcon.default)(_react.default.createElement("path", {
+  d: "M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"
+}), 'Phone');
 
 exports.default = _default;
 
@@ -97050,6 +97137,12 @@ var _images_contact_json__WEBPACK_IMPORTED_MODULE_21___namespace = /*#__PURE__*/
 /* harmony import */ var _material_ui_core_IconButton__WEBPACK_IMPORTED_MODULE_23__ = __webpack_require__(/*! @material-ui/core/IconButton */ "./node_modules/@material-ui/core/esm/IconButton/index.js");
 /* harmony import */ var _material_ui_icons_ArrowUpward__WEBPACK_IMPORTED_MODULE_24__ = __webpack_require__(/*! @material-ui/icons/ArrowUpward */ "./node_modules/@material-ui/icons/ArrowUpward.js");
 /* harmony import */ var _material_ui_icons_ArrowUpward__WEBPACK_IMPORTED_MODULE_24___default = /*#__PURE__*/__webpack_require__.n(_material_ui_icons_ArrowUpward__WEBPACK_IMPORTED_MODULE_24__);
+/* harmony import */ var _material_ui_icons_MailOutline__WEBPACK_IMPORTED_MODULE_25__ = __webpack_require__(/*! @material-ui/icons/MailOutline */ "./node_modules/@material-ui/icons/MailOutline.js");
+/* harmony import */ var _material_ui_icons_MailOutline__WEBPACK_IMPORTED_MODULE_25___default = /*#__PURE__*/__webpack_require__.n(_material_ui_icons_MailOutline__WEBPACK_IMPORTED_MODULE_25__);
+/* harmony import */ var _material_ui_icons_Phone__WEBPACK_IMPORTED_MODULE_26__ = __webpack_require__(/*! @material-ui/icons/Phone */ "./node_modules/@material-ui/icons/Phone.js");
+/* harmony import */ var _material_ui_icons_Phone__WEBPACK_IMPORTED_MODULE_26___default = /*#__PURE__*/__webpack_require__.n(_material_ui_icons_Phone__WEBPACK_IMPORTED_MODULE_26__);
+/* harmony import */ var _material_ui_icons_InsertDriveFile__WEBPACK_IMPORTED_MODULE_27__ = __webpack_require__(/*! @material-ui/icons/InsertDriveFile */ "./node_modules/@material-ui/icons/InsertDriveFile.js");
+/* harmony import */ var _material_ui_icons_InsertDriveFile__WEBPACK_IMPORTED_MODULE_27___default = /*#__PURE__*/__webpack_require__.n(_material_ui_icons_InsertDriveFile__WEBPACK_IMPORTED_MODULE_27__);
 function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -97071,6 +97164,9 @@ function _assertThisInitialized(self) { if (self === void 0) { throw new Referen
 function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
 
 function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+
+
 
 
 
@@ -97183,7 +97279,7 @@ var Contact = /*#__PURE__*/function (_React$Component) {
       }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_material_ui_core_Grid__WEBPACK_IMPORTED_MODULE_6__["default"], {
         container: true,
         align: "center",
-        direction: "row",
+        spacing: 4,
         style: {
           minHeight: "30vh"
         }
@@ -97195,16 +97291,77 @@ var Contact = /*#__PURE__*/function (_React$Component) {
         component: "h2"
       }, "CONTACT"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_material_ui_core_Typography__WEBPACK_IMPORTED_MODULE_8__["default"], {
         variant: "h6",
+        style: {
+          marginBottom: 20
+        },
         color: "primary",
         component: "h2"
-      }, "Have a question or want to work together?"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_material_ui_core_Typography__WEBPACK_IMPORTED_MODULE_8__["default"], {
+      }, "Have a question or want to work together?")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_material_ui_core_Grid__WEBPACK_IMPORTED_MODULE_6__["default"], {
+        item: true,
+        xs: 12,
+        md: 4,
+        style: {
+          marginBottom: 10,
+          backgroundColor: "#202833",
+          borderTop: "10px solid #2E3B71",
+          borderBottom: "10px solid #2E3B71"
+        }
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_material_ui_icons_MailOutline__WEBPACK_IMPORTED_MODULE_25___default.a, {
+        style: {
+          color: "white"
+        }
+      }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(WhiteTextTypography, {
         onClick: function onClick() {
           window.location.href = "mailto: pasajol231@gmail.com";
         },
         variant: "overline",
         component: "h2"
-      }, "Pasajol231@gmail.com"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_material_ui_core_Button__WEBPACK_IMPORTED_MODULE_13__["default"], {
+      }, "Pasajol231@gmail.com")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_material_ui_core_Grid__WEBPACK_IMPORTED_MODULE_6__["default"], {
+        item: true,
+        xs: 12,
+        md: 4,
+        style: {
+          marginBottom: 10,
+          backgroundColor: "#202833",
+          borderTop: "10px solid #2E3B71",
+          borderBottom: "10px solid #2E3B71"
+        }
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_material_ui_icons_Phone__WEBPACK_IMPORTED_MODULE_26___default.a, {
+        style: {
+          color: "white"
+        }
+      }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(WhiteTextTypography, {
+        variant: "overline",
+        component: "h2"
+      }, "+639206131065")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_material_ui_core_Grid__WEBPACK_IMPORTED_MODULE_6__["default"], {
+        item: true,
+        xs: 12,
+        md: 4,
+        style: {
+          marginBottom: 10,
+          backgroundColor: "#202833",
+          borderTop: "10px solid #2E3B71",
+          borderBottom: "10px solid #2E3B71"
+        }
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_material_ui_icons_InsertDriveFile__WEBPACK_IMPORTED_MODULE_27___default.a, {
+        style: {
+          color: "white"
+        }
+      }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(WhiteTextTypography, {
+        onClick: function onClick() {
+          window.open("https://deanpasajol.jobs180.com/", '_blank');
+        },
+        variant: "overline",
+        component: "h2"
+      }, "Click here for RESUME")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_material_ui_core_Grid__WEBPACK_IMPORTED_MODULE_6__["default"], {
+        item: true,
+        xs: 12
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_material_ui_core_Button__WEBPACK_IMPORTED_MODULE_13__["default"], {
         color: "primary",
+        style: {
+          marginBottom: 20,
+          marginTop: 5
+        },
         onClick: function onClick() {
           document.documentElement.scrollTop = 0;
         }
@@ -97722,6 +97879,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _images_porfolio_pylonproj_png__WEBPACK_IMPORTED_MODULE_42___default = /*#__PURE__*/__webpack_require__.n(_images_porfolio_pylonproj_png__WEBPACK_IMPORTED_MODULE_42__);
 /* harmony import */ var _images_porfolio_hire_png__WEBPACK_IMPORTED_MODULE_43__ = __webpack_require__(/*! ../images/porfolio/hire.png */ "./resources/js/images/porfolio/hire.png");
 /* harmony import */ var _images_porfolio_hire_png__WEBPACK_IMPORTED_MODULE_43___default = /*#__PURE__*/__webpack_require__.n(_images_porfolio_hire_png__WEBPACK_IMPORTED_MODULE_43__);
+/* harmony import */ var _images_porfolio_back_png__WEBPACK_IMPORTED_MODULE_44__ = __webpack_require__(/*! ../images/porfolio/back.png */ "./resources/js/images/porfolio/back.png");
+/* harmony import */ var _images_porfolio_back_png__WEBPACK_IMPORTED_MODULE_44___default = /*#__PURE__*/__webpack_require__.n(_images_porfolio_back_png__WEBPACK_IMPORTED_MODULE_44__);
 function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
@@ -97749,6 +97908,7 @@ function _assertThisInitialized(self) { if (self === void 0) { throw new Referen
 function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
 
 function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
 
 
 
@@ -97830,68 +97990,78 @@ var WhiteTextTypography = Object(_material_ui_core_styles__WEBPACK_IMPORTED_MODU
 })(_material_ui_core_Typography__WEBPACK_IMPORTED_MODULE_8__["default"]);
 var portfolio = [{
   name: "EBPLS",
-  category: ["all", " / ", "Boostrap", " / ", "Codeigniter"],
+  category: ["Boostrap", " / ", "Codeigniter"],
+  realcat: ["all", " / ", "Boostrap", " / ", "Codeigniter"],
   img: _images_porfolio_ubilis1_png__WEBPACK_IMPORTED_MODULE_35___default.a,
   title: "Electronic Business Processing And Licensing System ",
   author: "EBPLS",
   description: "A integrated multi platform software solution that utilizes data analytics which is designed to assist in data gathering, business registration, renewal, automated assessment, approval of  business applications and printing of Business Permit."
 }, {
   name: "ECRIS",
-  category: ["all", " / ", "Boostrap", " / ", "Codeigniter"],
+  category: ["Boostrap", " / ", "Codeigniter"],
+  realcat: ["all", " / ", "Boostrap", " / ", "Codeigniter"],
   img: _images_porfolio_ecris_png__WEBPACK_IMPORTED_MODULE_36___default.a,
   title: "Electronic Civil Registry Information System 2.0",
   author: "ECRIS",
   description: "Web based solution used in the creation of an electronic data base and is capable of releasing requested documents in real time manner. Handles online request system and uses data analytics to release pertinent reports and statistics."
 }, {
   name: "ATIN",
-  category: ["all", " / ", "React", " / ", "Laravel"],
+  category: ["React", " / ", "Laravel"],
+  realcat: ["all", " / ", "React", " / ", "Laravel", "android"],
   img: _images_porfolio_atin_png__WEBPACK_IMPORTED_MODULE_37___default.a,
   title: "ATIN COVID19 Tracker",
   author: "ATIN",
-  description: ""
+  description: "ATIN COVID TRACKER is an easy-to-use progressive web app that can: alert you if you have been in close contact with someone who has tested positive for coronavirus. advise you on what to do to protect yourself and others."
 }, {
   name: "ESGC",
-  category: ["all", " / ", "C#", " / ", "UX-Ui"],
+  category: ["C#", " / ", "UX-Ui"],
+  realcat: ["all", " / ", "C#", " / ", "UX-Ui"],
   img: _images_porfolio_ecosavers_png__WEBPACK_IMPORTED_MODULE_38___default.a,
   title: "ESGC Inventory System",
   author: "ESGC",
   description: "A Stand Alone Software used in tracking goods for the entire supply chain, from adding new inventory to end sales and reports"
 }, {
   name: "HumanAR ",
-  category: ["all", " / ", "C#", " / ", "Unity"],
+  category: ["C#", " / ", "Unity"],
+  realcat: ["all", " / ", "C#", " / ", "Unity", "android"],
   img: _images_porfolio_humanar_png__WEBPACK_IMPORTED_MODULE_39___default.a,
   title: "HumanAR",
   author: "HumanAR",
   description: "The HumanAR is an augmented reality application that improves the retention of the students in which the students uses android camera to capture the image target from the book that they are using"
 }, {
   name: "Appointment",
-  category: ["all", " / ", "React", " / ", "Laravel"],
+  category: ["React", " / ", "Laravel"],
+  realcat: ["all", " / ", "React", " / ", "Laravel", "android"],
   img: _images_porfolio_apoint_png__WEBPACK_IMPORTED_MODULE_40___default.a,
   title: "HR Appointment System",
   author: "Appointment",
   description: "The Appointment system is a web based solution that allows the users to set apointment/schedule for releasing of their ID and it is also used in order to minimize waiting times, prioritize appointments and optimize the utilization of resources.  "
 }, {
   name: "Pylon website",
-  category: ["all", " / ", "Boostrap", " / ", "Codeigniter"],
+  category: ["Boostrap", " / ", "Codeigniter"],
+  realcat: ["all", " / ", "Boostrap", " / ", "Codeigniter"],
   img: _images_porfolio_companyweb_png__WEBPACK_IMPORTED_MODULE_41___default.a,
   title: "Pylon Company Website",
   author: "Pylon",
   description: "A Company Website that tells  visitors all about your business and the Contact Us page informs everyone how to get in touch with you. It legitimizes your business and improves your credibility. It gives your business an identity and is virtual proof that it exists."
 }, {
   name: "Pylon Project Management",
-  category: ["all", " / ", "Boostrap", " / ", "Codeigniter"],
+  category: ["Boostrap", " / ", "Codeigniter"],
+  realcat: ["all", " / ", "Boostrap", " / ", "Codeigniter"],
   img: _images_porfolio_pylonproj_png__WEBPACK_IMPORTED_MODULE_42___default.a,
   title: "Pylon Project Management SYS",
   author: "Pylonproj",
   description: "Pylon Project Management is a web based solution that used for managing a project by planning, organizing, and managing its different required aspects"
-}, {
-  name: "Have any Projects in Mind?",
-  category: ["all", "others"],
-  img: _images_porfolio_hire_png__WEBPACK_IMPORTED_MODULE_43___default.a,
-  title: "Have any Projects in Mind?",
-  author: "Have any Projects in Mind?",
-  description: "asd"
-}];
+} //     {
+//         name: "Have any Projects in Mind?",
+//         category: ["Hire Me!"],
+//         realcat:["all", " / ","Boostrap"," / ", "Codeigniter","React","android","C#","Laravel"],
+//         img: hire,
+//         title: "Have any Projects in Mind?",
+//         author: "Have any Projects in Mind?",
+//         description: "Pasajol231@gmail.com "
+// }
+];
 
 var Porfolio = /*#__PURE__*/function (_React$Component) {
   _inherits(Porfolio, _React$Component);
@@ -97952,7 +98122,7 @@ var Porfolio = /*#__PURE__*/function (_React$Component) {
       }, function () {
         var filtered = portfolio.map(function (p) {
           return _objectSpread(_objectSpread({}, p), {}, {
-            filtered: p.category.includes(_this3.state.filter)
+            filtered: p.realcat.includes(_this3.state.filter)
           });
         });
 
@@ -98015,7 +98185,15 @@ var Porfolio = /*#__PURE__*/function (_React$Component) {
         item: true
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_material_ui_core_Button__WEBPACK_IMPORTED_MODULE_13__["default"], {
         onClick: function onClick() {
-          _this4.setfilter("frontend");
+          _this4.setfilter("C#");
+        },
+        variant: "contained",
+        color: "primary"
+      }, "C#")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_material_ui_core_Grid__WEBPACK_IMPORTED_MODULE_6__["default"], {
+        item: true
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_material_ui_core_Button__WEBPACK_IMPORTED_MODULE_13__["default"], {
+        onClick: function onClick() {
+          _this4.setfilter("React");
         },
         variant: "contained",
         color: "primary"
@@ -98023,7 +98201,7 @@ var Porfolio = /*#__PURE__*/function (_React$Component) {
         item: true
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_material_ui_core_Button__WEBPACK_IMPORTED_MODULE_13__["default"], {
         onClick: function onClick() {
-          _this4.setfilter("mobile");
+          _this4.setfilter("android");
         },
         variant: "contained",
         color: "primary"
@@ -98031,7 +98209,7 @@ var Porfolio = /*#__PURE__*/function (_React$Component) {
         item: true
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_material_ui_core_Button__WEBPACK_IMPORTED_MODULE_13__["default"], {
         onClick: function onClick() {
-          _this4.setfilter("ux-ui");
+          _this4.setfilter("Laravel");
         },
         variant: "contained",
         color: "primary"
@@ -98039,7 +98217,7 @@ var Porfolio = /*#__PURE__*/function (_React$Component) {
         item: true
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_material_ui_core_Button__WEBPACK_IMPORTED_MODULE_13__["default"], {
         onClick: function onClick() {
-          _this4.setfilter("others");
+          _this4.setfilter("Codeigniter");
         },
         variant: "contained",
         color: "primary"
@@ -98059,9 +98237,9 @@ var Porfolio = /*#__PURE__*/function (_React$Component) {
           className: "home-card-view flex-center",
           style: {
             backgroundImage: "url(".concat(item.img, ")"),
-            height: 250,
+            height: 260,
             margin: 10,
-            width: 370,
+            minWidth: 390,
             backgroundSize: "cover"
           }
         }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_material_ui_core_Zoom__WEBPACK_IMPORTED_MODULE_34__["default"], {
@@ -98071,10 +98249,13 @@ var Porfolio = /*#__PURE__*/function (_React$Component) {
           id: item.title,
           style: {
             display: "none",
-            backgroundColor: "white",
+            backgroundImage: "url(".concat(_images_porfolio_back_png__WEBPACK_IMPORTED_MODULE_44___default.a, ")"),
+            backgroundSize: "cover",
             height: "100%",
-            width: 370,
-            borderTop: "10px solid #303F9F"
+            width: 390,
+            marginTop: 10 // borderTop:
+            //     "10px solid #303F9F"
+
           }
         }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_material_ui_core_Grid__WEBPACK_IMPORTED_MODULE_6__["default"], {
           container: true,
@@ -98101,7 +98282,59 @@ var Porfolio = /*#__PURE__*/function (_React$Component) {
           display: "block",
           gutterBottom: true
         }, item.description))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null)))) : "";
-      })))));
+      }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        onMouseEnter: function onMouseEnter(e) {
+          _this4.showdata('static');
+        },
+        onMouseLeave: function onMouseLeave(e) {
+          _this4.showdata('static');
+        },
+        className: "home-card-view flex-center",
+        style: {
+          backgroundImage: "url(".concat(_images_porfolio_hire_png__WEBPACK_IMPORTED_MODULE_43___default.a, ")"),
+          height: 260,
+          margin: 10,
+          minWidth: 390,
+          backgroundSize: "cover"
+        }
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_material_ui_core_Zoom__WEBPACK_IMPORTED_MODULE_34__["default"], {
+        "in": this.state.zoom
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "hidenwords",
+        id: "static",
+        style: {
+          display: "none",
+          backgroundImage: "url(".concat(_images_porfolio_back_png__WEBPACK_IMPORTED_MODULE_44___default.a, ")"),
+          backgroundSize: "cover",
+          backgroundColor: "white",
+          height: "100%",
+          marginTop: 10,
+          width: 390
+        }
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_material_ui_core_Grid__WEBPACK_IMPORTED_MODULE_6__["default"], {
+        container: true,
+        spacing: 2,
+        style: {
+          paddingBottom: 20,
+          paddingLeft: 20,
+          paddingRight: 20
+        }
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_material_ui_core_Grid__WEBPACK_IMPORTED_MODULE_6__["default"], {
+        item: true,
+        xs: 12
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_material_ui_core_Typography__WEBPACK_IMPORTED_MODULE_8__["default"], {
+        variant: "overline",
+        component: "h2"
+      }, "Have any Projects in Mind?"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_material_ui_core_Typography__WEBPACK_IMPORTED_MODULE_8__["default"], {
+        color: "secondary",
+        variant: "overline",
+        display: "block",
+        gutterBottom: true
+      }, "HIRE ME!"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_material_ui_core_Typography__WEBPACK_IMPORTED_MODULE_8__["default"], {
+        variant: "overline",
+        display: "block",
+        gutterBottom: true
+      }, "Whether you have any projects in mind ,features, demo or anything else im ready to answer all your questions. Please free to contact me!"))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null))))))));
     }
   }]);
 
@@ -98422,7 +98655,7 @@ var Skills = /*#__PURE__*/function (_React$Component) {
       }, "Who's this guy?"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(WhiteTextTypography, {
         variant: "h6",
         gutterBottom: true
-      }, "I'm a innovative fullstack Developer for Pylon International Corp. base in San Pablo City as a contractor with a year of experience managing all aspects of developement process for small to large scale projects. Let's make something special.")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_material_ui_core_Grid__WEBPACK_IMPORTED_MODULE_6__["default"], {
+      }, "I'm a innovative fullstack Developer for Pylon International Corp. base in San Pablo City as a contractor with a year of experience managing all aspects of development process for small to large scale projects. Let's make something special.")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_material_ui_core_Grid__WEBPACK_IMPORTED_MODULE_6__["default"], {
         item: true,
         xs: 12,
         md: 6,
@@ -98439,7 +98672,7 @@ var Skills = /*#__PURE__*/function (_React$Component) {
       }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(WhiteTextTypography, {
         variant: "h6",
         gutterBottom: true
-      }, "Feel free to take a look at my latest projects on the web portfolio page."))));
+      }, "Feel free to take a look at my latest projects below."))));
     }
   }]);
 
@@ -98585,6 +98818,17 @@ module.exports = "/images/apoint.png?7219d35c3ea486f55173b1121ae63560";
 /***/ (function(module, exports) {
 
 module.exports = "/images/atin.png?1f68cd7b33076ebf0638b1883aa3b1db";
+
+/***/ }),
+
+/***/ "./resources/js/images/porfolio/back.png":
+/*!***********************************************!*\
+  !*** ./resources/js/images/porfolio/back.png ***!
+  \***********************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = "/images/back.png?b4cbc8920ec0f46aa8043b66b3b52b23";
 
 /***/ }),
 

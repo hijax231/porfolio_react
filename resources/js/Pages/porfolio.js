@@ -63,6 +63,7 @@ import apoint from '../images/porfolio/apoint.png'
 import companyweb from '../images/porfolio/companyweb.png'
 import pylonproj from '../images/porfolio/pylonproj.png'
 import hire from '../images/porfolio/hire.png'
+import back from '../images/porfolio/back.png'
 //lights
 
 const useStyles = theme => ({
@@ -101,7 +102,8 @@ const WhiteTextTypography = withStyles({
 const portfolio = [
     {
         name: "EBPLS",
-        category: ["all", " / ","Boostrap"," / ", "Codeigniter"],
+        category: ["Boostrap"," / ", "Codeigniter"],
+        realcat: ["all", " / ","Boostrap"," / ", "Codeigniter"],
         img: ubilis,
         title: "Electronic Business Processing And Licensing System ",
         author: "EBPLS",
@@ -109,7 +111,8 @@ const portfolio = [
      },
     {
         name: "ECRIS",
-        category: ["all", " / ","Boostrap"," / ", "Codeigniter"],
+        category: ["Boostrap"," / ", "Codeigniter"],
+        realcat: ["all", " / ","Boostrap"," / ", "Codeigniter"],
         img: ecris,
         title: "Electronic Civil Registry Information System 2.0",
         author: "ECRIS",
@@ -117,15 +120,17 @@ const portfolio = [
    },
     {
         name: "ATIN",
-        category: ["all", " / ","React"," / ", "Laravel"],
+        category: ["React"," / ", "Laravel"],
+        realcat: ["all", " / ","React"," / ", "Laravel", "android"],
         img: atin,
         title: "ATIN COVID19 Tracker",
         author: "ATIN",
-        description: ""   
+        description: "ATIN COVID TRACKER is an easy-to-use progressive web app that can: alert you if you have been in close contact with someone who has tested positive for coronavirus. advise you on what to do to protect yourself and others."   
     },
     {
         name: "ESGC",
-        category: ["all", " / ","C#"," / ", "UX-Ui"],
+        category: ["C#"," / ", "UX-Ui"],
+        realcat:["all", " / ","C#"," / ", "UX-Ui"],
         img:esgc,
         title: "ESGC Inventory System",
         author: "ESGC",
@@ -133,7 +138,8 @@ const portfolio = [
     },
     {
         name: "HumanAR ",
-        category: ["all", " / ","C#"," / ", "Unity"],
+        category: ["C#"," / ", "Unity"],
+        realcat: ["all", " / ","C#"," / ", "Unity", "android"],
         img: humanar,
         title: "HumanAR",
         author: "HumanAR",
@@ -141,7 +147,8 @@ const portfolio = [
     },
     {
         name: "Appointment",
-        category: ["all", " / ","React"," / ", "Laravel"],
+        category: ["React"," / ", "Laravel"],
+        realcat: ["all", " / ","React"," / ", "Laravel", "android"],
         img: apoint,
         title: "HR Appointment System",
         author: "Appointment",
@@ -149,7 +156,8 @@ const portfolio = [
     },
     {
         name: "Pylon website",
-        category: ["all", " / ","Boostrap"," / ", "Codeigniter"],
+        category: ["Boostrap"," / ", "Codeigniter"],
+        realcat:["all", " / ","Boostrap"," / ", "Codeigniter"],
         img: companyweb,
         title: "Pylon Company Website",
         author: "Pylon",
@@ -157,20 +165,23 @@ const portfolio = [
     },
     {
         name: "Pylon Project Management",
-        category: ["all", " / ","Boostrap"," / ", "Codeigniter"],
+        category: ["Boostrap"," / ", "Codeigniter"],
+        realcat:["all", " / ","Boostrap"," / ", "Codeigniter"],
         img: pylonproj,
         title: "Pylon Project Management SYS",
         author: "Pylonproj",
         description: "Pylon Project Management is a web based solution that used for managing a project by planning, organizing, and managing its different required aspects"     
 },
-    {
-        name: "Have any Projects in Mind?",
-        category: ["all", "others"],
-        img: hire,
-        title: "Have any Projects in Mind?",
-        author: "Have any Projects in Mind?",
-        description: "asd"    
-}
+//     {
+//         name: "Have any Projects in Mind?",
+//         category: ["Hire Me!"],
+//         realcat:["all", " / ","Boostrap"," / ", "Codeigniter","React","android","C#","Laravel"],
+//         img: hire,
+//         title: "Have any Projects in Mind?",
+//         author: "Have any Projects in Mind?",
+//         description: "Pasajol231@gmail.com "
+    
+// }
 ];
 
 class Porfolio extends React.Component {
@@ -220,7 +231,7 @@ class Porfolio extends React.Component {
             () => {
                 const filtered = portfolio.map(p => ({
                     ...p,
-                    filtered: p.category.includes(this.state.filter)
+                    filtered: p.realcat.includes(this.state.filter)
                 }));
 
                 this.setState({
@@ -293,7 +304,19 @@ class Porfolio extends React.Component {
                         <Grid item>
                             <Button
                                 onClick={() => {
-                                    this.setfilter("frontend");
+                                    this.setfilter("C#");
+                                }}
+                                variant="contained"
+                                color="primary"
+                            >
+                            C#
+                            </Button>
+                        </Grid>
+
+                        <Grid item>
+                            <Button
+                                onClick={() => {
+                                    this.setfilter("React");
                                 }}
                                 variant="contained"
                                 color="primary"
@@ -305,7 +328,7 @@ class Porfolio extends React.Component {
                         <Grid item>
                             <Button
                                 onClick={() => {
-                                    this.setfilter("mobile");
+                                    this.setfilter("android");
                                 }}
                                 variant="contained"
                                 color="primary"
@@ -317,7 +340,7 @@ class Porfolio extends React.Component {
                         <Grid item>
                             <Button
                                 onClick={() => {
-                                    this.setfilter("ux-ui");
+                                    this.setfilter("Laravel");
                                 }}
                                 variant="contained"
                                 color="primary"
@@ -329,7 +352,7 @@ class Porfolio extends React.Component {
                         <Grid item>
                             <Button
                                 onClick={() => {
-                                    this.setfilter("others");
+                                    this.setfilter("Codeigniter");
                                 }}
                                 variant="contained"
                                 color="primary"
@@ -368,9 +391,11 @@ onClick={()=>{
                                         className="home-card-view flex-center"
                                         style={{
                                             backgroundImage: `url(${item.img})`,
-                                            height: 250,
+                                            height: 260,
                                             margin: 10,
-                                            width: 370,
+                                     
+                                           minWidth: 390,
+                                         
                                             backgroundSize: "cover"
                                         }}
                                     >
@@ -380,11 +405,14 @@ onClick={()=>{
                                                 id={item.title}
                                                 style={{
                                                     display: "none",
-                                                    backgroundColor: "white",
+                                                    backgroundImage:`url(${back})`,
+                                                 
+                                                    backgroundSize: "cover",
                                                     height: "100%",
-                                                    width: 370,
-                                                    borderTop:
-                                                        "10px solid #303F9F"
+                                                    width: 390,
+                                                    marginTop: 10,
+                                                    // borderTop:
+                                                    //     "10px solid #303F9F"
                                                 }}
                                             >
                                                 <Grid
@@ -398,6 +426,7 @@ onClick={()=>{
                                                 >
                                                     <Grid item xs={12}>
                                                         <Typography
+                                                       
                                                             variant="overline"
                                                             component="h2"
                                                         >
@@ -406,7 +435,7 @@ onClick={()=>{
                                                         </Typography>
 
                                                         <Typography
-                                                            color="secondary"
+                                                         color="secondary"
                                                             variant="overline"
                                                             display="block"
                                                             gutterBottom
@@ -434,6 +463,86 @@ onClick={()=>{
                                     ""
                                 )
                             )}
+
+
+
+<div
+                                        onMouseEnter={e => {
+                                            this.showdata('static');
+                                        }}
+                                        onMouseLeave={e => {
+                                            this.showdata('static');
+                                        }}
+                                        className="home-card-view flex-center"
+                                        style={{
+                                            backgroundImage:`url(${hire})` ,
+                                            height: 260,
+                                            margin: 10,
+                                            minWidth: 390,
+                                            backgroundSize: "cover"
+                                        }}
+                                    >
+                                        <Zoom in={this.state.zoom}>
+                                            <div
+                                                className="hidenwords"
+                                                id="static"
+                                                style={{
+                                                    display: "none",
+                                                    backgroundImage:`url(${back})`,
+                                                    backgroundSize: "cover",
+                                                    backgroundColor: "white",
+                                                    height: "100%",
+                                                    marginTop: 10,
+                                                    width: 390,
+                                            
+                                                }}
+                                            >
+                                                <Grid
+                                                    container
+                                                    spacing={2}
+                                                    style={{
+                                                        paddingBottom: 20,
+                                                        paddingLeft: 20,
+                                                        paddingRight: 20,
+                                                    }}
+                                                >
+                                                    <Grid item xs={12}>
+                                                        <Typography
+                                                            variant="overline"
+                                                            component="h2"
+                                                        >
+                                                        Have any Projects in Mind?
+                                                        </Typography>
+
+                                                        <Typography
+                                                            color="secondary"
+                                                            variant="overline"
+                                                            display="block"
+                                                            gutterBottom
+                                                        >
+                                                          HIRE ME!
+                                                        </Typography>
+                                                 
+
+
+                                                   
+
+                                                <Typography
+                                                       
+                                                            variant="overline"
+                                                            display="block"
+                                                            gutterBottom
+                                                        >
+                                                 Whether you have any projects in mind ,features, demo or anything else im ready to answer all your questions. Please free to contact me!
+                                                        </Typography>
+                                                
+                                                    </Grid>
+                                                </Grid>
+
+                                                <div></div>
+                                            </div>
+                                        </Zoom>
+                                    </div>
                         </Grid>
                     </Container>
                 </Grid>

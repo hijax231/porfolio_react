@@ -253,7 +253,7 @@ ___
                     </WhiteTextTypography>
                     <WhiteTextTypography variant="h6" gutterBottom>
                   
-                        I'm a innovative fullstack Developer for Pylon International Corp. base in San Pablo City as a contractor with a year of experience managing all aspects of developement process for small to large scale projects.
+                        I'm a innovative fullstack Developer for Pylon International Corp. base in San Pablo City as a contractor with a year of experience managing all aspects of development process for small to large scale projects.
                       
                         Let's make something special.
                     </WhiteTextTypography>
@@ -282,8 +282,7 @@ ___
                         
                     <WhiteTextTypography variant="h6" gutterBottom>
                         {/* <Typing speed={50}> */}
-                        Feel free to take a look at my latest projects on the
-                        web portfolio page.
+                        Feel free to take a look at my latest projects below.
                         {/* then this will be typed at 200ms/character. */}
                         {/* </Typing> */}
                     </WhiteTextTypography>
