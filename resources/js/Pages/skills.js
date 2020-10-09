@@ -253,7 +253,7 @@ ___
                     </WhiteTextTypography>
                     <WhiteTextTypography variant="h6" gutterBottom>
                   
-                        I'm a innovative fullstack Developer for Pylon International Corp. base in San Pablo City as a contractor with a year of experience managing all aspects of development process for small to large scale projects.
+                        I'm an innovative fullstack Developer for Pylon International Corp. based in San Pablo City as a contractor with a year of experience managing all aspects of development process for small to large scale projects.
                       
                         Let's make something special.
                     </WhiteTextTypography>
