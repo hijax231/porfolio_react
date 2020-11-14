@@ -102,8 +102,8 @@ const WhiteTextTypography = withStyles({
 const portfolio = [
     {
         name: "EBPLS",
-        category: ["Boostrap"," / ", "Codeigniter"],
-        realcat: ["all", " / ","Boostrap"," / ", "Codeigniter"],
+        category: ["Bootstrap"," / ", "Codeigniter"],
+        realcat: ["all", " / ","Bootstrap"," / ", "Codeigniter"],
         img: ubilis,
         title: "Electronic Business Processing And Licensing System ",
         author: "EBPLS",
@@ -111,8 +111,8 @@ const portfolio = [
      },
     {
         name: "ECRIS",
-        category: ["Boostrap"," / ", "Codeigniter"],
-        realcat: ["all", " / ","Boostrap"," / ", "Codeigniter"],
+        category: ["Bootstrap"," / ", "Codeigniter"],
+        realcat: ["all", " / ","Bootstrap"," / ", "Codeigniter"],
         img: ecris,
         title: "Electronic Civil Registry Information System 2.0",
         author: "ECRIS",
@@ -156,8 +156,8 @@ const portfolio = [
     },
     {
         name: "Pylon website",
-        category: ["Boostrap"," / ", "Codeigniter"],
-        realcat:["all", " / ","Boostrap"," / ", "Codeigniter"],
+        category: ["Bootstrap"," / ", "Codeigniter"],
+        realcat:["all", " / ","Bootstrap"," / ", "Codeigniter"],
         img: companyweb,
         title: "Pylon Company Website",
         author: "Pylon",
@@ -165,8 +165,8 @@ const portfolio = [
     },
     {
         name: "Pylon Project Management",
-        category: ["Boostrap"," / ", "Codeigniter"],
-        realcat:["all", " / ","Boostrap"," / ", "Codeigniter"],
+        category: ["Bootstrap"," / ", "Codeigniter"],
+        realcat:["all", " / ","Bootstrap"," / ", "Codeigniter"],
         img: pylonproj,
         title: "Pylon Project Management SYS",
         author: "Pylonproj",
@@ -175,7 +175,7 @@ const portfolio = [
 //     {
 //         name: "Have any Projects in Mind?",
 //         category: ["Hire Me!"],
-//         realcat:["all", " / ","Boostrap"," / ", "Codeigniter","React","android","C#","Laravel"],
+//         realcat:["all", " / ","Bootstrap"," / ", "Codeigniter","React","android","C#","Laravel"],
 //         img: hire,
 //         title: "Have any Projects in Mind?",
 //         author: "Have any Projects in Mind?",
